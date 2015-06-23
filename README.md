@@ -1,5 +1,5 @@
 # space-monogatari
-# Projeto de Computação I - Ciência da Computação 2015.1 UFRJ
+### Projeto de Computação I - Ciência da Computação 2015.1 UFRJ
     Professor:   Geraldo Zimbrão
     Estudantes:  Vinícius Garcia
                  Diego Souza
