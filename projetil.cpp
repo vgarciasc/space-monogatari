@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include <allegro5/allegro_primitives.h>
 
 #include "projetil.h"
 
-void cria_projetil (Projetil* projetil, int posicao_x, int posicao_y, DIRECAO direcao) {
+void cria_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRECAO direcao) {
 	projetil->posicao_x = posicao_x;
 	projetil->posicao_y = posicao_y;
 	projetil->direcao = direcao;
 
 	inicializa_sprite_projetil (projetil);
+
+	projetil->altura_sprite = al_get_bitmap_height(projetil->sprite);
 
 	desenha_projetil (projetil);
 }

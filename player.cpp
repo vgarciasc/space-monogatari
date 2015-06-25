@@ -9,9 +9,10 @@
 #define altura_sprites 64
 #define largura_sprites 64
 
-void inicializa_player (Player* player, int posicao_x, int posicao_y) {
+void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
 	player->posicao_y = posicao_y;
+	player->projetil_cooldown = 10;
 
 	inicializa_sprites_player (player);
 
@@ -64,4 +65,8 @@ int get_posicao_x_max_player (Player* player){
 
 int get_posicao_x_min_player (Player* player){
 	return player->posicao_x - player->delta_x;
+}
+
+int get_posicao_x_centro_player (Player* player){
+	return player->posicao_x - 3;
 }

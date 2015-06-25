@@ -6,16 +6,18 @@
 
 #include "player.h"
 
-#define VELOCIDADE_PROJETIL 5
+#define VELOCIDADE_PROJETIL 10
 
 struct Projetil {
-	int posicao_x, posicao_y;
+	double posicao_x, posicao_y;
 	DIRECAO direcao;
 
+	int altura_sprite, largura_sprite;
+	int cooldown;
 	ALLEGRO_BITMAP* sprite;
 };
 
-void cria_projetil (Projetil* projetil, int posicao_x, int posicao_y, DIRECAO direcao);
+void cria_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRECAO direcao);
 
 void desenha_projetil (Projetil* projetil);
 
