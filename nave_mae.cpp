@@ -19,7 +19,7 @@ void movimenta_nave(NaveMae *nave){
 	nave->posicao_x += nave->velocidade;
 }
 void reinicia_nave(NaveMae *nave){
-	nave->posicao_x = 0;
+	nave->posicao_x = -35;
 	nave->posicao_y = 0;
 	nave->status = 0;
 }
