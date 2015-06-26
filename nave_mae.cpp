@@ -25,6 +25,10 @@ void reinicia_nave(NaveMae *nave){
 }
 void inicializa_nave(NaveMae *nave){
 	nave->imagem = al_load_bitmap("resources/nave.png");
+	if (nave->imagem == NULL) {
+		puts("Erro ao carregar o arquivo resources/nave.png");
+		exit(0);
+	}
 	nave->velocidade=3;
 	reinicia_nave(nave);
 }
