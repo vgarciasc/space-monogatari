@@ -1,45 +1,39 @@
-#include <stdio.h>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
-#include "game.h"
-#include "nave_mae.h"
+#ifndef NAVE_MAE_H
+#define NAVE_MAE_H
 
-void desenha_nave(NaveMae *nave,Jogo *jogo){
-	if(autoriza_nave(nave,jogo) || nave->status==1){
-	 	 al_draw_bitmap(nave->imagem, nave->posicao_x,nave->posicao_y,0);
-	 	 if(nave->posicao_x>=jogo->largura){
-	 		 reinicia_nave(nave);
-	 		 return;
-	 	 }
-	 	 movimenta_nave(nave);
-	}
+struct Jogo;
 
-}
-void movimenta_nave(NaveMae *nave){
-	nave->posicao_x += nave->velocidade;
-}
-void reinicia_nave(NaveMae *nave){
-	nave->posicao_x = -35;
-	nave->posicao_y = 0;
-	nave->status = 0;
-}
-void inicializa_nave(NaveMae *nave){
-	nave->imagem = al_load_bitmap("resources/nave.png");
-	if (nave->imagem == NULL) {
-		puts("Erro ao carregar o arquivo resources/nave.png");
-		exit(0);
-	}
-	nave->velocidade=3;
-	reinicia_nave(nave);
-}
-void finaliza_nave(NaveMae *nave){
-	al_destroy_bitmap(nave->imagem);
-}
-int autoriza_nave(NaveMae *nave, Jogo *jogo){
-	if(((jogo->segundos)/FPS)%30 == 0){
-		nave->status=1;
-		return 1;
-	}
-	else
-		return 0;
-}
+struct NaveMae{
+	ALLEGRO_BITMAP *imagem=NULL;
+	int posicao_x;
+	int posicao_y;
+	int velocidade;
+	int status;
+	int altura;
+	int largura;
+};
+
+//desenha a nave de acordo com as coordenadas
+//apenas essa aqui será usada no loop do jogo
+void desenha_nave(NaveMae*, Jogo*, Projetil*);
+
+// por enquanto apenas coloca posicao_x=0 e posicao_y=0[depois faz mais]
+// AINDA PRECISA REINICIAR O CONTADOR AQUI
+void reinicia_nave(NaveMae*);
+
+// responsável pela mudança nas coordenadas
+void movimenta_nave(NaveMae*);
+
+// carrega a imagem em nave->imagem, reinicia as posições e define a velocidade
+//utilizar antes da inicialização do loop do jogo
+void inicializa_nave(NaveMae*);
+
+//função que controla se a nave mae aparece ou n
+int autoriza_nave(NaveMae*, Jogo*);
+
+void detecta_colisao(NaveMae*, Jogo*);
+
+//destroi a nave mae
+void finaliza_nave(NaveMae*);
+
+#endif
