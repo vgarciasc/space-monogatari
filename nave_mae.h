@@ -9,11 +9,13 @@ struct NaveMae{
 	int posicao_y;
 	int velocidade;
 	int status;
+	int altura;
+	int largura;
 };
 
 //desenha a nave de acordo com as coordenadas
 //apenas essa aqui será usada no loop do jogo
-void desenha_nave(NaveMae*, Jogo*);
+void desenha_nave(NaveMae*, Jogo*, Projetil*);
 
 // por enquanto apenas coloca posicao_x=0 e posicao_y=0[depois faz mais]
 // AINDA PRECISA REINICIAR O CONTADOR AQUI
@@ -28,6 +30,8 @@ void inicializa_nave(NaveMae*);
 
 //função que controla se a nave mae aparece ou n
 int autoriza_nave(NaveMae*, Jogo*);
+
+void detecta_colisao(NaveMae*, Jogo*);
 
 //destroi a nave mae
 void finaliza_nave(NaveMae*);
