@@ -5,6 +5,7 @@ struct Jogo;
 
 struct Mothership{
 	ALLEGRO_BITMAP *imagem=NULL;
+	ALLEGRO_FONT *fonte=NULL;
 	int posicao_x;
 	int posicao_y;
 	int velocidade;
