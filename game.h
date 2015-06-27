@@ -28,7 +28,7 @@ struct Jogo {
 
 	int loop_count;
 	int loop_count_projetil;
-	int loop_count_menu;
+	int loop_count_menu_pause;
 };
 
 void inicializa_jogo (Jogo* jogo, int largura, int altura);
