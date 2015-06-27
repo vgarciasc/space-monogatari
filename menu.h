@@ -22,15 +22,17 @@ struct Menu {
 
 	int numero_de_telas;
 	int tela_selecionada;
+
+	int new_game;
 };
 
-void inicializa_menu_pause (Menu* menu);
+void inicializa_menus (Menu* menu);
 
 void desenha_fundo_menu_pause ();
 
 void desenha_menu_pause (Menu* menu);
 
-bool loop_menu_pause (Menu* menu);
+bool loop_menu (Menu* menu, int numero_tela);
 
 void seleciona_nova_tela (Menu* menu, int numero_tela);
 

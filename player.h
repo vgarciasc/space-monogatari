@@ -25,7 +25,7 @@ void finaliza_player (Player* player);
 
 void desenha_player (Player* player);
 
-void inicializa_sprites_player (Player* player);
+ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename, int largura, int altura);
 
 void finaliza_sprites_player (Player* player);
 

@@ -30,11 +30,16 @@ struct Jogo {
 	int loop_count;
 	int loop_count_projetil;
 	int loop_count_menu_pause;
+	int loop_alien_movement;
 	
 	bool key[N_KEYS];
 };
 
-void inicializa_jogo (Jogo* jogo, int largura, int altura);
+void inicializa_display (Jogo* jogo, int largura, int altura);
+
+void finaliza_display (Jogo* jogo);
+
+void inicializa_jogo (Jogo* jogo);
 
 void finaliza_jogo (Jogo* jogo);
 

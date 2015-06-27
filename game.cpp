@@ -7,25 +7,31 @@
 
 #include "game.h"
 
-void inicializa_jogo (Jogo* jogo, int largura, int altura) {
+void inicializa_display (Jogo* jogo, int largura, int altura) {
+  jogo->largura = largura;
+  jogo->altura = altura;
 
-	inic_funcoes_allegro();
+  jogo->display = al_create_display(largura, altura);
+  if (!jogo->display) {
+      fprintf(stderr, "Falha ao inicializar o display!\n");
+      exit(-1);
+  }
+}
 
-	jogo->largura = largura;
-	jogo->altura = altura;
+void finaliza_display (Jogo* jogo) {
+  al_destroy_display(jogo->display);
+}
+
+void inicializa_jogo (Jogo* jogo) {
 	jogo->event_queue = NULL;
+
+  jogo->menu.new_game = 1;
 
   jogo->fundo = al_load_bitmap("resources/fundo.png");
   if (jogo->fundo == NULL) {
       puts("Erro ao carregar o arquivo resources/fundo.png");
       exit(0);
   }
-
-  jogo->display = al_create_display(largura, altura);
-	if (!jogo->display) {
-    	fprintf(stderr, "Falha ao inicializar o display!\n");
-		  exit(-1);
-	}
 
   inicializa_teclado(jogo);
   inicializa_timer_jogo(jogo);
@@ -34,12 +40,16 @@ void inicializa_jogo (Jogo* jogo, int largura, int altura) {
   inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
   inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
   inicializa_mothership(&jogo->mothership);
+
+  inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*largura_aliens*COLUNAS_TROPA - largura_aliens/2)) / 2 , 1.5*altura_aliens);
+  //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
+  //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
+  //jogo->altura - 1.5*2*jogo->alien[0][0].delta_y*LINHAS_TROPA + 1.5*2*jogo->alien[0][0].delta_y)
 }
-	
+
 void finaliza_jogo (Jogo* jogo) {
 	finaliza_player (&jogo->player);
 	finaliza_mothership(&jogo->mothership);
-	al_destroy_display(jogo->display);
 }
 
 void desenha_jogo (Jogo* jogo) {
@@ -73,8 +83,10 @@ void loop_de_jogo (Jogo* jogo) {
   jogo->loop_count = 0;
   jogo->loop_count_projetil = jogo->player.projetil_cooldown;
   jogo->loop_count_menu_pause = 1;
-
-	while (!doexit) {
+  jogo->menu.new_game = 0;
+  jogo->loop_alien_movement = 0;
+	
+  while (!doexit) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(jogo->event_queue, &ev);
 
@@ -86,10 +98,22 @@ void loop_de_jogo (Jogo* jogo) {
             	move_player(&jogo->player, DIREITA);
  
           if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
-              inicializa_menu_pause(&jogo->menu); 
-              doexit = loop_menu_pause(&jogo->menu);
+              inicializa_menus(&jogo->menu);
+              doexit = loop_menu(&jogo->menu, 0);
               jogo->key[KEY_Z] = false;
               jogo->loop_count_menu_pause = 0;
+          }
+
+          if (jogo->key[KEY_Z]
+              && jogo->loop_count_projetil > jogo->player.projetil_cooldown
+              && jogo->loop_count_menu_pause > 1) {
+
+            jogo->loop_count_projetil = 0;
+            cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
+                          get_posicao_x_centro_player(&jogo->player),
+                          jogo->player.posicao_y,
+                          CIMA);
+            jogo->numero_de_projeteis++;
           }
 
         	redraw = true;
@@ -120,14 +144,6 @@ void loop_de_jogo (Jogo* jogo) {
 
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = true;
-                  if (jogo->loop_count_projetil > jogo->player.projetil_cooldown && jogo->loop_count_menu_pause > 1) {
-                    jogo->loop_count_projetil = 0;
-                    cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
-                                  get_posicao_x_centro_player(&jogo->player),
-                                  jogo->player.posicao_y,
-                                  CIMA);
-                    jogo->numero_de_projeteis++;
-                  }
                		break;
         }
     }
@@ -151,13 +167,15 @@ void loop_de_jogo (Jogo* jogo) {
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
           redraw = false;
 
+          jogo->loop_count_projetil++;
           jogo->key[KEY_ESCAPE] = false;
           jogo->loop_count++;
-          jogo->loop_count_projetil++;
           jogo->loop_count_menu_pause++;
+          jogo->loop_alien_movement++;
           //dá pra fazer uma funçao com tudo isto
 
-          rota_tropa (jogo->alien);
+          if (!loop_alien_movement % (FPS/2))
+              rota_tropa (jogo->alien, jogo);
 
           desenha_jogo(jogo);
 
