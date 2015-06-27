@@ -4,16 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "player.h"
+
 #define LINHAS_TROPA 5
 #define COLUNAS_TROPA 10
 #define DISTANCIA_PASSO_ALIEN 1
 
-enum DIRECAO_ALIEN { alienESQUERDA, alienDIREITA, alienCIMA, alienBAIXO };
-
 struct Alien {
 	int posicao_x, posicao_y;
 	int delta_x;
-	DIRECAO_ALIEN direcao_atual;
+	DIRECAO direcao_atual;
 
 	bool vivo;
 
@@ -35,9 +35,11 @@ void inicializa_sprites_alien (Alien* alien);
 
 void finaliza_sprites_alien (Alien* alien);
 
-void move_alien (Alien* alien, DIRECAO_ALIEN direcao);
+void move_alien (Alien* alien, DIRECAO direcao);
 
-void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO_ALIEN direcao);
+void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
+
+void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]);
 
 int get_posicao_x_max_alien (Alien* alien);
 
