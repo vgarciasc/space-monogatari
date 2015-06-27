@@ -55,7 +55,11 @@ void inicializa_event_queue_jogo (Jogo* jogo);
 
 void inicializa_timer_jogo (Jogo* jogo);
 
+void tela_boot_jogo (Jogo* jogo);
+
 void inic_funcoes_allegro (void);
+
+void fadein (ALLEGRO_BITMAP* bitmap);
 
 void inic_allegro (void);
 

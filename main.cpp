@@ -16,6 +16,7 @@ int main(int argc, char **argv) {
    	inicializa_display (&jogo, 640, 480);
 
     // TITLE SCREEN
+	tela_boot_jogo(&jogo);
 	inicializa_menus(&jogo.menu);
 	loop_menu(&jogo.menu, 3);
 
@@ -28,6 +29,7 @@ int main(int argc, char **argv) {
     	loop_de_jogo (&jogo);
 
     	finaliza_jogo (&jogo);
+    	
     }
 
 	finaliza_display (&jogo);

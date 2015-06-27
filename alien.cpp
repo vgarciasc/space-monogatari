@@ -54,12 +54,6 @@ void desenha_alien (Alien* alien) {
 						  ALTURA_SPRITES_ALIEN,
 
 						  flags);
-
-	// al_draw_bitmap (alien->sprites[0], 
-	// 				alien->posicao_x - alien->delta_x, 
-	// 				alien->posicao_y,
-	// 				flags);
-
 }
 
 void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {

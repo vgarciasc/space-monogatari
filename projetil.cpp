@@ -43,10 +43,10 @@ void finaliza_projetil (Projetil* projetil) {
 }
 
 void inicializa_sprite_projetil (Projetil* projetil) {
-	projetil->sprite = al_load_bitmap("resources/projetil.png");
+	projetil->sprite = al_load_bitmap("resources/projetil2.png");
 
 	if (projetil->sprite == NULL) {
-		puts("Erro ao carregar o arquivo resources/projetil.png");
+		puts("Erro ao carregar o arquivo resources/projetil2.png");
 		exit(0);
 	}
 }

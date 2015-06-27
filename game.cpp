@@ -185,8 +185,60 @@ void loop_de_jogo (Jogo* jogo) {
 }
 
 void desenha_fundo_jogo (Jogo* jogo) {
-	al_clear_to_color(al_map_rgb(0,0,0));
+	al_clear_to_color(al_map_rgb(20,20,20));
   // al_draw_bitmap (jogo->fundo, 0, 0, 0);
+}
+
+void tela_boot_jogo (Jogo* jogo) {
+
+  ALLEGRO_BITMAP* minerva = al_load_bitmap("resources/minerva.png");
+  if (minerva == NULL) {
+    puts("Erro ao carregar o arquivo resources/minerva.png");
+    exit(0);
+  }
+
+   al_clear_to_color(al_map_rgb(0,0,0));
+  
+   al_flip_display();
+   al_rest(1.5);
+
+   for (int i = 0; i < 255; i+=20) {
+     al_clear_to_color(al_map_rgb(0,0,0));
+     al_draw_tinted_bitmap(minerva,
+                    al_map_rgba(i, i, i, i),
+                    (jogo->largura - al_get_bitmap_width(minerva))/2,
+                    (jogo->altura - al_get_bitmap_height(minerva))/2,
+                    0);
+     al_flip_display();
+     al_rest(0.1);                   
+   }
+
+   al_draw_bitmap(minerva,
+                (jogo->largura - al_get_bitmap_width(minerva))/2,
+                (jogo->altura - al_get_bitmap_height(minerva))/2,
+                0);
+   al_flip_display();
+   al_rest(1.5);
+
+   for (int i = 255; i > 0; i-=20) {
+     al_clear_to_color(al_map_rgb(0,0,0));
+     al_draw_tinted_bitmap(minerva,
+                    al_map_rgba(i, i, i, i),
+                    (jogo->largura - al_get_bitmap_width(minerva))/2,
+                    (jogo->altura - al_get_bitmap_height(minerva))/2,
+                    0);
+     al_flip_display();
+     al_rest(0.1);                   
+   }
+   al_clear_to_color(al_map_rgb(0,0,0));
+   al_flip_display();
+   al_rest(1);
+  
+   al_destroy_bitmap(minerva);
+}
+
+void fadein (ALLEGRO_BITMAP* bitmap) {
+
 }
 
 void inicializa_teclado (Jogo* jogo) {
