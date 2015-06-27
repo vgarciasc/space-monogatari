@@ -28,6 +28,7 @@ void inicializa_jogo (Jogo* jogo, int largura, int altura) {
   desenha_fundo_jogo();
   inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
   inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
+  inicializa_mothership(&jogo->mothership);
   inicializa_timer_jogo(jogo);
   inicializa_teclado(jogo);
   inicializa_event_queue_jogo(jogo);
@@ -35,7 +36,7 @@ void inicializa_jogo (Jogo* jogo, int largura, int altura) {
 	
 void finaliza_jogo (Jogo* jogo) {
 	finaliza_player (&jogo->player);
-	
+	finaliza_mothership(&jogo->mothership);
 	al_destroy_display(jogo->display);
 }
 
@@ -45,6 +46,8 @@ void desenha_jogo (Jogo* jogo) {
 	desenha_player(&jogo->player);
 
   desenha_tropa(jogo->alien);
+
+  desenha_mothership(&jogo->mothership,jogo, jogo->projetil_stack);
 
   for (int i = 0; i < jogo->numero_de_projeteis; i++) {
 
@@ -69,8 +72,9 @@ void loop_de_jogo (Jogo* jogo) {
 	bool redraw = true;
 
 	jogo->numero_de_projeteis = 0;
-  int loop_count_projetil = jogo->player.projetil_cooldown;
-  int loop_count_menu = 2;
+  jogo->loop_count = 0;
+  jogo->loop_count_projetil = jogo->player.projetil_cooldown;
+  jogo->loop_count_menu = 2;
 
 	while (!doexit) {
 		ALLEGRO_EVENT ev;
@@ -84,11 +88,11 @@ void loop_de_jogo (Jogo* jogo) {
         	if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - 15)
             	move_player(&jogo->player, DIREITA);
  
-          if (jogo->key[KEY_ESCAPE] && loop_count_menu > 2) {
+          if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu > 2) {
               inicializa_menu(&jogo->menu); 
               doexit = loop_menu(&jogo->menu);
               jogo->key[KEY_Z] = false;
-              loop_count_menu = 0;
+              jogo->loop_count_menu = 0;
           }
 
         	redraw = true;
@@ -118,8 +122,8 @@ void loop_de_jogo (Jogo* jogo) {
 
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = true;
-                  if (loop_count_projetil > jogo->player.projetil_cooldown && loop_count_menu > 2) {
-                    loop_count_projetil = 0;
+                  if (jogo->loop_count_projetil > jogo->player.projetil_cooldown && jogo->loop_count_menu > 2) {
+                    jogo->loop_count_projetil = 0;
                     cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
                                   get_posicao_x_centro_player(&jogo->player),
                                   jogo->player.posicao_y,
@@ -150,8 +154,9 @@ void loop_de_jogo (Jogo* jogo) {
           redraw = false;
           jogo->key[KEY_ESCAPE] = false;
 
-          loop_count_projetil++;
-          loop_count_menu++;
+          jogo->loop_count;
+          jogo->loop_count_projetil++;
+          jogo->loop_count_menu++;
 
           desenha_jogo(jogo);
 

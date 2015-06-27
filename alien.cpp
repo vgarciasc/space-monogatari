@@ -15,6 +15,8 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 
 	alien->vivo = true;
 
+	alien->direcao_atual = alienESQUERDA;
+
 	inicializa_sprites_alien (alien);
 
 	alien->delta_x = al_get_bitmap_width(alien->sprites[0])/2;
@@ -66,13 +68,56 @@ void finaliza_sprites_alien (Alien* alien) {
 
 void move_alien (Alien* alien, DIRECAO_ALIEN direcao) {
 	if (direcao == alienESQUERDA) {
-		alien->posicao_x -= DISTANCIA_PASSO;
+		alien->posicao_x -= DISTANCIA_PASSO_ALIEN;
 		alien->direcao_atual = alienESQUERDA;
 	}
 	if (direcao == alienDIREITA) {
-		alien->posicao_x += DISTANCIA_PASSO;
+		alien->posicao_x += DISTANCIA_PASSO_ALIEN;
 		alien->direcao_atual = alienDIREITA;
 	}
+	if (direcao == alienCIMA) {
+		alien->posicao_y -= DISTANCIA_PASSO_ALIEN;
+		alien->direcao_atual = alienCIMA;
+	}
+	if (direcao == alienBAIXO) {
+		alien->posicao_y += DISTANCIA_PASSO_ALIEN;
+		alien->direcao_atual = alienBAIXO;
+	}
+}
+
+void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO_ALIEN direcao) {
+	if (direcao == alienESQUERDA) {
+		for (int i = 0; i < COLUNAS_TROPA; i++) {
+			for (int j = 0; j < LINHAS_TROPA; j++) {
+				move_alien (&alien[i][j], alienESQUERDA);
+			}
+		}
+	}
+
+	if (direcao == alienDIREITA) {
+		for (int i = 0; i < COLUNAS_TROPA; i++) {
+			for (int j = 0; j < LINHAS_TROPA; j++) {
+				move_alien (&alien[i][j], alienDIREITA);
+			}
+		}
+	}
+
+	if (direcao == alienCIMA) {
+		for (int i = 0; i < COLUNAS_TROPA; i++) {
+			for (int j = 0; j < LINHAS_TROPA; j++) {
+				move_alien (&alien[i][j], alienCIMA);
+			}
+		}
+	}
+
+	if (direcao == alienBAIXO) {
+		for (int i = 0; i < COLUNAS_TROPA; i++) {
+			for (int j = 0; j < LINHAS_TROPA; j++) {
+				move_alien (&alien[i][j], alienBAIXO);
+			}
+		}
+	}
+
 }
 
 int get_posicao_x_max_alien (Alien* alien){

@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 #define LINHAS_TROPA 5
-#define COLUNAS_TROPA 11
-#define DISTANCIA_PASSO 5
+#define COLUNAS_TROPA 10
+#define DISTANCIA_PASSO_ALIEN 1
 
 enum DIRECAO_ALIEN { alienESQUERDA, alienDIREITA, alienCIMA, alienBAIXO };
 
@@ -36,6 +36,8 @@ void inicializa_sprites_alien (Alien* alien);
 void finaliza_sprites_alien (Alien* alien);
 
 void move_alien (Alien* alien, DIRECAO_ALIEN direcao);
+
+void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO_ALIEN direcao);
 
 int get_posicao_x_max_alien (Alien* alien);
 
