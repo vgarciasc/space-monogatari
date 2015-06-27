@@ -14,11 +14,17 @@ void inicializa_jogo (Jogo* jogo, int largura, int altura) {
 	jogo->largura = largura;
 	jogo->altura = altura;
 	jogo->event_queue = NULL;
-	jogo->display = al_create_display(largura, altura);
 	
+  jogo->fundo = al_load_bitmap("resources/fundo.png");
+  if (jogo->fundo == NULL) {
+      puts("Erro ao carregar o arquivo resources/alien.png");
+      exit(0);
+  }
+
+  jogo->display = al_create_display(largura, altura);
 	if (!jogo->display) {
     	fprintf(stderr, "Falha ao inicializar o display!\n");
-		exit(-1);
+		  exit(-1);
 	}
 
   inicializa_teclado(jogo);
@@ -150,6 +156,8 @@ void loop_de_jogo (Jogo* jogo) {
           jogo->loop_count_projetil++;
           jogo->loop_count_menu_pause++;
 
+          rota_tropa (jogo->alien);
+
           desenha_jogo(jogo);
 
         	al_flip_display();
@@ -157,8 +165,8 @@ void loop_de_jogo (Jogo* jogo) {
    }
 }
 
-void desenha_fundo_jogo () {
-	al_clear_to_color(al_map_rgb(60,60,100));
+void desenha_fundo_jogo (Jogo* jogo) {
+	al_draw_bitmap (jogo->fundo, 0, 0, 0);
 }
 
 void inicializa_teclado (Jogo* jogo) {

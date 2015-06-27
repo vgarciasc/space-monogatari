@@ -12,11 +12,12 @@
 enum MYKEYS { KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE };
 
 struct Jogo {
-	int largura, altura;
 	ALLEGRO_DISPLAY *display;
 	ALLEGRO_EVENT_QUEUE* event_queue;
 	ALLEGRO_TIMER* timer;
-	bool key[N_KEYS];
+	
+	int largura, altura;
+	ALLEGRO_BITMAP* fundo;
 
 	Player player;
 	Mothership mothership;
@@ -29,6 +30,8 @@ struct Jogo {
 	int loop_count;
 	int loop_count_projetil;
 	int loop_count_menu_pause;
+	
+	bool key[N_KEYS];
 };
 
 void inicializa_jogo (Jogo* jogo, int largura, int altura);
@@ -39,7 +42,7 @@ void desenha_jogo (Jogo* jogo);
 
 void loop_de_jogo (Jogo* jogo);
 
-void desenha_fundo_jogo ();
+void desenha_fundo_jogo (Jogo* jogo);
 
 void inicializa_teclado (Jogo* jogo);
 
