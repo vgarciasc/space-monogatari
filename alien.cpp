@@ -6,19 +6,16 @@
 
 #include "alien.h"
 #include "player.h"
+#include "game.h"
 
-#define altura_sprites 35
-#define largura_sprites 36
 
 void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
 
-	alien->frame_count = 0;
-
 	alien->vivo = true;
 
-	alien->direcao_atual = ESQUERDA;
+	alien->direcao_atual = DIREITA;
 
 	inicializa_sprites_alien (alien);
 
@@ -28,8 +25,8 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, int posicao_y) {
 	for (int i = 0; i < COLUNAS_TROPA; i++)
 		for (int j = 0; j < LINHAS_TROPA; j++)
-			inicializa_alien (&alien[i][j], posicao_x + i * (largura_sprites + largura_sprites/2),
-									posicao_y + j * (altura_sprites + altura_sprites/2) ); 
+			inicializa_alien (&alien[i][j], posicao_x + i * (largura_aliens + largura_aliens/2),
+									posicao_y + j * (altura_aliens + altura_aliens/2) ); 
 
 }
 
@@ -39,22 +36,15 @@ void finaliza_alien (Alien* alien) {
 
 void desenha_alien (Alien* alien) {
 	int flags = 0;
-	int frequencia_sprite = 20;
   
 	if (alien->direcao_atual == DIREITA)
 		flags = ALLEGRO_FLIP_HORIZONTAL;
 
-	al_draw_bitmap (alien->sprites[alien->sprite_atual], 
+	al_draw_bitmap (alien->sprites[0], 
 					alien->posicao_x - alien->delta_x, 
 					alien->posicao_y,
 					flags);
-  
-	if (alien->frame_count > frequencia_sprite) {
-		alien->sprite_atual = (alien->sprite_atual + 1) % 2;
-		alien->frame_count = 0;
-	}
 
-	alien->frame_count++;
 }
 
 void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
@@ -65,12 +55,12 @@ void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
 }
 
 void inicializa_sprites_alien (Alien* alien) {
-	alien->sprites[0] = al_load_bitmap("resources/alien1.png");
+	alien->sprites[0] = al_load_bitmap("resources/alien.png");
 	alien->sprites[1] = al_load_bitmap("resources/alien1-2.png");
 	alien->sprite_atual = 0;
 
 	if (alien->sprites[0] == NULL) {
-		puts("Erro ao carregar o arquivo resources/alien1.png");
+		puts("Erro ao carregar o arquivo resources/alien.png");
 		exit(0);
 	}
 
@@ -84,7 +74,17 @@ void finaliza_sprites_alien (Alien* alien) {
 	al_destroy_bitmap(alien->sprites[0]);
 }
 
+void muda_direcao_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao) {
+	for (int i = 0; i < COLUNAS_TROPA; i++)
+		for (int j = 0; j < LINHAS_TROPA; j++)
+			alien[i][j].direcao_atual = direcao;
+}
+
 void move_alien (Alien* alien, DIRECAO direcao) {
+	ALLEGRO_BITMAP* temp = alien->sprites[0];
+	alien->sprites[0] = alien->sprites[1];
+	alien->sprites[1] = temp;
+
 	if (direcao == ESQUERDA) {
 		alien->posicao_x -= DISTANCIA_PASSO_ALIEN;
 		alien->direcao_atual = ESQUERDA;
@@ -138,12 +138,23 @@ void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao) {
 
 }
 
-void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
-	if (alien[0][0].direcao_atual == ESQUERDA && get_posicao_x_min_alien(&alien[0][0]) > 0 + 5)
+void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Jogo* jogo) {
+	if (alien[0][0].direcao_atual == ESQUERDA && get_posicao_x_min_alien(&alien[0][0]) > 0 + 10 + DISTANCIA_PASSO_ALIEN)
 		move_tropa (alien, ESQUERDA);
-	if (get_posicao_x_min_alien(&alien[0][0]) <= 0 + 5)// ||
-//			get_posicao_x_max_alien(&alien[COLUNAS_TROPA][0]) == largura - 5)
-		move_tropa (alien, BAIXO);
+
+	if (get_posicao_x_min_alien(&alien[0][0]) <= 0 + 10 + DISTANCIA_PASSO_ALIEN) {
+			move_tropa (alien, BAIXO);
+			muda_direcao_tropa(alien, DIREITA);
+	}
+
+	if (get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) >= jogo->largura - 10 - DISTANCIA_PASSO_ALIEN) {
+			move_tropa (alien, BAIXO);
+			muda_direcao_tropa(alien, ESQUERDA);
+	}
+
+	if (alien[COLUNAS_TROPA-1][0].direcao_atual == DIREITA && get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) < jogo->largura - 10 - DISTANCIA_PASSO_ALIEN)
+		move_tropa (alien, DIREITA);
+
 }
 
 int get_posicao_x_max_alien (Alien* alien){
