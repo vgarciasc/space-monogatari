@@ -9,6 +9,7 @@ struct Mothership{
 	int posicao_x;
 	int posicao_y;
 	int velocidade;
+	int frequencia;
 	int status;
 	int altura;
 	int largura;
