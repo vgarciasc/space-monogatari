@@ -27,7 +27,6 @@ struct Jogo {
 	Projetil projetil_stack[50];
 	int numero_de_projeteis;
 
-	int loop_count;
 	int loop_count_projetil;
 	int loop_count_menu_pause;
 	int loop_alien_movement;
