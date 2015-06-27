@@ -174,7 +174,7 @@ void loop_de_jogo (Jogo* jogo) {
           jogo->loop_alien_movement++;
           //dá pra fazer uma funçao com tudo isto
 
-          if (!loop_alien_movement % (FPS/2))
+          if (!(jogo->loop_alien_movement % (FPS/2)))
               rota_tropa (jogo->alien, jogo);
 
           desenha_jogo(jogo);

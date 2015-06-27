@@ -6,8 +6,8 @@
 
 #include "player.h"
 
-#define ALTURA_SPRITES 48
-#define LARGURA_SPRITES 48
+#define ALTURA_SPRITES_PLAYER 48
+#define LARGURA_SPRITES_PLAYER 48
 
 void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
@@ -23,7 +23,7 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 		exit(0);
 	}
 
-	player->delta_x = LARGURA_SPRITES/2;
+	player->delta_x = LARGURA_SPRITES_PLAYER/2;
 }
 
 void finaliza_player (Player* player) {
@@ -44,8 +44,8 @@ void desenha_player (Player* player) {
 
 						  player->posicao_x - player->delta_x,
 						  player->posicao_y,
-						  LARGURA_SPRITES,
-						  ALTURA_SPRITES,
+						  LARGURA_SPRITES_PLAYER,
+						  ALTURA_SPRITES_PLAYER,
 
 						  flags);
 

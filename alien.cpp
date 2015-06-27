@@ -8,6 +8,8 @@
 #include "player.h"
 #include "game.h"
 
+#define LARGURA_SPRITES_ALIEN 32
+#define ALTURA_SPRITES_ALIEN 32
 
 void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_x = posicao_x;
@@ -19,7 +21,7 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 
 	inicializa_sprites_alien (alien);
 
-	alien->delta_x = al_get_bitmap_width(alien->sprites[0])/2;
+	alien->delta_x = LARGURA_SPRITES_ALIEN/2;
 }
 
 void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, int posicao_y) {
@@ -40,10 +42,23 @@ void desenha_alien (Alien* alien) {
 	if (alien->direcao_atual == DIREITA)
 		flags = ALLEGRO_FLIP_HORIZONTAL;
 
-	al_draw_bitmap (alien->sprites[0], 
-					alien->posicao_x - alien->delta_x, 
-					alien->posicao_y,
-					flags);
+	al_draw_scaled_bitmap(alien->sprites[alien->sprite_atual],
+						  0, 
+						  0,
+						  al_get_bitmap_width(alien->sprites[alien->sprite_atual]),
+						  al_get_bitmap_height(alien->sprites[alien->sprite_atual]),
+
+						  alien->posicao_x - alien->delta_x,
+						  alien->posicao_y,
+						  LARGURA_SPRITES_ALIEN,
+						  ALTURA_SPRITES_ALIEN,
+
+						  flags);
+
+	// al_draw_bitmap (alien->sprites[0], 
+	// 				alien->posicao_x - alien->delta_x, 
+	// 				alien->posicao_y,
+	// 				flags);
 
 }
 
@@ -55,12 +70,12 @@ void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
 }
 
 void inicializa_sprites_alien (Alien* alien) {
-	alien->sprites[0] = al_load_bitmap("resources/alien.png");
+	alien->sprites[0] = al_load_bitmap("resources/alien1.png");
 	alien->sprites[1] = al_load_bitmap("resources/alien1-2.png");
 	alien->sprite_atual = 0;
 
 	if (alien->sprites[0] == NULL) {
-		puts("Erro ao carregar o arquivo resources/alien.png");
+		puts("Erro ao carregar o arquivo resources/alien1.png");
 		exit(0);
 	}
 
