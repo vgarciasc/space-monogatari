@@ -5,17 +5,23 @@
 
 #include "menu.h"
 
+const ALLEGRO_COLOR MARROM_CLARO = al_map_rgb(247, 180, 109);
+const ALLEGRO_COLOR BRANCO = al_map_rgb(255, 255, 255);
+
 void inicializa_menu (Menu* menu) {
-  menu->numero_de_botoes = 2;
+  //botoes funcionam com logica de array (primeiro botao 0, segundo botao 1, etc)
+  menu->numero_de_botoes = 1;
   menu->event_queue = NULL;
   menu->timer = NULL;
-  menu->botao_selecionado = 1;
+  menu->botao_selecionado = 0;
   
   inicializa_timer_menu (menu);
   inicializa_event_queue_menu(menu);
 
-	menu->font = al_load_font("resources/verdana.ttf", 48, 0);
-	if (menu->font == NULL) {
+	menu->font_title = al_load_font("resources/verdana.ttf", 48, 0);
+  menu->font_items = al_load_font("resources/verdana.ttf", 24, 0);
+
+	if (menu->font_title == NULL || menu->font_items == NULL) {
 		puts("Erro ao carregar o arquivo resources/verdana.ttf");
 		exit(0);
 	}
@@ -27,10 +33,20 @@ void desenha_fundo_menu () {
 
 void desenha_menu (Menu* menu) {
 	desenha_fundo_menu ();
-    al_draw_text(menu->font, al_map_rgb(255,255,255), 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "PAUSE");
+  al_draw_text(menu->font_title, al_map_rgb(255,255,255), 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "PAUSE");
+
+  if (menu->botao_selecionado == 0)
+    al_draw_text(menu->font_items, al_map_rgb(247,150,220), 640/2, 240, ALLEGRO_ALIGN_CENTRE, "RESUME");
+  else
+    al_draw_text(menu->font_items, al_map_rgb(255,255,255), 640/2, 240, ALLEGRO_ALIGN_CENTRE, "RESUME");
+  
+  if (menu->botao_selecionado == 1)
+    al_draw_text(menu->font_items, al_map_rgb(150,150,220), 640/2, 240 + 30, ALLEGRO_ALIGN_CENTRE, "EXIT GAME");
+  else
+    al_draw_text(menu->font_items, al_map_rgb(255,255,255), 640/2, 240 + 30, ALLEGRO_ALIGN_CENTRE, "EXIT GAME");
 }
 
-void loop_menu (Menu* menu) {
+bool loop_menu (Menu* menu) {
   al_start_timer(menu->timer);
   bool doexit = false;
   bool redraw = true;
@@ -40,7 +56,8 @@ void loop_menu (Menu* menu) {
     al_wait_for_event(menu->event_queue, &ev);
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
-    	}
+      redraw = true;
+    }
     	
     	else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
         	break;
@@ -49,28 +66,35 @@ void loop_menu (Menu* menu) {
       	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
         	switch(ev.keyboard.keycode) {
             	case ALLEGRO_KEY_UP: 
-            		  if (menu->botao_selecionado == 1)
-                    menu->botao_selecionado = menu->numero_de_botoes - 1;
-                  else
+            		  if (menu->botao_selecionado == 0) {
+                    menu->botao_selecionado = menu->numero_de_botoes;
+                  }
+                  else {
                     menu->botao_selecionado--;
-                	break;
+                	}
+                  break;
  
             	case ALLEGRO_KEY_DOWN:
-               		if (menu->botao_selecionado == menu->numero_de_botoes)
-                    menu->botao_selecionado = 1;
-                  else
+               		if (menu->botao_selecionado == menu->numero_de_botoes) {
+                    menu->botao_selecionado = 0;
+                  }
+                  else {
                     menu->botao_selecionado++;
-               		break;
+               		}
+                  break;
 
               case ALLEGRO_KEY_Z:
-                  if (menu->botao_selecionado == 1)
+                  if (menu->botao_selecionado == 0) {
                     doexit = true;
-                  if (menu->botao_selecionado == 2)
+                    return false;
+                  }
+                  if (menu->botao_selecionado == 1) {
                     doexit = true;
+                    return true;
+                  }
                   break;
 
               case ALLEGRO_KEY_ESCAPE:
-                  puts("A");
                   doexit = true;
                   break;
         }

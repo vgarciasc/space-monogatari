@@ -7,7 +7,6 @@
 #include "menu.h"
 
 #define N_KEYS 4
-#define FPS 60
 
 enum MYKEYS { KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE };
 

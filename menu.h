@@ -10,7 +10,8 @@
 enum BOTAO { CONTINUE = 1, QUIT };
 
 struct Menu {
-	ALLEGRO_FONT* font;
+	ALLEGRO_FONT* font_title;
+	ALLEGRO_FONT* font_items;
 	ALLEGRO_EVENT_QUEUE* event_queue;
 	ALLEGRO_TIMER* timer;
 
@@ -24,7 +25,7 @@ void desenha_fundo_menu ();
 
 void desenha_menu (Menu* menu);
 
-void loop_menu (Menu* menu);
+bool loop_menu (Menu* menu);
 
 void inicializa_event_queue_menu (Menu* menu);
 

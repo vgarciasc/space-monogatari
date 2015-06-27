@@ -69,7 +69,8 @@ void loop_de_jogo (Jogo* jogo) {
 	bool redraw = true;
 
 	jogo->numero_de_projeteis = 0;
-  int loop_count = jogo->player.projetil_cooldown;
+  int loop_count_projetil = jogo->player.projetil_cooldown;
+  int loop_count_menu = 2;
 
 	while (!doexit) {
 		ALLEGRO_EVENT ev;
@@ -83,11 +84,11 @@ void loop_de_jogo (Jogo* jogo) {
         	if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - 15)
             	move_player(&jogo->player, DIREITA);
  
-          if (jogo->key[KEY_ESCAPE]) {
-              puts("1");
+          if (jogo->key[KEY_ESCAPE] && loop_count_menu > 2) {
               inicializa_menu(&jogo->menu); 
-              loop_menu(&jogo->menu);
-              puts("2");
+              doexit = loop_menu(&jogo->menu);
+              jogo->key[KEY_Z] = false;
+              loop_count_menu = 0;
           }
 
         	redraw = true;
@@ -117,8 +118,8 @@ void loop_de_jogo (Jogo* jogo) {
 
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = true;
-                  if (loop_count > jogo->player.projetil_cooldown) {
-                    loop_count = 0;
+                  if (loop_count_projetil > jogo->player.projetil_cooldown && loop_count_menu > 2) {
+                    loop_count_projetil = 0;
                     cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
                                   get_posicao_x_centro_player(&jogo->player),
                                   jogo->player.posicao_y,
@@ -142,17 +143,15 @@ void loop_de_jogo (Jogo* jogo) {
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = false;
                		break;
-
-              case ALLEGRO_KEY_ESCAPE:
-                  jogo->key[KEY_ESCAPE] = false;
-                  break;
         }
     }
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
-        	redraw = false;
+          redraw = false;
+          jogo->key[KEY_ESCAPE] = false;
 
-          loop_count++;
+          loop_count_projetil++;
+          loop_count_menu++;
 
           desenha_jogo(jogo);
 
