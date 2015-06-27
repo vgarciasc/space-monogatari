@@ -26,7 +26,7 @@ void reinicia_mothership(Mothership *mothership){
 	mothership->status = 0;
 }
 void inicializa_mothership(Mothership *mothership){
-	mothership->imagem = al_load_bitmap("resources/player2.png");
+	mothership->imagem = al_load_bitmap("resources/mothership.png");
 	if (mothership->imagem == NULL) {
 			puts("Erro ao carregar o arquivo resources/mothership.png");
 			exit(0);

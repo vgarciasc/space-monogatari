@@ -47,10 +47,16 @@ void inicializa_event_queue_jogo (Jogo* jogo);
 
 void inicializa_timer_jogo (Jogo* jogo);
 
+void inic_funcoes_allegro (void);
+
 void inic_allegro (void);
 
 void inic_allegro_primitive (void);
 
 void inic_allegro_image (void);
+
+void inic_allegro_font (void);
+
+void inic_allegro_ttf (void);
 
 #endif

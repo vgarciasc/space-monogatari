@@ -9,11 +9,7 @@
 
 void inicializa_jogo (Jogo* jogo, int largura, int altura) {
 
-	inic_allegro();
-	inic_allegro_primitive();
-	inic_allegro_image();
-  al_init_font_addon(); 
-  al_init_ttf_addon(); 
+	inic_funcoes_allegro();
 
 	jogo->largura = largura;
 	jogo->altura = altura;
@@ -25,13 +21,13 @@ void inicializa_jogo (Jogo* jogo, int largura, int altura) {
 		exit(-1);
 	}
 
-  desenha_fundo_jogo();
+  inicializa_teclado(jogo);
+  inicializa_timer_jogo(jogo);
+  inicializa_event_queue_jogo(jogo);
+  
   inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
   inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
   inicializa_mothership(&jogo->mothership);
-  inicializa_timer_jogo(jogo);
-  inicializa_teclado(jogo);
-  inicializa_event_queue_jogo(jogo);
 }
 	
 void finaliza_jogo (Jogo* jogo) {
@@ -42,16 +38,13 @@ void finaliza_jogo (Jogo* jogo) {
 
 void desenha_jogo (Jogo* jogo) {
 	desenha_fundo_jogo();
-
 	desenha_player(&jogo->player);
-
   desenha_tropa(jogo->alien);
-
   desenha_mothership(&jogo->mothership,jogo, jogo->projetil_stack);
 
   for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-
     desenha_projetil(&jogo->projetil_stack[i]);
+    move_projetil(&jogo->projetil_stack[i]);
     
     if (jogo->projetil_stack[i].posicao_y < 0 - jogo->projetil_stack[i].altura_sprite) {
       copy_projetil(&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
@@ -60,7 +53,6 @@ void desenha_jogo (Jogo* jogo) {
       jogo->numero_de_projeteis--;
     }
 
-    move_projetil(&jogo->projetil_stack[i]);
   }
 
 	al_flip_display();
@@ -74,21 +66,20 @@ void loop_de_jogo (Jogo* jogo) {
 	jogo->numero_de_projeteis = 0;
   jogo->loop_count = 0;
   jogo->loop_count_projetil = jogo->player.projetil_cooldown;
-  jogo->loop_count_menu = 2;
+  jogo->loop_count_menu = 1;
 
 	while (!doexit) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(jogo->event_queue, &ev);
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
-
         	if (jogo->key[KEY_LEFT] && get_posicao_x_min_player(&jogo->player) > 0 + 15)
             	move_player(&jogo->player, ESQUERDA);
 
         	if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - 15)
             	move_player(&jogo->player, DIREITA);
  
-          if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu > 2) {
+          if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu > 1) {
               inicializa_menu(&jogo->menu); 
               doexit = loop_menu(&jogo->menu);
               jogo->key[KEY_Z] = false;
@@ -113,6 +104,7 @@ void loop_de_jogo (Jogo* jogo) {
                		break;
 
               case ALLEGRO_KEY_F1:
+                  //F1 é o hard exit
                   doexit = true;
                   break;
 
@@ -122,7 +114,7 @@ void loop_de_jogo (Jogo* jogo) {
 
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = true;
-                  if (jogo->loop_count_projetil > jogo->player.projetil_cooldown && jogo->loop_count_menu > 2) {
+                  if (jogo->loop_count_projetil > jogo->player.projetil_cooldown && jogo->loop_count_menu > 1) {
                     jogo->loop_count_projetil = 0;
                     cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
                                   get_posicao_x_centro_player(&jogo->player),
@@ -152,9 +144,9 @@ void loop_de_jogo (Jogo* jogo) {
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
           redraw = false;
-          jogo->key[KEY_ESCAPE] = false;
 
-          jogo->loop_count;
+          jogo->key[KEY_ESCAPE] = false;
+          jogo->loop_count++;
           jogo->loop_count_projetil++;
           jogo->loop_count_menu++;
 
@@ -201,6 +193,14 @@ void inicializa_timer_jogo (Jogo* jogo) {
 	}
 }
 
+void inic_funcoes_allegro (void) {
+  inic_allegro();
+  inic_allegro_primitive();
+  inic_allegro_image();
+  inic_allegro_font(); 
+  inic_allegro_ttf(); 
+}
+
 void inic_allegro (void) {
 	if (!al_init()) {
   	    fprintf(stderr, "Falha ao inicializar o Allegro!\n");
@@ -220,4 +220,15 @@ void inic_allegro_image (void) {
   	    fprintf(stderr, "Falha ao inicializar o Allegro Image!\n");
   	    exit(-1);
 	}
+}
+
+void inic_allegro_font (void) {
+  al_init_font_addon();
+}
+
+void inic_allegro_ttf (void) {
+  if (!al_init_ttf_addon()) {
+        fprintf(stderr, "Falha ao inicializar o Allegro TrueType!\n");
+        exit(-1);
+  }
 }
