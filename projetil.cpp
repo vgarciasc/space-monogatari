@@ -13,6 +13,7 @@ void cria_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRE
 	inicializa_sprite_projetil (projetil);
 
 	projetil->altura_sprite = al_get_bitmap_height(projetil->sprite);
+	projetil->largura_sprite = al_get_bitmap_width(projetil->sprite);
 
 	desenha_projetil (projetil);
 }
@@ -21,13 +22,19 @@ void desenha_projetil (Projetil* projetil) {
 //funcao pode ser reutilizada pros aliens
 	int flags = 0;
 
-	if (projetil->direcao == BAIXO)
+	if (projetil->direcao == BAIXO) {
 		flags = ALLEGRO_FLIP_VERTICAL;
-
-	al_draw_bitmap (projetil->sprite,
+		al_draw_bitmap (projetil->sprite,
 					projetil->posicao_x, 
 					projetil->posicao_y,
 					flags);
+	}
+
+	if (projetil->direcao == CIMA)
+		al_draw_tinted_bitmap(projetil->sprite, al_map_rgba_f(1, 0.2, 0, 1), projetil->posicao_x,
+													projetil->posicao_y, flags);
+
+
 }
 
 void move_projetil (Projetil* projetil) {
