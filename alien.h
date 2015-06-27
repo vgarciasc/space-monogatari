@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "player.h"
+#include "projetil.h"
 
 #define LINHAS_TROPA 5
 #define COLUNAS_TROPA 10
@@ -47,6 +48,8 @@ void move_alien (Alien* alien, DIRECAO direcao);
 void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao);
 
 void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Jogo* jogo);
+
+void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Projetil* projetil);
 
 int get_posicao_x_max_alien (Alien* alien);
 
