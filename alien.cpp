@@ -14,6 +14,8 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
 
+	alien->frame_count = 0;
+
 	alien->vivo = true;
 
 	alien->direcao_atual = ESQUERDA;
@@ -37,6 +39,7 @@ void finaliza_alien (Alien* alien) {
 
 void desenha_alien (Alien* alien) {
 	int flags = 0;
+	int frequencia_sprite = 20;
   
 	if (alien->direcao_atual == DIREITA)
 		flags = ALLEGRO_FLIP_HORIZONTAL;
@@ -46,8 +49,12 @@ void desenha_alien (Alien* alien) {
 					alien->posicao_y,
 					flags);
   
-	alien->sprite_atual = (alien->sprite_atual + 1) % 2;
+	if (alien->frame_count > frequencia_sprite) {
+		alien->sprite_atual = (alien->sprite_atual + 1) % 2;
+		alien->frame_count = 0;
+	}
 
+	alien->frame_count++;
 }
 
 void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
@@ -58,12 +65,12 @@ void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
 }
 
 void inicializa_sprites_alien (Alien* alien) {
-	alien->sprites[0] = al_load_bitmap("resources/alien.png");
+	alien->sprites[0] = al_load_bitmap("resources/alien1.png");
 	alien->sprites[1] = al_load_bitmap("resources/alien1-2.png");
 	alien->sprite_atual = 0;
 
 	if (alien->sprites[0] == NULL) {
-		puts("Erro ao carregar o arquivo resources/alien.png");
+		puts("Erro ao carregar o arquivo resources/alien1.png");
 		exit(0);
 	}
 

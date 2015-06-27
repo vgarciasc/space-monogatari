@@ -14,10 +14,10 @@ void inicializa_jogo (Jogo* jogo, int largura, int altura) {
 	jogo->largura = largura;
 	jogo->altura = altura;
 	jogo->event_queue = NULL;
-	
+
   jogo->fundo = al_load_bitmap("resources/fundo.png");
   if (jogo->fundo == NULL) {
-      puts("Erro ao carregar o arquivo resources/alien.png");
+      puts("Erro ao carregar o arquivo resources/fundo.png");
       exit(0);
   }
 
@@ -43,7 +43,7 @@ void finaliza_jogo (Jogo* jogo) {
 }
 
 void desenha_jogo (Jogo* jogo) {
-	desenha_fundo_jogo();
+	desenha_fundo_jogo(jogo);
 	desenha_player(&jogo->player);
   desenha_tropa(jogo->alien);
   desenha_mothership(&jogo->mothership,jogo, jogo->projetil_stack);
@@ -155,6 +155,7 @@ void loop_de_jogo (Jogo* jogo) {
           jogo->loop_count++;
           jogo->loop_count_projetil++;
           jogo->loop_count_menu_pause++;
+          //dá pra fazer uma funçao com tudo isto
 
           rota_tropa (jogo->alien);
 
@@ -166,7 +167,8 @@ void loop_de_jogo (Jogo* jogo) {
 }
 
 void desenha_fundo_jogo (Jogo* jogo) {
-	al_draw_bitmap (jogo->fundo, 0, 0, 0);
+	al_clear_to_color(al_map_rgb(0,0,0));
+  // al_draw_bitmap (jogo->fundo, 0, 0, 0);
 }
 
 void inicializa_teclado (Jogo* jogo) {

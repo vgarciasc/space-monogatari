@@ -17,6 +17,7 @@ struct Alien {
 
 	bool vivo;
 
+	int frame_count;
 	int sprite_atual;
 	ALLEGRO_BITMAP* sprites[10];
 };

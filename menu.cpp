@@ -140,8 +140,6 @@ bool loop_menu_pause (Menu* menu) {
 
           desenha_menu_pause(menu);
 
-          rota_tropa (jogo->alien);
-
         	al_flip_display();
       	}
    }
