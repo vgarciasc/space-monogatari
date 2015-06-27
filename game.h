@@ -31,6 +31,7 @@ struct Jogo {
 	int loop_count_projetil;
 	int loop_count_menu_pause;
 	int loop_alien_movement;
+	int loop_alien_shots;
 	
 	bool key[N_KEYS];
 };
