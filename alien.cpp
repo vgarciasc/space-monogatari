@@ -5,7 +5,6 @@
 #include <allegro5/allegro_primitives.h>
 
 #include "alien.h"
-#include "player.h"
 #include "game.h"
 
 #define LARGURA_SPRITES_ALIEN 32
@@ -170,6 +169,22 @@ void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Jogo* jogo) {
 	if (alien[COLUNAS_TROPA-1][0].direcao_atual == DIREITA && get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) < jogo->largura - 10 - DISTANCIA_PASSO_ALIEN)
 		move_tropa (alien, DIREITA);
 
+}
+
+void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Projetil* projetil) {
+	srand(time(NULL));
+	int quem_atira_x = rand() % COLUNAS_TROPA;
+	int quem_atira_y = LINHAS_TROPA-1;
+
+	while (!alien[quem_atira_x][0].vivo)
+		quem_atira_x = (quem_atira_x+1) % COLUNAS_TROPA;
+
+	while (!alien[quem_atira_x][quem_atira_y].vivo && quem_atira_y > 0)
+		quem_atira_y--;
+
+	cria_projetil (projetil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
+								alien[quem_atira_x][quem_atira_y].posicao_y + al_get_bitmap_height(alien[0][0].sprites[0]), BAIXO);	
+		
 }
 
 int get_posicao_x_max_alien (Alien* alien){
