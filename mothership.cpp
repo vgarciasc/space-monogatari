@@ -45,8 +45,8 @@ void detecta_colisao(Mothership *mothership, Jogo *jogo){
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
 		if(!(jogo->projetil_stack[i].posicao_x > mothership->posicao_x + mothership->largura ||
 						jogo->projetil_stack[i].posicao_y > mothership->posicao_y + mothership->altura  ||
-						jogo->projetil_stack[i].posicao_y + 16 < mothership->posicao_y ||
-						jogo->projetil_stack[i].posicao_x + 8 < mothership->posicao_x)
+						jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < mothership->posicao_y ||
+						jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < mothership->posicao_x)
 						)
 
 		{
