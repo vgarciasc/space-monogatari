@@ -5,6 +5,7 @@
 #include <allegro5/allegro_primitives.h>
 
 #include "alien.h"
+#include "player.h"
 
 #define altura_sprites 35
 #define largura_sprites 36
@@ -15,7 +16,7 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 
 	alien->vivo = true;
 
-	alien->direcao_atual = alienESQUERDA;
+	alien->direcao_atual = ESQUERDA;
 
 	inicializa_sprites_alien (alien);
 
@@ -37,13 +38,16 @@ void finaliza_alien (Alien* alien) {
 void desenha_alien (Alien* alien) {
 	int flags = 0;
   
-	if (alien->direcao_atual == alienDIREITA)
+	if (alien->direcao_atual == DIREITA)
 		flags = ALLEGRO_FLIP_HORIZONTAL;
 
-	al_draw_bitmap (alien->sprites[0], 
+	al_draw_bitmap (alien->sprites[alien->sprite_atual], 
 					alien->posicao_x - alien->delta_x, 
 					alien->posicao_y,
 					flags);
+  
+	alien->sprite_atual = (alien->sprite_atual + 1) % 2;
+
 }
 
 void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
@@ -55,9 +59,16 @@ void desenha_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
 
 void inicializa_sprites_alien (Alien* alien) {
 	alien->sprites[0] = al_load_bitmap("resources/alien.png");
+	alien->sprites[1] = al_load_bitmap("resources/alien1-2.png");
+	alien->sprite_atual = 0;
 
 	if (alien->sprites[0] == NULL) {
 		puts("Erro ao carregar o arquivo resources/alien.png");
+		exit(0);
+	}
+
+	if (alien->sprites[1] == NULL) {
+		puts("Erro ao carregar o arquivo resources/alien1-2.png");
 		exit(0);
 	}
 }
@@ -66,58 +77,66 @@ void finaliza_sprites_alien (Alien* alien) {
 	al_destroy_bitmap(alien->sprites[0]);
 }
 
-void move_alien (Alien* alien, DIRECAO_ALIEN direcao) {
-	if (direcao == alienESQUERDA) {
+void move_alien (Alien* alien, DIRECAO direcao) {
+	if (direcao == ESQUERDA) {
 		alien->posicao_x -= DISTANCIA_PASSO_ALIEN;
-		alien->direcao_atual = alienESQUERDA;
+		alien->direcao_atual = ESQUERDA;
 	}
-	if (direcao == alienDIREITA) {
+	if (direcao == DIREITA) {
 		alien->posicao_x += DISTANCIA_PASSO_ALIEN;
-		alien->direcao_atual = alienDIREITA;
+		alien->direcao_atual = DIREITA;
 	}
-	if (direcao == alienCIMA) {
+	if (direcao == CIMA) {
 		alien->posicao_y -= DISTANCIA_PASSO_ALIEN;
-		alien->direcao_atual = alienCIMA;
+		alien->direcao_atual = CIMA;
 	}
-	if (direcao == alienBAIXO) {
+	if (direcao == BAIXO) {
 		alien->posicao_y += DISTANCIA_PASSO_ALIEN;
-		alien->direcao_atual = alienBAIXO;
+		alien->direcao_atual = BAIXO;
 	}
 }
 
-void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO_ALIEN direcao) {
-	if (direcao == alienESQUERDA) {
+void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao) {
+	if (direcao == ESQUERDA) {
 		for (int i = 0; i < COLUNAS_TROPA; i++) {
 			for (int j = 0; j < LINHAS_TROPA; j++) {
-				move_alien (&alien[i][j], alienESQUERDA);
+				move_alien (&alien[i][j], ESQUERDA);
 			}
 		}
 	}
 
-	if (direcao == alienDIREITA) {
+	if (direcao == DIREITA) {
 		for (int i = 0; i < COLUNAS_TROPA; i++) {
 			for (int j = 0; j < LINHAS_TROPA; j++) {
-				move_alien (&alien[i][j], alienDIREITA);
+				move_alien (&alien[i][j], DIREITA);
 			}
 		}
 	}
 
-	if (direcao == alienCIMA) {
+	if (direcao == CIMA) {
 		for (int i = 0; i < COLUNAS_TROPA; i++) {
 			for (int j = 0; j < LINHAS_TROPA; j++) {
-				move_alien (&alien[i][j], alienCIMA);
+				move_alien (&alien[i][j], CIMA);
 			}
 		}
 	}
 
-	if (direcao == alienBAIXO) {
+	if (direcao == BAIXO) {
 		for (int i = 0; i < COLUNAS_TROPA; i++) {
 			for (int j = 0; j < LINHAS_TROPA; j++) {
-				move_alien (&alien[i][j], alienBAIXO);
+				move_alien (&alien[i][j], BAIXO);
 			}
 		}
 	}
 
+}
+
+void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA]) {
+	if (alien[0][0].direcao_atual == ESQUERDA && get_posicao_x_min_alien(&alien[0][0]) > 0 + 5)
+		move_tropa (alien, ESQUERDA);
+	if (get_posicao_x_min_alien(&alien[0][0]) <= 0 + 5)// ||
+//			get_posicao_x_max_alien(&alien[COLUNAS_TROPA][0]) == largura - 5)
+		move_tropa (alien, BAIXO);
 }
 
 int get_posicao_x_max_alien (Alien* alien){
