@@ -20,8 +20,6 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	inicializa_sprites_alien (alien);
 
 	alien->delta_x = al_get_bitmap_width(alien->sprites[0])/2;
-
-	alien->delta_y = al_get_bitmap_height(alien->sprites[0])/2;
 }
 
 void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, int posicao_y) {
@@ -42,12 +40,10 @@ void desenha_alien (Alien* alien) {
 	if (alien->direcao_atual == DIREITA)
 		flags = ALLEGRO_FLIP_HORIZONTAL;
 
-	al_draw_bitmap (alien->sprites[alien->sprite_atual], 
+	al_draw_bitmap (alien->sprites[0], 
 					alien->posicao_x - alien->delta_x, 
 					alien->posicao_y,
 					flags);
-  
-	alien->sprite_atual = (alien->sprite_atual + 1) % 2;
 
 }
 
@@ -85,6 +81,10 @@ void muda_direcao_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direc
 }
 
 void move_alien (Alien* alien, DIRECAO direcao) {
+	ALLEGRO_BITMAP* temp = alien->sprites[0];
+	alien->sprites[0] = alien->sprites[1];
+	alien->sprites[1] = temp;
+
 	if (direcao == ESQUERDA) {
 		alien->posicao_x -= DISTANCIA_PASSO_ALIEN;
 		alien->direcao_atual = ESQUERDA;
