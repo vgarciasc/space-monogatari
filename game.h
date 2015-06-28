@@ -6,6 +6,7 @@
 #include "projetil.h"
 #include "menu.h"
 #include "mothership.h"
+#include "hud.h"
 
 #define N_KEYS 4
 
@@ -23,11 +24,11 @@ struct Jogo {
 	Mothership mothership;
 	Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
 	Menu menu;
+	Hud hud;
 
 	Projetil projetil_stack[50];
 	int numero_de_projeteis;
 
-	int loop_count;
 	int loop_count_projetil;
 	int loop_count_menu_pause;
 	int loop_alien_movement;
