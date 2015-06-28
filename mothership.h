@@ -1,3 +1,4 @@
+
 #ifndef MOTHERSHIP_H
 #define MOTHERSHIP_H
 
@@ -12,7 +13,8 @@ struct Mothership {
 
 	int segundos;
 	int posicao_x, posicao_y, delta_x, delta_y;
-	int velocidade, frequencia, status;
+	int velocidade, frequencia;
+	bool ativo;
 	int altura_sprite,largura_sprite;
 	int largura_tela;
 };
