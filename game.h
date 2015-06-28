@@ -49,7 +49,7 @@ void loop_de_jogo (Jogo* jogo);
 
 void desenha_fundo_jogo (Jogo* jogo);
 
-void inicializa_teclado (Jogo* jogo);
+void inicializa_teclado_jogo (Jogo* jogo);
 
 void inicializa_event_queue_jogo (Jogo* jogo);
 
@@ -57,18 +57,16 @@ void inicializa_timer_jogo (Jogo* jogo);
 
 void tela_boot_jogo (Jogo* jogo);
 
-void inic_funcoes_allegro (void);
-
-void fadein (ALLEGRO_BITMAP* bitmap);
-
 void inic_allegro (void);
 
-void inic_allegro_primitive (void);
+void inic_biblioteca_allegro (void);
 
-void inic_allegro_image (void);
+void inic_biblioteca_allegro_primitive (void);
 
-void inic_allegro_font (void);
+void inic_biblioteca_allegro_image (void);
 
-void inic_allegro_ttf (void);
+void inic_biblioteca_allegro_font (void);
+
+void inic_biblioteca_allegro_ttf (void);
 
 #endif

@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 
 	Alien alien[LINHAS_TROPA][COLUNAS_TROPA];
 
-	inic_funcoes_allegro();
+	inic_allegro();
 
    	inicializa_display (&jogo, 640, 480);
 

@@ -8,86 +8,85 @@
 #include "game.h"
 
 void inicializa_display (Jogo* jogo, int largura, int altura) {
-  jogo->largura = largura;
-  jogo->altura = altura;
+    jogo->largura = largura;
+    jogo->altura = altura;
 
-  jogo->display = al_create_display(largura, altura);
-  if (!jogo->display) {
-      fprintf(stderr, "Falha ao inicializar o display!\n");
-      exit(-1);
-  }
+    jogo->display = al_create_display(largura, altura);
+ 
+    if (!jogo->display) {
+        fprintf(stderr, "Falha ao inicializar o display!\n");
+        exit(-1);
+    }
 }
 
 void finaliza_display (Jogo* jogo) {
-  al_destroy_display(jogo->display);
+    al_destroy_display(jogo->display);
 }
 
 void inicializa_jogo (Jogo* jogo) {
-	jogo->event_queue = NULL;
+    jogo->event_queue = NULL;
+    jogo->menu.new_game = 1;
 
-  jogo->menu.new_game = 1;
+    jogo->numero_de_projeteis = 0;
+    jogo->loop_count = 0;
+    jogo->loop_count_projetil = jogo->player.projetil_cooldown;
+    jogo->loop_count_menu_pause = 1;
+    jogo->menu.new_game = 0;
+    jogo->loop_alien_movement = 0;
+    jogo->loop_alien_shots = 0;
 
-  jogo->fundo = al_load_bitmap("resources/fundo.png");
-  if (jogo->fundo == NULL) {
-      puts("Erro ao carregar o arquivo resources/fundo.png");
-      exit(0);
-  }
+    inicializa_teclado_jogo(jogo);
+    inicializa_timer_jogo(jogo);
+    inicializa_event_queue_jogo(jogo);
 
-  inicializa_teclado(jogo);
-  inicializa_timer_jogo(jogo);
-  inicializa_event_queue_jogo(jogo);
-  
-  inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
-  inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
-  inicializa_mothership(&jogo->mothership, jogo);
-  inicializa_hud(&jogo->hud);
+    jogo->fundo = al_load_bitmap("resources/fundo.png");
+    if (jogo->fundo == NULL) {
+        puts("Erro ao carregar o arquivo resources/fundo.png");
+        exit(0);
+    }
 
-  inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
-  //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
-  //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
-  //jogo->altura - 1.5*2*jogo->alien[0][0].delta_y*LINHAS_TROPA + 1.5*2*jogo->alien[0][0].delta_y)
+    inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
+    inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
+    inicializa_mothership(&jogo->mothership, jogo);
+    inicializa_hud(&jogo->hud);
+    inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
+    //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
+    //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
+    //jogo->altura - 1.5*2*jogo->alien[0][0].delta_y*LINHAS_TROPA + 1.5*2*jogo->alien[0][0].delta_y)
 }
 
 void finaliza_jogo (Jogo* jogo) {
-	finaliza_player (&jogo->player);
+	finaliza_player(&jogo->player);
 	finaliza_mothership(&jogo->mothership);
 }
 
 void desenha_jogo (Jogo* jogo) {
-	desenha_fundo_jogo(jogo);
-	desenha_player(&jogo->player);
-  desenha_tropa(jogo->alien);
-  desenha_mothership(&jogo->mothership);
-  desenha_hud(&jogo->hud);
+    desenha_fundo_jogo(jogo);
+    desenha_player(&jogo->player);
+    desenha_tropa(jogo->alien);
+    desenha_mothership(&jogo->mothership);
+    desenha_hud(&jogo->hud);
 
-  for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-    desenha_projetil(&jogo->projetil_stack[i]);
-    move_projetil(&jogo->projetil_stack[i]);
-    
-    if (jogo->projetil_stack[i].posicao_y < 0 - jogo->projetil_stack[i].altura_sprite) {
-      copy_projetil(&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-      desenha_projetil(&jogo->projetil_stack[i]);
-      finaliza_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-      jogo->numero_de_projeteis--;
+    for (int i = 0; i < jogo->numero_de_projeteis; i++) {
+        desenha_projetil(&jogo->projetil_stack[i]);
+        move_projetil(&jogo->projetil_stack[i]);
+        
+        if (jogo->projetil_stack[i].posicao_y < 0 - jogo->projetil_stack[i].altura_sprite) {
+            copy_projetil(&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+            desenha_projetil(&jogo->projetil_stack[i]);
+            finaliza_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+            jogo->numero_de_projeteis--;
+        }
     }
-
-  }
 
 	al_flip_display();
 }
 
 void loop_de_jogo (Jogo* jogo) {
-	al_start_timer(jogo->timer);
-	bool doexit = false;
-	bool redraw = true;
+    al_start_timer(jogo->timer);
+    bool doexit = false;
+    bool redraw = true;
 
-	jogo->numero_de_projeteis = 0;
-  jogo->loop_count = 0;
-  jogo->loop_count_projetil = jogo->player.projetil_cooldown;
-  jogo->loop_count_menu_pause = 1;
-  jogo->menu.new_game = 0;
-  jogo->loop_alien_movement = 0;
-  jogo->loop_alien_shots = 0;
 	
   while (!doexit) {
 		ALLEGRO_EVENT ev;
@@ -263,15 +262,13 @@ void tela_boot_jogo (Jogo* jogo) {
         }
 
      }
-
-   al_rest(1);
   
    al_destroy_timer(timer);
    al_destroy_event_queue(event_queue);
    al_destroy_bitmap(minerva);
 }
 
-void inicializa_teclado (Jogo* jogo) {
+void inicializa_teclado_jogo (Jogo* jogo) {
   if (!al_install_keyboard()) {
         fprintf(stderr, "Falha ao inicializar o teclado!\n");
         exit(-1);
@@ -303,40 +300,40 @@ void inicializa_timer_jogo (Jogo* jogo) {
 	}
 }
 
-void inic_funcoes_allegro (void) {
-  inic_allegro();
-  inic_allegro_primitive();
-  inic_allegro_image();
-  inic_allegro_font(); 
-  inic_allegro_ttf(); 
+void inic_allegro (void) {
+    inic_biblioteca_allegro();
+    inic_biblioteca_allegro_primitive();
+    inic_biblioteca_allegro_image();
+    inic_biblioteca_allegro_font(); 
+    inic_biblioteca_allegro_ttf(); 
 }
 
-void inic_allegro (void) {
+void inic_biblioteca_allegro (void) {
 	if (!al_init()) {
   	    fprintf(stderr, "Falha ao inicializar o Allegro!\n");
   	    exit(-1);
 	}
 }
 
-void inic_allegro_primitive (void) {
+void inic_biblioteca_allegro_primitive (void) {
 	if (!al_init_primitives_addon()) {
   	    fprintf(stderr, "Falha ao inicializar o Allegro Primitives!\n");
   	    exit(-1);
 	}
 }
 
-void inic_allegro_image (void) {
+void inic_biblioteca_allegro_image (void) {
 	if (!al_init_image_addon()) {
   	    fprintf(stderr, "Falha ao inicializar o Allegro Image!\n");
   	    exit(-1);
 	}
 }
 
-void inic_allegro_font (void) {
+void inic_biblioteca_allegro_font (void) {
   al_init_font_addon();
 }
 
-void inic_allegro_ttf (void) {
+void inic_biblioteca_allegro_ttf (void) {
   if (!al_init_ttf_addon()) {
         fprintf(stderr, "Falha ao inicializar o Allegro TrueType!\n");
         exit(-1);

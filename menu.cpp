@@ -131,7 +131,7 @@ bool loop_menu (Menu* menu, int numero_tela) {
             else if (menu->key[KEY_DOWN])
                 navega_botoes(menu, BAIXO);
 
-            else if ((menu->key[KEY_ENTER] || menu->key[KEY_Z]) && loop_count > 5) {
+            else if ((menu->key[KEY_ENTER] || menu->key[KEY_Z]) && loop_count > 10){
                 loop_count = 0;
                 //PAUSE
                 if (menu->tela_selecionada == 0) {
@@ -197,20 +197,20 @@ bool loop_menu (Menu* menu, int numero_tela) {
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             switch(ev.keyboard.keycode) {
                 case ALLEGRO_KEY_UP: 
-                menu->key[KEY_UP] = true;
-                break;
+                    menu->key[KEY_UP] = true;
+                    break;
 
                 case ALLEGRO_KEY_DOWN:
-                menu->key[KEY_DOWN] = true;
-                break;
+                    menu->key[KEY_DOWN] = true;
+                    break;
 
                 case ALLEGRO_KEY_Z:
-                menu->key[KEY_Z] = true;
-                break;
+                    menu->key[KEY_Z] = true;
+                    break;
 
                 case ALLEGRO_KEY_ENTER:
-                menu->key[KEY_ENTER] = true;
-                break;
+                    menu->key[KEY_ENTER] = true;
+                    break;
             }
         }
 
