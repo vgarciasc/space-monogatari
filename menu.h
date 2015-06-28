@@ -6,8 +6,11 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#define FPS 60
+#define MENU_FPS 10
 #define MAX_BOTOES 20
+#define N_KEYS 7
+
+enum MYKEYS { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE, KEY_ENTER };
 
 struct Menu {
 	ALLEGRO_EVENT_QUEUE* event_queue;
@@ -24,6 +27,8 @@ struct Menu {
 	int tela_selecionada;
 
 	int new_game;
+
+	bool key[N_KEYS];
 };
 
 void inicializa_menus (Menu* menu);

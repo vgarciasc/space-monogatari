@@ -41,7 +41,7 @@ void inicializa_jogo (Jogo* jogo) {
   inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
   inicializa_mothership(&jogo->mothership, jogo);
   inicializa_hud(&jogo->hud);
-  
+
   inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*largura_aliens*COLUNAS_TROPA - largura_aliens/2)) / 2 , 1.5*altura_aliens);
   //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
   //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
@@ -57,7 +57,7 @@ void desenha_jogo (Jogo* jogo) {
 	desenha_fundo_jogo(jogo);
 	desenha_player(&jogo->player);
   desenha_tropa(jogo->alien);
-  desenha_mothership(&jogo->mothership,jogo, jogo->projetil_stack);
+  desenha_mothership(&jogo->mothership);
   desenha_hud(&jogo->hud);
 
   for (int i = 0; i < jogo->numero_de_projeteis; i++) {
@@ -178,10 +178,10 @@ void loop_de_jogo (Jogo* jogo) {
           jogo->loop_alien_shots++;
           //dá pra fazer uma funçao com tudo isto
 
-          if (!(jogo->loop_alien_movement % (FPS/2)))
+          if (!(jogo->loop_alien_movement % (GAME_FPS/2)))
               rota_tropa (jogo->alien, jogo);
 
-          if (!(jogo->loop_alien_shots % (FPS/2*3))) {
+          if (!(jogo->loop_alien_shots % (GAME_FPS/2*3))) {
               atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
               jogo->numero_de_projeteis++;
           }
@@ -199,6 +199,10 @@ void desenha_fundo_jogo (Jogo* jogo) {
 }
 
 void tela_boot_jogo (Jogo* jogo) {
+  ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+  ALLEGRO_TIMER *timer = NULL;
+  
+  bool doexit = false;
 
   ALLEGRO_BITMAP* minerva = al_load_bitmap("resources/minerva.png");
   if (minerva == NULL) {
@@ -206,48 +210,60 @@ void tela_boot_jogo (Jogo* jogo) {
     exit(0);
   }
 
-   al_clear_to_color(al_map_rgb(0,0,0));
+  al_install_keyboard();
+  event_queue = al_create_event_queue();
+  al_register_event_source(event_queue, al_get_keyboard_event_source());
   
-   al_flip_display();
-   al_rest(1.5);
+  timer = al_create_timer(1.0 / 30);
+  al_register_event_source(event_queue, al_get_display_event_source(jogo->display));
+  al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
-   for (int i = 0; i < 255; i+=20) {
-     al_clear_to_color(al_map_rgb(0,0,0));
-     al_draw_tinted_bitmap(minerva,
-                    al_map_rgba(i, i, i, i),
-                    (jogo->largura - al_get_bitmap_width(minerva))/2,
-                    (jogo->altura - al_get_bitmap_height(minerva))/2,
-                    0);
-     al_flip_display();
-     al_rest(0.1);                   
-   }
+  int alfa = 0;
+  int velocidade = 5;
 
-   al_draw_bitmap(minerva,
-                (jogo->largura - al_get_bitmap_width(minerva))/2,
-                (jogo->altura - al_get_bitmap_height(minerva))/2,
-                0);
-   al_flip_display();
-   al_rest(1.5);
+  ALLEGRO_EVENT ev;
+    
+  al_rest(1);
 
-   for (int i = 255; i > 0; i-=20) {
-     al_clear_to_color(al_map_rgb(0,0,0));
-     al_draw_tinted_bitmap(minerva,
-                    al_map_rgba(i, i, i, i),
-                    (jogo->largura - al_get_bitmap_width(minerva))/2,
-                    (jogo->altura - al_get_bitmap_height(minerva))/2,
-                    0);
-     al_flip_display();
-     al_rest(0.1);                   
-   }
-   al_clear_to_color(al_map_rgb(0,0,0));
-   al_flip_display();
+  al_start_timer(timer);
+
+  while (!doexit) {
+     alfa += velocidade;
+
+     al_wait_for_event(event_queue, &ev);
+
+      if (ev.type == ALLEGRO_EVENT_TIMER) {
+        
+        if (alfa > 0 && alfa < 255) {
+          al_clear_to_color(al_map_rgb(0,0,0));
+          al_draw_tinted_bitmap(minerva,
+                      al_map_rgba(alfa, alfa, alfa, alfa),
+                      (jogo->largura - al_get_bitmap_width(minerva))/2,
+                      (jogo->altura - al_get_bitmap_height(minerva))/2,
+                      0);
+          al_flip_display();
+        }
+
+        if (alfa > 350) {
+          velocidade = -velocidade;
+        }
+        if (alfa < 0) {
+          doexit = true;
+          break;
+        }
+     }
+      else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+        doexit = true;
+        break;
+        }
+
+     }
+
    al_rest(1);
   
+   al_destroy_timer(timer);
+   al_destroy_event_queue(event_queue);
    al_destroy_bitmap(minerva);
-}
-
-void fadein (ALLEGRO_BITMAP* bitmap) {
-
 }
 
 void inicializa_teclado (Jogo* jogo) {
@@ -274,7 +290,7 @@ void inicializa_event_queue_jogo (Jogo* jogo) {
 }
 
 void inicializa_timer_jogo (Jogo* jogo) {
-	jogo->timer = al_create_timer(1.0/FPS);
+	jogo->timer = al_create_timer(1.0/GAME_FPS);
 
 	if(!jogo->timer){
 		fprintf(stderr, "Falha em executar timer!\n");

@@ -8,9 +8,9 @@
 #include "mothership.h"
 #include "hud.h"
 
-#define N_KEYS 4
+#define GAME_FPS 60
 
-enum MYKEYS { KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE };
+// enum MYKEYS { KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE, KEY_ENTER };
 
 struct Jogo {
 	ALLEGRO_DISPLAY *display;
@@ -29,6 +29,7 @@ struct Jogo {
 	Projetil projetil_stack[50];
 	int numero_de_projeteis;
 
+	int loop_count;
 	int loop_count_projetil;
 	int loop_count_menu_pause;
 	int loop_alien_movement;

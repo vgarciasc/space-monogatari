@@ -38,6 +38,8 @@ void inicializa_menus (Menu* menu) {
 		exit(0);
 	}
 
+  for(int i = 0; i < N_KEYS; i++)
+    menu->key[i] = false;
 }
 
 void desenha_fundo_menu_pause () {
@@ -47,7 +49,7 @@ void desenha_fundo_menu_pause () {
 void desenha_menu_pause (Menu* menu) {
   desenha_fundo_menu_pause ();
 
-  char tela_0_botoes[menu->numero_de_botoes[0]][40];
+  char tela_0_botoes[menu->numero_de_botoes[0]][50];
   strcpy(tela_0_botoes[0], "RESUME");
   strcpy(tela_0_botoes[1], "OPTIONS");
   strcpy(tela_0_botoes[2], "TITLE SCREEN");
@@ -122,94 +124,123 @@ bool loop_menu (Menu* menu, int numero_tela) {
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
       redraw = true;
+
+      if (menu->key[KEY_UP]) {
+        navega_botoes_cima(menu);
+      }
+      else if (menu->key[KEY_DOWN]) {
+        navega_botoes_baixo(menu);
+      }
+      else if (menu->key[KEY_ENTER] || menu->key[KEY_Z]) {
+        //PAUSE
+        if (menu->tela_selecionada == 0) {
+          switch (menu->botao_selecionado) {
+            case 0:
+                return false;
+                break;
+            case 1:
+                seleciona_nova_tela(menu, 1);
+                break;
+            case 2:
+                seleciona_nova_tela(menu, 3);
+                break;                      
+            case 3:
+                return true;
+                break;
+            }
+        }
+        //OPTIONS
+        else if (menu->tela_selecionada == 1) {
+          switch (menu->botao_selecionado) {
+            case 0:
+                seleciona_nova_tela(menu, 0);
+                break;
+            case 1:
+                seleciona_nova_tela(menu, 0);
+                break;
+            case 2:
+                seleciona_nova_tela(menu, 0);
+                break;
+            }   
+        }
+        //GAME OVER
+        else if (menu->tela_selecionada == 2) {
+          switch (menu->botao_selecionado) {
+            case 0:
+                return true;
+                break;
+            case 1:
+                return true;
+                break;                        
+            }
+        }
+        //TITLE SCREEN
+        else if (menu->tela_selecionada == 3) {
+          switch (menu->botao_selecionado) {
+            case 0:
+                menu->new_game = 1;
+                return true;
+                break;
+            case 1:
+                // seleciona_nova_tela(menu, 4);
+                return true;
+                break;
+            case 2:
+                return true;
+                break;                        
+          }
+        }                  
+      }
     }
 
   	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
     	switch(ev.keyboard.keycode) {
         	case ALLEGRO_KEY_UP: 
-        		  navega_botoes_cima(menu);
+              menu->key[KEY_UP] = true;
               break;
 
         	case ALLEGRO_KEY_DOWN:
-           		navega_botoes_baixo(menu);
+              menu->key[KEY_DOWN] = true;
               break;
 
           case ALLEGRO_KEY_Z:
-              //PAUSE
-              if (menu->tela_selecionada == 0) {
-                switch (menu->botao_selecionado) {
-                  case 0:
-                      return false;
-                      break;
-                  case 1:
-                      seleciona_nova_tela(menu, 1);
-                      break;
-                  case 2:
-                      seleciona_nova_tela(menu, 3);
-                      break;                      
-                  case 3:
-                      return true;
-                      break;
-                  }
-              }
-              //OPTIONS
-              else if (menu->tela_selecionada == 1) {
-                switch (menu->botao_selecionado) {
-                  case 0:
-                      seleciona_nova_tela(menu, 0);
-                      break;
-                  case 1:
-                      seleciona_nova_tela(menu, 0);
-                      break;
-                  case 2:
-                      seleciona_nova_tela(menu, 0);
-                      break;
-                  }   
-              }
-              //GAME OVER
-              else if (menu->tela_selecionada == 2) {
-                switch (menu->botao_selecionado) {
-                  case 0:
-                      return true;
-                      break;
-                  case 1:
-                      return true;
-                      break;                        
-                  }
-              }
-              //TITLE SCREEN
-              else if (menu->tela_selecionada == 3) {
-                switch (menu->botao_selecionado) {
-                  case 0:
-                      menu->new_game = 1;
-                      return true;
-                      break;
-                  case 1:
-                      // seleciona_nova_tela(menu, 4);
-                      return true;
-                      break;
-                  case 2:
-                      return true;
-                      break;                        
-                  }
-              }                  
+              menu->key[KEY_Z] = true;
               break;
 
-          case ALLEGRO_KEY_ESCAPE:
-              return false;
+          case ALLEGRO_KEY_ENTER:
+              menu->key[KEY_ENTER] = true;
               break;
+      }
+    }
 
+    else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+    switch(ev.keyboard.keycode) {
+        case ALLEGRO_KEY_UP: 
+            menu->key[KEY_UP] = false;
+            break;
+
+        case ALLEGRO_KEY_DOWN:
+            menu->key[KEY_DOWN] = false;
+            break;
+
+        case ALLEGRO_KEY_Z:
+            menu->key[KEY_Z] = false;
+            break;
+
+        case ALLEGRO_KEY_ENTER:
+            menu->key[KEY_ENTER] = false;
+            break;
       }
     }
  
-    	if (redraw && al_is_event_queue_empty(menu->event_queue)) {
-        	redraw = false;
+  	if (redraw && al_is_event_queue_empty(menu->event_queue)) {
+      	redraw = false;
 
-          desenha_menu_pause(menu);
+        desenha_menu_pause(menu);
 
-        	al_flip_display();
-      	}
-   }
+      	al_flip_display();
+    }
+  }
 }
 
 void seleciona_nova_tela (Menu* menu, int numero_tela) {
@@ -248,7 +279,7 @@ void inicializa_event_queue_menu_pause (Menu* menu) {
 }
 
 void inicializa_timer_menu_pause (Menu* menu) {
-	menu->timer = al_create_timer(1.0/FPS);
+	menu->timer = al_create_timer(1.0/MENU_FPS);
 
 	if(!menu->timer){
 		fprintf(stderr, "Falha em executar timer do menu!\n");
