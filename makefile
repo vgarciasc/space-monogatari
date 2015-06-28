@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-all: game.o player.o projetil.o menu.o alien.o mothership.o
-	g++ main.cpp game.o player.o projetil.o menu.o alien.o mothership.o -o main -g -std=c++11 -lallegro z-lallegro_image -lallegro_primitives -lallegro_font -lallegro_ttf
-=======
 all: game.o player.o projetil.o menu.o alien.o mothership.o hud.o
 	g++ main.cpp game.o player.o projetil.o menu.o alien.o mothership.o hud.o -o main -g -std=c++11 -lallegro -lallegro_dialog -lallegro_image -lallegro_primitives -lallegro_font -lallegro_ttf
->>>>>>> 6377e7ffb4af39125fa5524e3dfe71938ab21327
 	rm game.o
 	rm player.o
 	rm projetil.o
