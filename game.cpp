@@ -63,7 +63,6 @@ void finaliza_jogo (Jogo* jogo) {
 void desenha_jogo (Jogo* jogo) {
     desenha_fundo_jogo(jogo);
     desenha_player(&jogo->player);
-    desenha_tropa(jogo->alien);
     desenha_mothership(&jogo->mothership);
     desenha_hud(&jogo->hud);
 
@@ -79,6 +78,8 @@ void desenha_jogo (Jogo* jogo) {
         }
     }
 
+    desenha_tropa(jogo->alien);
+    
 	al_flip_display();
 }
 
@@ -87,49 +88,43 @@ void loop_de_jogo (Jogo* jogo) {
     bool doexit = false;
     bool redraw = true;
 
-	
-  while (!doexit) {
-		ALLEGRO_EVENT ev;
-		al_wait_for_event(jogo->event_queue, &ev);
+    while (!doexit) {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(jogo->event_queue, &ev);
 
-    /* AQUI VAO FICAR OS TESTES DE COLISAO */
-    /*---------------------------------------------------------------*/
-    colisao_mothership_vs_projetil(jogo);
-    /*---------------------------------------------------------------*/
+        /* AQUI VAO FICAR OS TESTES DE COLISAO */
+        /*---------------------------------------------------------------*/
+        colisao_mothership_vs_projetil(jogo);
+        /*---------------------------------------------------------------*/
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
-        	if (jogo->key[KEY_LEFT] && get_posicao_x_min_player(&jogo->player) > 0 + 15)
-            	move_player(&jogo->player, ESQUERDA);
-
-        	if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - 15)
-            	move_player(&jogo->player, DIREITA);
- 
-          if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
-              inicializa_menus(&jogo->menu);
-              doexit = loop_menu(&jogo->menu, 0);
-              jogo->key[KEY_Z] = false;
-              jogo->loop_count_menu_pause = 0;
-          }
-
-          if (jogo->key[KEY_Z]
-              && jogo->loop_count_projetil > jogo->player.projetil_cooldown
-              && jogo->loop_count_menu_pause > 1) {
-
-            jogo->loop_count_projetil = 0;
-            cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
-                          get_posicao_x_centro_player(&jogo->player),
-                          jogo->player.posicao_y,
-                          CIMA);
-            jogo->numero_de_projeteis++;
-          }
-
         	redraw = true;
-    	}
-    	
-    	else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-        	break;
-      	}
+    
+            if (jogo->key[KEY_LEFT] && get_posicao_x_min_player(&jogo->player) > 0 + BARREIRA_SEPARACAO_PLAYER_PAREDE)
+                move_player(&jogo->player, ESQUERDA);
 
+            if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - BARREIRA_SEPARACAO_PLAYER_PAREDE)
+                move_player(&jogo->player, DIREITA);
+ 
+            if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
+                inicializa_menus(&jogo->menu);
+                doexit = loop_menu(&jogo->menu, PAUSE);
+                jogo->key[KEY_Z] = false;
+                jogo->loop_count_menu_pause = 0;
+            }
+
+            if (jogo->key[KEY_Z]
+                && jogo->loop_count_projetil > jogo->player.projetil_cooldown
+                && jogo->loop_count_menu_pause > 1) {
+                jogo->loop_count_projetil = 0;
+                cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
+                              get_posicao_x_centro_player(&jogo->player),
+                              jogo->player.posicao_y,
+                              CIMA);
+                jogo->numero_de_projeteis++;
+            }
+    	}
+ 
       	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
         	switch(ev.keyboard.keycode) {
             	case ALLEGRO_KEY_LEFT: 
@@ -140,14 +135,14 @@ void loop_de_jogo (Jogo* jogo) {
                		jogo->key[KEY_RIGHT] = true;
                		break;
 
-              case ALLEGRO_KEY_F1:
-                  //F1 é o hard exit
-                  doexit = true;
-                  break;
+                case ALLEGRO_KEY_F1:
+                    //F1 é o hard exit
+                    doexit = true;
+                    break;
 
-              case ALLEGRO_KEY_ESCAPE:
-                  jogo->key[KEY_ESCAPE] = true;
-                  break;
+                case ALLEGRO_KEY_ESCAPE:
+                    jogo->key[KEY_ESCAPE] = true;
+                    break;
 
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = true;
@@ -172,110 +167,107 @@ void loop_de_jogo (Jogo* jogo) {
     }
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
-          redraw = false;
+        	redraw = false;
+        	
+			jogo->key[KEY_ESCAPE] = false;
 
-          jogo->loop_count_projetil++;
-          jogo->key[KEY_ESCAPE] = false;
-          jogo->loop_count++;
-          jogo->loop_count_menu_pause++;
-          jogo->loop_alien_movement++;
-          jogo->loop_alien_shots++;
-          //dá pra fazer uma funçao com tudo isto
+			if (!(jogo->loop_alien_movement % (GAME_FPS/2)))
+				rota_tropa (jogo->alien, jogo);
 
-          if (!(jogo->loop_alien_movement % (GAME_FPS/2)))
-              rota_tropa (jogo->alien, jogo);
+			if (!(jogo->loop_alien_shots % (GAME_FPS/2*3))) {
+				atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
+				jogo->numero_de_projeteis++;
+			}
 
-          if (!(jogo->loop_alien_shots % (GAME_FPS/2*3))) {
-              atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
-              jogo->numero_de_projeteis++;
-          }
+			incremento_loop_elementos_jogo(jogo);
 
-          desenha_jogo(jogo);
+			desenha_jogo(jogo);
 
-        	al_flip_display();
-      	}
-   }
+			al_flip_display();
+		}
+    }
+}
+
+void incremento_loop_elementos_jogo (Jogo* jogo) {
+	jogo->loop_count_projetil++;
+	jogo->loop_count++;
+	jogo->loop_count_menu_pause++;
+	jogo->loop_alien_movement++;
+	jogo->loop_alien_shots++;
 }
 
 void desenha_fundo_jogo (Jogo* jogo) {
 	al_clear_to_color(al_map_rgb(20,20,20));
-  // al_draw_bitmap (jogo->fundo, 0, 0, 0);
+	// al_draw_bitmap (jogo->fundo, 0, 0, 0);
 }
 
 void tela_boot_jogo (Jogo* jogo) {
-  ALLEGRO_EVENT_QUEUE *event_queue = NULL;
-  ALLEGRO_TIMER *timer = NULL;
-  
-  bool doexit = false;
+	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+	ALLEGRO_TIMER *timer = NULL;
+	ALLEGRO_EVENT ev;
 
-  ALLEGRO_BITMAP* minerva = al_load_bitmap("resources/minerva.png");
-  if (minerva == NULL) {
-    puts("Erro ao carregar o arquivo resources/minerva.png");
-    exit(0);
-  }
+	int alfa = 0;
+	int velocidade = 5;
 
-  al_install_keyboard();
-  event_queue = al_create_event_queue();
-  al_register_event_source(event_queue, al_get_keyboard_event_source());
-  
-  timer = al_create_timer(1.0 / 30);
-  al_register_event_source(event_queue, al_get_display_event_source(jogo->display));
-  al_register_event_source(event_queue, al_get_timer_event_source(timer));
+	ALLEGRO_BITMAP* minerva = al_load_bitmap("resources/minerva.png");
+	if (minerva == NULL) {
+		puts("Erro ao carregar o arquivo resources/minerva.png");
+		exit(0);
+	}
 
-  int alfa = 0;
-  int velocidade = 5;
+	event_queue = al_create_event_queue();
+	timer = al_create_timer(1.0 / 30);
 
-  ALLEGRO_EVENT ev;
-    
-  al_rest(1);
+	al_register_event_source(event_queue, al_get_display_event_source(jogo->display));
+	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
-  al_start_timer(timer);
+	al_install_keyboard();
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
-  while (!doexit) {
-     alfa += velocidade;
+	al_rest(1);
 
-     al_wait_for_event(event_queue, &ev);
+	al_start_timer(timer);
 
-      if (ev.type == ALLEGRO_EVENT_TIMER) {
-        
-        if (alfa > 0 && alfa < 255) {
-          al_clear_to_color(al_map_rgb(0,0,0));
-          al_draw_tinted_bitmap(minerva,
-                      al_map_rgba(alfa, alfa, alfa, alfa),
-                      (jogo->largura - al_get_bitmap_width(minerva))/2,
-                      (jogo->altura - al_get_bitmap_height(minerva))/2,
-                      0);
-          al_flip_display();
-        }
+	while (true) {
+		alfa += velocidade;
 
-        if (alfa > 350) {
-          velocidade = -velocidade;
-        }
-        if (alfa < 0) {
-          doexit = true;
-          break;
-        }
-     }
-      else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-        doexit = true;
-        break;
-        }
+		al_wait_for_event(event_queue, &ev);
 
-     }
-  
-   al_destroy_timer(timer);
-   al_destroy_event_queue(event_queue);
-   al_destroy_bitmap(minerva);
+		if (ev.type == ALLEGRO_EVENT_TIMER) {
+
+			if (alfa > 0 && alfa < 255) {
+				al_clear_to_color(al_map_rgb(0,0,0));
+				al_draw_tinted_bitmap(minerva,
+									  al_map_rgba(alfa, alfa, alfa, alfa),
+									  (jogo->largura - al_get_bitmap_width(minerva))/2,
+									  (jogo->altura - al_get_bitmap_height(minerva))/2,
+									  0);
+				al_flip_display();
+			}
+
+			if (alfa > 350)
+				velocidade = -velocidade;
+			if (alfa < 0)
+				break;
+		}
+		else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+			break;
+		}
+	}
+
+	al_destroy_timer(timer);
+	al_destroy_event_queue(event_queue);
+	al_destroy_bitmap(minerva);
 }
 
 void inicializa_teclado_jogo (Jogo* jogo) {
-  if (!al_install_keyboard()) {
-        fprintf(stderr, "Falha ao inicializar o teclado!\n");
-        exit(-1);
-  }
+	if (!al_install_keyboard()) {
+		fprintf(stderr, "Falha ao inicializar o teclado!\n");
+		exit(-1);
+	}
 
-  for(int i = 0; i < N_KEYS; i++)
-    jogo->key[i] = false;
+	for(int i = 0; i < N_KEYS; i++)
+		jogo->key[i] = false;
 }
 
 void inicializa_event_queue_jogo (Jogo* jogo) {
@@ -330,7 +322,7 @@ void inic_biblioteca_allegro_image (void) {
 }
 
 void inic_biblioteca_allegro_font (void) {
-  al_init_font_addon();
+	al_init_font_addon();
 }
 
 void inic_biblioteca_allegro_ttf (void) {

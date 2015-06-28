@@ -17,19 +17,17 @@ int main(int argc, char **argv) {
 
     // TITLE SCREEN
 	tela_boot_jogo(&jogo);
-	inicializa_menus(&jogo.menu);
-	loop_menu(&jogo.menu, 3);
 
-	// finaliza_jogo (&jogo);
+	inicializa_menus(&jogo.menu);
+
+	loop_menu(&jogo.menu, TITLE_SCREEN);
 
     while (jogo.menu.new_game == 1) {
-
     	inicializa_jogo (&jogo);
 
     	loop_de_jogo (&jogo);
 
     	finaliza_jogo (&jogo);
-    	
     }
 
 	finaliza_display (&jogo);

@@ -25,9 +25,9 @@ void desenha_projetil (Projetil* projetil) {
 	if (projetil->direcao == BAIXO) {
 		flags = ALLEGRO_FLIP_VERTICAL;
 		al_draw_bitmap (projetil->sprite,
-					projetil->posicao_x, 
-					projetil->posicao_y,
-					flags);
+						projetil->posicao_x, 
+						projetil->posicao_y,
+						flags);
 	}
 
 	if (projetil->direcao == CIMA)
@@ -50,10 +50,10 @@ void finaliza_projetil (Projetil* projetil) {
 }
 
 void inicializa_sprite_projetil (Projetil* projetil) {
-	projetil->sprite = al_load_bitmap("resources/projetil2.png");
+	projetil->sprite = al_load_bitmap("resources/projetil.png");
 
 	if (projetil->sprite == NULL) {
-		puts("Erro ao carregar o arquivo resources/projetil2.png");
+		puts("Erro ao carregar o arquivo \"resources/projetil.png\"");
 		exit(0);
 	}
 }

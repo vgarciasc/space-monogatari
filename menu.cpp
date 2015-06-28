@@ -16,8 +16,6 @@ void inicializa_menus (Menu* menu) {
 
     menu->botao_selecionado = 0;
 
-    menu->numero_de_telas = 5;
-
     menu->numero_de_botoes[0] = 3;
     menu->numero_de_botoes[1] = 2;
     menu->numero_de_botoes[2] = 1;
@@ -108,11 +106,11 @@ void desenha_menu_pause (Menu* menu) {
     }  
 }    
 
-bool loop_menu (Menu* menu, int numero_tela) {
+bool loop_menu (Menu* menu, TELA tela) {
     al_start_timer(menu->timer);
     ALLEGRO_EVENT ev;
 
-    menu->tela_selecionada = numero_tela;
+    menu->tela_selecionada = tela;
 
     int loop_count = 0;
     bool doexit = false;
@@ -133,65 +131,66 @@ bool loop_menu (Menu* menu, int numero_tela) {
 
             else if ((menu->key[KEY_ENTER] || menu->key[KEY_Z]) && loop_count > 10){
                 loop_count = 0;
-                //PAUSE
-                if (menu->tela_selecionada == 0) {
-                    switch (menu->botao_selecionado) {
-                        case 0:
-                            return false;
-                            break;
-                        case 1:
-                            seleciona_nova_tela(menu, 1);
-                            break;
-                        case 2:
-                            seleciona_nova_tela(menu, 3);
-                            break;                      
-                        case 3:
-                            return true;
-                            break;
-                    }
+                switch (menu->tela_selecionada) {
+                    case PAUSE:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                return false;
+                                break;
+                            case 1:
+                                seleciona_nova_tela(menu, OPTIONS);
+                                break;
+                            case 2:
+                                seleciona_nova_tela(menu, TITLE_SCREEN);
+                                break;                      
+                            case 3:
+                                return true;
+                                break;
+                        }
+                    break;
+
+                    case OPTIONS:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                seleciona_nova_tela(menu, PAUSE);
+                                break;
+                            case 1:
+                                seleciona_nova_tela(menu, PAUSE);
+                                break;
+                            case 2:
+                                seleciona_nova_tela(menu, PAUSE);
+                                break;
+                        }  
+                    break;
+
+                    case GAME_OVER:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                return true;
+                                break;
+                            case 1:
+                                return true;
+                                break;                        
+                        }
+                    break;
+
+                    case TITLE_SCREEN:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                menu->new_game = 1;
+                                return true;
+                                break;
+                            case 1:
+                                // seleciona_nova_tela(menu, 4);
+                                return true;
+                                break;
+                            case 2:
+                                return true;
+                                break;   
+                        }  
+                    break;                   
                 }
-                //OPTIONS
-                else if (menu->tela_selecionada == 1) {
-                    switch (menu->botao_selecionado) {
-                        case 0:
-                            seleciona_nova_tela(menu, 0);
-                            break;
-                        case 1:
-                            seleciona_nova_tela(menu, 0);
-                            break;
-                        case 2:
-                            seleciona_nova_tela(menu, 0);
-                            break;
-                    }   
-                }
-                //GAME OVER
-                else if (menu->tela_selecionada == 2) {
-                    switch (menu->botao_selecionado) {
-                        case 0:
-                            return true;
-                            break;
-                        case 1:
-                            return true;
-                            break;                        
-                    }
-                }
-                //TITLE SCREEN
-                else if (menu->tela_selecionada == 3) {
-                    switch (menu->botao_selecionado) {
-                        case 0:
-                            menu->new_game = 1;
-                            return true;
-                            break;
-                        case 1:
-                            // seleciona_nova_tela(menu, 4);
-                            return true;
-                            break;
-                        case 2:
-                            return true;
-                            break;                        
-                    }
-                }                  
-            }
+            }                  
         }
 
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
@@ -244,8 +243,8 @@ bool loop_menu (Menu* menu, int numero_tela) {
     }
 }
 
-void seleciona_nova_tela (Menu* menu, int numero_tela) {
-    menu->tela_selecionada = numero_tela;
+void seleciona_nova_tela (Menu* menu, TELA tela) {
+    menu->tela_selecionada = tela;
     menu->botao_selecionado = 0;
 }
 

@@ -20,8 +20,7 @@ struct Menu {
 	int numero_de_botoes[MAX_BOTOES];
 	int botao_selecionado;
 
-	int numero_de_telas;
-	int tela_selecionada;
+	TELA tela_selecionada;
 
 	int new_game;
 
@@ -34,9 +33,9 @@ void desenha_fundo_menu_pause ();
 
 void desenha_menu_pause (Menu* menu);
 
-bool loop_menu (Menu* menu, int numero_tela);
+bool loop_menu (Menu* menu, TELA tela);
 
-void seleciona_nova_tela (Menu* menu, int numero_tela);
+void seleciona_nova_tela (Menu* menu, TELA tela);
 
 void navega_botoes (Menu* menu, DIRECAO direcao);
 

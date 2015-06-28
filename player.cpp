@@ -24,6 +24,7 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	}
 
 	player->delta_x = LARGURA_SPRITES_PLAYER/2;
+	player->delta_y = ALTURA_SPRITES_PLAYER/2;
 }
 
 void finaliza_player (Player* player) {
@@ -43,12 +44,11 @@ void desenha_player (Player* player) {
 						  al_get_bitmap_height(player->sprites[0]),
 
 						  player->posicao_x - player->delta_x,
-						  player->posicao_y,
+						  player->posicao_y + player->delta_y,
 						  LARGURA_SPRITES_PLAYER,
 						  ALTURA_SPRITES_PLAYER,
 
 						  flags);
-
 }
 
 ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename, int largura, int altura) {
@@ -65,20 +65,6 @@ ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename,
 		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
 		exit(0);
 	}
-
-	// al_draw_scaled_bitmap(loaded_bmp,
-
-	// 					  155,
-	// 					  posicao_x,
-	// 					  al_get_bitmap_width(loaded_bmp),
-	// 					  al_get_bitmap_height(loaded_bmp),
-
-	// 					  320,
-	// 					  240,
-	// 					  largura,
-	// 					  altura,
-
-	// 					  0);
 
     al_set_target_bitmap(prev_target);
   	al_destroy_bitmap(loaded_bmp);

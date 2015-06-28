@@ -8,7 +8,7 @@
 
 struct Player {
 	double posicao_x, posicao_y;
-	double delta_x;
+	double delta_x, delta_y;
 	DIRECAO direcao_atual;
 
 	int projetil_cooldown;
