@@ -9,13 +9,9 @@ struct Mothership{
 	ALLEGRO_TIMER *tempo=NULL;
 	ALLEGRO_EVENT_QUEUE *fila_evento = NULL;
 	int segundos;
-	int posicao_x;
-	int posicao_y;
-	int velocidade;
-	int frequencia;
-	int status;
-	int altura_sprite;
-	int largura_sprite;
+	int posicao_x, posicao_y, delta_x, delta_y;
+	int velocidade, frequencia, status;
+	int altura_sprite,largura_sprite;
 	int largura_tela;
 };
 
@@ -41,6 +37,13 @@ void inicializar_timer_mothership(Mothership*);
 
 void disparar_timer_mothership(Mothership*);
 
+void colisao_mothership_vs_projetil(Jogo*);
+
+int get_posicao_x_max_mothership (Mothership*);
+int get_posicao_y_max_mothership(Mothership*);
+
+int get_posicao_x_min_mothership (Mothership*);
+int get_posicao_y_min_mothership(Mothership*);
 
 //destroi a mothership mae
 void finaliza_mothership(Mothership*);
