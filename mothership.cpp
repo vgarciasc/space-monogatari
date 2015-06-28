@@ -4,12 +4,9 @@
 #include "game.h"
 #include "mothership.h"
 
-<<<<<<< HEAD
-void desenha_mothership(Mothership *mothership,Jogo *jogo, Projetil *projetil){
-=======
+
 void desenha_mothership(Mothership *mothership){
 
->>>>>>> 6377e7ffb4af39125fa5524e3dfe71938ab21327
 	disparar_timer_mothership(mothership);
 
 	if(autoriza_mothership(mothership) || mothership->status==1){
@@ -39,14 +36,13 @@ void inicializa_mothership(Mothership *mothership, Jogo *jogo){
 	}
 	mothership->fonte = al_load_font("resources/verdana.ttf",10,0);
 	mothership->velocidade=3;
-	mothership->frequencia=10;
+	mothership->frequencia=20;
 	mothership->segundos=0;
 	mothership->largura_tela = jogo->largura;
 	mothership->largura_sprite=27;
 	mothership->altura_sprite=19;
 	reinicia_mothership(mothership);
 	inicializar_timer_mothership(mothership);
-<<<<<<< HEAD
 }
 
 void inicializar_timer_mothership(Mothership *mothership){
@@ -63,34 +59,14 @@ void disparar_timer_mothership(Mothership *mothership){
 
 	            if (evento.type == ALLEGRO_EVENT_TIMER)
 	                mothership->segundos++;
+	}
 }
 
 void finaliza_mothership(Mothership *mothership){
 	al_destroy_bitmap(mothership->imagem);
 }
 
-=======
-}
-void inicializar_timer_mothership(Mothership *mothership){
-    mothership->fila_evento = al_create_event_queue();
-    mothership->tempo = al_create_timer(1.0);
-    al_register_event_source(mothership->fila_evento, al_get_timer_event_source(mothership->tempo));
-	al_start_timer(mothership->tempo);
-}
-void disparar_timer_mothership(Mothership *mothership){
-	if (!al_is_event_queue_empty(mothership->fila_evento)){
-	            ALLEGRO_EVENT evento;
-	            al_wait_for_event(mothership->fila_evento, &evento);
 
-	            if (evento.type == ALLEGRO_EVENT_TIMER)
-	                mothership->segundos++;
-	            }
-}
-void finaliza_mothership(Mothership *mothership){
-	al_destroy_bitmap(mothership->imagem);
-}
-
->>>>>>> 6377e7ffb4af39125fa5524e3dfe71938ab21327
 int autoriza_mothership(Mothership *mothership){
 	if( mothership->segundos % mothership->frequencia==0 && mothership->status==0){
 		mothership->status=1;
