@@ -22,11 +22,11 @@ void inicializa_menus (Menu* menu) {
     menu->numero_de_botoes[3] = 2;
 
     menu->font_size = 24;
-    menu->font_title = al_load_font("resources/verdana.ttf", menu->font_size*2, 0);
-    menu->font_items = al_load_font("resources/verdana.ttf", menu->font_size, 0);
+    menu->font_title = al_load_font("resources/acknowledge.ttf", menu->font_size*2, 0);
+    menu->font_items = al_load_font("resources/acknowledge.ttf", menu->font_size, 0);
 
     if (menu->font_title == NULL || menu->font_items == NULL) {
-        puts("Erro ao carregar o arquivo \"resources/verdana.ttf\"");
+        puts("Erro ao carregar o arquivo \"resources/acknowledge.ttf\"");
         exit(0);
     }
 

@@ -12,7 +12,7 @@
 void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
 	player->posicao_y = posicao_y;
-	player->projetil_cooldown = 10;
+	player->projetil_cooldown = 30;
 
 	// player->sprites[0] = inicializa_sprites_player (player, "resources/player4.png", 16, 16);
 

@@ -44,9 +44,9 @@ void desenha_lives (Hud *hud){
 }
 
 void inicializa_hud (Hud *hud){
-	hud->fonte = al_load_font("resources/verdana.ttf", 20, 0);
+	hud->fonte = al_load_font("resources/acknowledge.ttf", 20, 0);
 	if (hud->fonte == NULL){
-		puts("Erro ao carregar \"resources/verdana.ttf\"");
+		puts("Erro ao carregar \"resources/acknowledge.ttf\"");
 		exit(0);
 	}
 
