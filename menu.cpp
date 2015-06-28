@@ -24,7 +24,6 @@ void inicializa_menus (Menu* menu) {
     menu->numero_de_botoes[3] = 2;
 
     menu->font_size = 24;
-
     menu->font_title = al_load_font("resources/verdana.ttf", menu->font_size*2, 0);
     menu->font_items = al_load_font("resources/verdana.ttf", menu->font_size, 0);
 
@@ -115,10 +114,12 @@ bool loop_menu (Menu* menu, int numero_tela) {
 
     menu->tela_selecionada = numero_tela;
 
+    int loop_count = 0;
     bool doexit = false;
     bool redraw = true;
 
     while (!doexit) {
+        loop_count++;
         al_wait_for_event(menu->event_queue, &ev);
 
         if (ev.type == ALLEGRO_EVENT_TIMER) {
@@ -130,7 +131,8 @@ bool loop_menu (Menu* menu, int numero_tela) {
             else if (menu->key[KEY_DOWN])
                 navega_botoes(menu, BAIXO);
 
-            else if (menu->key[KEY_ENTER] || menu->key[KEY_Z]) {
+            else if ((menu->key[KEY_ENTER] || menu->key[KEY_Z]) && loop_count > 5) {
+                loop_count = 0;
                 //PAUSE
                 if (menu->tela_selecionada == 0) {
                     switch (menu->botao_selecionado) {
