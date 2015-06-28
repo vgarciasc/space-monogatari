@@ -4,6 +4,7 @@
 #include "game.h"
 #include "mothership.h"
 
+
 void desenha_mothership(Mothership *mothership){
 
 	disparar_timer_mothership(mothership);
@@ -24,7 +25,7 @@ void movimenta_mothership(Mothership *mothership){
 }
 void reinicia_mothership(Mothership *mothership){
 	mothership->posicao_x = -mothership->largura_sprite;
-	mothership->posicao_y = mothership->altura_sprite;
+	mothership->posicao_y = (mothership->altura_sprite-mothership->delta_y);
 	mothership->status = 0;
 }
 void inicializa_mothership(Mothership *mothership, Jogo *jogo){
@@ -33,13 +34,21 @@ void inicializa_mothership(Mothership *mothership, Jogo *jogo){
 			puts("Erro ao carregar o arquivo resources/mothership.png");
 			exit(0);
 	}
-	mothership->fonte = al_load_font("resources/verdana.ttf",10,0);
+	mothership->fonte = al_load_font("resources/verdana.ttf",40,0);
+	if(mothership->fonte==NULL){
+		puts("Erro ao carregar o arquivo resources/verdana.ttf");
+		exit(0);
+	}
 	mothership->velocidade=3;
 	mothership->frequencia=20;
 	mothership->segundos=0;
+
 	mothership->largura_tela = jogo->largura;
-	mothership->largura_sprite=27;
-	mothership->altura_sprite=19;
+	mothership->largura_sprite=al_get_bitmap_width(mothership->imagem);
+	mothership->altura_sprite=al_get_bitmap_height(mothership->imagem);
+	mothership->delta_x=17;
+	mothership->delta_y=17;
+
 	reinicia_mothership(mothership);
 	inicializar_timer_mothership(mothership);
 }
@@ -65,6 +74,7 @@ void finaliza_mothership(Mothership *mothership){
 	al_destroy_bitmap(mothership->imagem);
 }
 
+
 int autoriza_mothership(Mothership *mothership){
 	if( mothership->segundos % mothership->frequencia==0 && mothership->status==0){
 		mothership->status=1;
@@ -73,3 +83,40 @@ int autoriza_mothership(Mothership *mothership){
 	else
 		return 0;
 }
+int get_posicao_x_max_mothership (Mothership *mothership){
+	return mothership->posicao_x + mothership->largura_sprite - mothership->delta_x;
+}
+int get_posicao_x_min_mothership (Mothership *mothership){
+	return mothership->posicao_x + mothership->delta_x;
+}
+int get_posicao_y_max_mothership(Mothership *mothership){
+	return mothership->posicao_y + mothership->altura_sprite - mothership->delta_y;
+}
+int get_posicao_y_min_mothership(Mothership *mothership){
+	return mothership->posicao_y + mothership->delta_y;
+}
+
+void colisao_mothership_vs_projetil(Jogo *jogo){
+	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
+		if(!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_mothership(&jogo->mothership) ||
+						jogo->projetil_stack[i].posicao_y > get_posicao_y_max_mothership(&jogo->mothership)  ||
+						jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_min_mothership(&jogo->mothership) ||
+						jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_mothership(&jogo->mothership))
+						)
+
+		{
+				copy_projetil(&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+				desenha_projetil(&jogo->projetil_stack[i]);
+				finaliza_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+				jogo->numero_de_projeteis--;
+				jogo->hud.score+=500;
+				reinicia_mothership(&jogo->mothership);
+
+				return ;
+		}
+
+	}
+
+
+}
+
