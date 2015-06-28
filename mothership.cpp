@@ -8,7 +8,7 @@
 void desenha_mothership (Mothership *mothership) {
 	disparar_timer_mothership(mothership);
 
-	if (autoriza_mothership(mothership) || mothership->status == 1) {
+	if (autoriza_mothership(mothership) || mothership->ativo) {
 		al_draw_scaled_bitmap(mothership->imagem,
 							  0, 
 							  0,
@@ -38,7 +38,7 @@ void movimenta_mothership (Mothership *mothership) {
 void reinicia_mothership (Mothership *mothership) {
 	mothership->posicao_x = - mothership->largura_sprite;
 	mothership->posicao_y = (mothership->altura_sprite - mothership->delta_y);
-	mothership->status = 0;
+	mothership->ativo = false;
 }
 
 void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
@@ -49,15 +49,15 @@ void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
 	}
 
 	mothership->velocidade = 3;
-	mothership->frequencia = 20;
-	mothership->segundos = 0;
+	mothership->frequencia = 30;
+	mothership->segundos = 1;
 
 	mothership->largura_tela = jogo->largura;
 	mothership->largura_sprite = al_get_bitmap_width(mothership->imagem);
 	mothership->altura_sprite = al_get_bitmap_height(mothership->imagem);
 
-	mothership->delta_x = LARGURA_SPRITES_MOTHERSHIP/2;
-	mothership->delta_y = ALTURA_SPRITES_MOTHERSHIP/2;
+	mothership->delta_x = (0.7*LARGURA_SPRITES_MOTHERSHIP)/2;
+	mothership->delta_y = (ALTURA_SPRITES_MOTHERSHIP)/2;
 
 	reinicia_mothership(mothership);
 	inicializar_timer_mothership(mothership);
@@ -87,8 +87,8 @@ void finaliza_mothership(Mothership *mothership){
 
 
 int autoriza_mothership(Mothership *mothership){
-	if (((mothership->segundos % mothership->frequencia) == 0) && (mothership->status == 0)){
-		mothership->status = 1;
+	if (((mothership->segundos % mothership->frequencia) == 0) && (!mothership->ativo)){
+		mothership->ativo = true;
 		return 1;
 	}
 	else
@@ -124,7 +124,7 @@ void colisao_mothership_vs_projetil (Jogo *jogo) {
 
 				jogo->numero_de_projeteis--;
 				jogo->hud.score += PONTOS_MOTHERSHIP;
-
+				jogo->mothership.segundos++;
 				reinicia_mothership(&jogo->mothership);
 
 				return;
