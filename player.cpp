@@ -92,11 +92,11 @@ void finaliza_sprites_player (Player* player) {
 
 void move_player (Player* player, DIRECAO direcao) {
 	if (direcao == ESQUERDA) {
-		player->posicao_x -= DISTANCIA_PASSO;
+		player->posicao_x -= DISTANCIA_PASSO_PLAYER;
 		player->direcao_atual = ESQUERDA;
 	}
 	if (direcao == DIREITA) {
-		player->posicao_x += DISTANCIA_PASSO;
+		player->posicao_x += DISTANCIA_PASSO_PLAYER;
 		player->direcao_atual = DIREITA;
 	}
 }

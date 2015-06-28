@@ -1,16 +1,13 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "config.h"
 #include "alien.h"
 #include "player.h"
 #include "projetil.h"
 #include "menu.h"
 #include "mothership.h"
 #include "hud.h"
-
-#define GAME_FPS 60
-
-// enum MYKEYS { KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE, KEY_ENTER };
 
 struct Jogo {
 	ALLEGRO_DISPLAY *display;

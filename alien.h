@@ -6,13 +6,7 @@
 
 #include "player.h"
 #include "projetil.h"
-
-#define LINHAS_TROPA 5
-#define COLUNAS_TROPA 10
-#define DISTANCIA_PASSO_ALIEN 20
-
-#define altura_aliens 35
-#define largura_aliens 36
+#include "config.h"
 
 struct Jogo;
 

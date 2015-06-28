@@ -1,6 +1,8 @@
 #ifndef HUD_H
 #define HUD_H
 
+#include "config.h"
+
 struct Hud {
 	ALLEGRO_FONT *fonte=NULL;
 	ALLEGRO_BITMAP *life=NULL;

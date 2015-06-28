@@ -42,7 +42,7 @@ void inicializa_jogo (Jogo* jogo) {
   inicializa_mothership(&jogo->mothership, jogo);
   inicializa_hud(&jogo->hud);
 
-  inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*largura_aliens*COLUNAS_TROPA - largura_aliens/2)) / 2 , 1.5*altura_aliens);
+  inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
   //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
   //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
   //jogo->altura - 1.5*2*jogo->alien[0][0].delta_y*LINHAS_TROPA + 1.5*2*jogo->alien[0][0].delta_y)
@@ -92,6 +92,11 @@ void loop_de_jogo (Jogo* jogo) {
   while (!doexit) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(jogo->event_queue, &ev);
+
+    /* AQUI VAO FICAR OS TESTES DE COLISAO */
+    /*---------------------------------------------------------------*/
+    colisao_mothership_vs_projetil(jogo);
+    /*---------------------------------------------------------------*/
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
         	if (jogo->key[KEY_LEFT] && get_posicao_x_min_player(&jogo->player) > 0 + 15)

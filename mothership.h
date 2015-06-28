@@ -1,6 +1,8 @@
 #ifndef MOTHERSHIP_H
 #define MOTHERSHIP_H
 
+#include "config.h"
+
 struct Jogo;
 
 struct Mothership{

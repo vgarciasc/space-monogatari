@@ -7,9 +7,6 @@
 #include "alien.h"
 #include "game.h"
 
-#define LARGURA_SPRITES_ALIEN 32
-#define ALTURA_SPRITES_ALIEN 32
-
 void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
@@ -26,8 +23,8 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, int posicao_y) {
 	for (int i = 0; i < COLUNAS_TROPA; i++)
 		for (int j = 0; j < LINHAS_TROPA; j++)
-			inicializa_alien (&alien[i][j], posicao_x + i * (largura_aliens + largura_aliens/2),
-									posicao_y + j * (altura_aliens + altura_aliens/2) ); 
+			inicializa_alien (&alien[i][j], posicao_x + i * (LARGURA_SPRITES_ALIEN + LARGURA_SPRITES_ALIEN/2),
+									posicao_y + j * (ALTURA_SPRITES_ALIEN + ALTURA_SPRITES_ALIEN/2) ); 
 
 }
 

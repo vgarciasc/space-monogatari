@@ -4,9 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DISTANCIA_PASSO 5
-
-enum DIRECAO { ESQUERDA, DIREITA, CIMA, BAIXO };
+#include "config.h"
 
 struct Player {
 	double posicao_x, posicao_y;

@@ -1,0 +1,31 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+//CORES
+#define MARROM_ESCURO al_map_rgb(20,20,12)
+#define MARROM_CLARO al_map_rgb(247, 180, 109)
+#define BRANCO al_map_rgb(255, 255, 255)
+
+//INPUT
+#define N_KEYS 7
+enum MYKEYS { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_Z, KEY_ESCAPE, KEY_ENTER };
+
+//DIRECAO
+enum DIRECAO { ESQUERDA, DIREITA, CIMA, BAIXO };
+
+//MENU
+#define MENU_FPS 10
+#define MAX_BOTOES 20
+#define GAME_FPS 60
+
+//ALIEN
+#define LINHAS_TROPA 5
+#define COLUNAS_TROPA 10
+#define DISTANCIA_PASSO_ALIEN 20
+#define LARGURA_SPRITES_ALIEN 32
+#define ALTURA_SPRITES_ALIEN 32
+
+//PLAYER
+#define DISTANCIA_PASSO 5
+
+#endif
