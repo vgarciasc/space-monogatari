@@ -39,8 +39,9 @@ void inicializa_jogo (Jogo* jogo) {
   
   inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
   inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
-  inicializa_mothership(&jogo->mothership);
-
+  inicializa_mothership(&jogo->mothership, jogo);
+  inicializa_hud(&jogo->hud);
+  
   inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*largura_aliens*COLUNAS_TROPA - largura_aliens/2)) / 2 , 1.5*altura_aliens);
   //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
   //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
@@ -57,6 +58,7 @@ void desenha_jogo (Jogo* jogo) {
 	desenha_player(&jogo->player);
   desenha_tropa(jogo->alien);
   desenha_mothership(&jogo->mothership,jogo, jogo->projetil_stack);
+  desenha_hud(&jogo->hud);
 
   for (int i = 0; i < jogo->numero_de_projeteis; i++) {
     desenha_projetil(&jogo->projetil_stack[i]);
