@@ -74,7 +74,6 @@ void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield) {
 						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						jogo->numero_de_projeteis--;
 
-						puts("A");
 						if (shield->part_state[j][v] == INTEIRO)
 							shield->part_state[j][v] = DANIFICADO;
 						else if (shield->part_state[j][v] == DANIFICADO)
