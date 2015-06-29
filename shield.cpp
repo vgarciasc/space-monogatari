@@ -10,9 +10,9 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y) {
 	shield->posicao_x = posicao_x;
 	shield->posicao_y = posicao_y;
 
-	shield->bitmap_inteiro = al_load_bitmap("resources/shield_inteiro.jpg");
+	shield->bitmap_inteiro = al_load_bitmap("resources/shield_inteiro.png");
 	if (shield->bitmap_inteiro == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/shield_inteiro.jpg\"");
+		puts("Erro ao carregar o arquivo \"resources/shield_inteiro.png\"");
 		exit(0);
 	}
 
@@ -62,12 +62,13 @@ void desenha_shield (Shield* shield) {
 
 void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-		for (int j = 0; j < PARTES_Y; j++) {
-			for (int v = 0; v < PARTES_X; v++) {
-				if (!(jogo->projetil_stack[i].posicao_x > shield->posicao_x + (LARGURA_SHIELD / PARTES_X)*(v+1)
-			|| jogo->projetil_stack[i].posicao_y > shield->posicao_y + (ALTURA_SHIELD / PARTES_Y)*(j)
-			|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < shield->posicao_y + (ALTURA_SHIELD / PARTES_Y)*j+1
-			|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < LARGURA_SHIELD / PARTES_X)*(v)) {
+		for (int j = 0; j < PARTES_X; j++) {
+			for (int v = 0; v < PARTES_Y; v++) {
+				if ((!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_part_n(shield, j)
+					|| jogo->projetil_stack[i].posicao_y > get_posicao_y_max_part_n(shield, v)
+					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_min_part_n(shield, v)
+					|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_part_n(shield, j)))
+					&& shield->part_state[j][v] != DESTRUIDO) {
 
 						copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						desenha_projetil (&jogo->projetil_stack[i]);
@@ -79,13 +80,25 @@ void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield) {
 						else if (shield->part_state[j][v] == DANIFICADO)
 							shield->part_state[j][v] = DESTRUIDO;
 
-						// jogo->hud.score += PONTOS_MOTHERSHIP;
-						// jogo->reinicia_mothershipp.segundos++;
-						// reinicia_mothership(&jogo->mothership);
-
 						return;
 				}
 			}
 		}
 	}
+}
+
+double get_posicao_x_min_part_n (Shield* shield, int n) {
+	return shield->posicao_x + (LARGURA_SHIELD / PARTES_X)*n;
+}
+
+double get_posicao_y_min_part_n (Shield* shield, int n) {
+	return shield->posicao_y + (LARGURA_SHIELD / PARTES_X)*n;
+}
+
+double get_posicao_x_max_part_n (Shield* shield, int n) {
+	return shield->posicao_x + (LARGURA_SHIELD / PARTES_X)*(n+1);
+}
+
+double get_posicao_y_max_part_n (Shield* shield, int n) {
+	return shield->posicao_y + (LARGURA_SHIELD / PARTES_X)*(n+1);
 }

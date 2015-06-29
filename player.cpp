@@ -4,19 +4,13 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 
+#include "game.h"
 #include "player.h"
 
-<<<<<<< HEAD
-=======
-#define ALTURA_SPRITES_PLAYER 48
-#define LARGURA_SPRITES_PLAYER 48
-
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
 	player->posicao_y = posicao_y;
-	player->projetil_cooldown = 30;
-<<<<<<< HEAD
+	player->projetil_cooldown = PROJETIL_COOLDOWN;
 
 	player->sprites[0] = al_load_bitmap("resources/player4.png");
 
@@ -25,10 +19,6 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 		exit(0);
 	}
 
-=======
-
-	// player->sprites[0] = inicializa_sprites_player (player, "resources/player4.png", 16, 16);
-
 	player->sprites[0] = al_load_bitmap("resources/player4.png");
 
 	if (player->sprites[0] == NULL) {
@@ -36,7 +26,6 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 		exit(0);
 	}
 
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 	player->delta_x = LARGURA_SPRITES_PLAYER/2;
 	player->delta_y = ALTURA_SPRITES_PLAYER/2;
 }
@@ -101,12 +90,43 @@ void move_player (Player* player, DIRECAO direcao) {
 	}
 }
 
-int get_posicao_x_max_player (Player* player){
-	return player->posicao_x + player->delta_x;
+void colisao_player_vs_projetil (Jogo *jogo) {
+	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
+		for (int j = 0; j < COLUNAS_TROPA; j++) {
+			for (int v = 0; v < LINHAS_TROPA; v++) {
+				if ((!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_player(&jogo->player)
+					|| jogo->projetil_stack[i].posicao_y > get_posicao_y_min_player(&jogo->player)
+					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_max_player(&jogo->player)
+					|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_player(&jogo->player)))) {
+
+						copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+						desenha_projetil (&jogo->projetil_stack[i]);
+						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+						jogo->numero_de_projeteis--;
+
+						puts("A");
+
+						return;
+				}
+			}
+		}
+	}
 }
 
 int get_posicao_x_min_player (Player* player){
 	return player->posicao_x - player->delta_x;
+}
+
+int get_posicao_x_max_player (Player* player){
+	return player->posicao_x + player->delta_x;
+}
+
+int get_posicao_y_min_player (Player* player){
+	return player->posicao_x - player->delta_y;
+}
+
+int get_posicao_y_max_player (Player* player){
+	return player->posicao_x + player->delta_y;
 }
 
 int get_posicao_x_centro_player (Player* player){

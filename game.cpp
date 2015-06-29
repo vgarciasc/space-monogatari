@@ -17,7 +17,6 @@ void inicializa_display (Jogo* jogo, int largura, int altura) {
         fprintf(stderr, "Falha ao inicializar o display!\n");
         exit(-1);
     }
-<<<<<<< HEAD
 }
 
 void finaliza_display (Jogo* jogo) {
@@ -29,26 +28,11 @@ void inicializa_jogo (Jogo* jogo) {
     jogo->menu.new_game = 1;
 
     jogo->numero_de_projeteis = 0;
-=======
-}
-
-void finaliza_display (Jogo* jogo) {
-    al_destroy_display(jogo->display);
-}
-
-void inicializa_jogo (Jogo* jogo) {
-    jogo->event_queue = NULL;
-    jogo->menu.new_game = 1;
-
-    jogo->numero_de_projeteis = 0;
-    jogo->loop_count = 0;
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
     jogo->loop_count_projetil = jogo->player.projetil_cooldown;
     jogo->loop_count_menu_pause = 1;
     jogo->menu.new_game = 0;
     jogo->loop_alien_movement = 0;
     jogo->loop_alien_shots = 0;
-<<<<<<< HEAD
     jogo->numero_shields = 4;
 
     jogo->shields = (Shield*) malloc(sizeof(Shield) * jogo->numero_shields);
@@ -73,26 +57,7 @@ void inicializa_jogo (Jogo* jogo) {
         inicializa_shield(&jogo->shields[i],
                           (((LARGURA_DISPLAY - 2*15) / 4 ) + 20)*i + 15,
                           (ALTURA_DISPLAY / 12.0) * 8.75);
-=======
-
-    inicializa_teclado_jogo(jogo);
-    inicializa_timer_jogo(jogo);
-    inicializa_event_queue_jogo(jogo);
-
-    jogo->fundo = al_load_bitmap("resources/fundo.png");
-    if (jogo->fundo == NULL) {
-        puts("Erro ao carregar o arquivo resources/fundo.png");
-        exit(0);
     }
-
-    inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
-    inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
-    inicializa_mothership(&jogo->mothership, jogo);
-    inicializa_hud(&jogo->hud);
-    inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
-    //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
-    //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
-    //jogo->altura - 1.5*2*jogo->alien[0][0].delta_y*LINHAS_TROPA + 1.5*2*jogo->alien[0][0].delta_y)
 }
 
 void finaliza_jogo (Jogo* jogo) {
@@ -102,37 +67,6 @@ void finaliza_jogo (Jogo* jogo) {
 
 void desenha_jogo (Jogo* jogo) {
     desenha_fundo_jogo(jogo);
-    desenha_player(&jogo->player);
-    desenha_mothership(&jogo->mothership);
-    desenha_hud(&jogo->hud);
-
-    for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-        desenha_projetil(&jogo->projetil_stack[i]);
-        move_projetil(&jogo->projetil_stack[i]);
-        
-        if (jogo->projetil_stack[i].posicao_y < 0 - jogo->projetil_stack[i].altura_sprite) {
-            copy_projetil(&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-            desenha_projetil(&jogo->projetil_stack[i]);
-            finaliza_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-            jogo->numero_de_projeteis--;
-        }
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
-    }
-    //- (1.5*altura_aliens) * (LINHAS_TROPA - 1));
-    //(jogo->largura % (3*jogo->alien[0][0].delta_x*COLUNAS_TROPA - jogo->alien[0][0].delta_x))/2
-    //jogo->altura - 1.5*2*jogo->alien[0][0].delta_y*LINHAS_TROPA + 1.5*2*jogo->alien[0][0].delta_y)
-}
-
-<<<<<<< HEAD
-void finaliza_jogo (Jogo* jogo) {
-    free(jogo->shields);
-	finaliza_player(&jogo->player);
-	finaliza_mothership(&jogo->mothership);
-}
-
-void desenha_jogo (Jogo* jogo) {
-    desenha_fundo_jogo(jogo);
-    desenha_player(&jogo->player);
     desenha_mothership(&jogo->mothership);
     desenha_hud(&jogo->hud);
 
@@ -151,8 +85,7 @@ void desenha_jogo (Jogo* jogo) {
         }
     }
 
-=======
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
+    desenha_player(&jogo->player);
     desenha_tropa(jogo->alien);
     
 	al_flip_display();
@@ -169,12 +102,9 @@ void loop_de_jogo (Jogo* jogo) {
 
         /* AQUI VAO FICAR OS TESTES DE COLISAO */
         /*---------------------------------------------------------------*/
-        colisao_mothership_vs_projetil(jogo);
-<<<<<<< HEAD
-        for (int i = 0; i < jogo->numero_shields; i++)
-            colisao_shield_vs_projetil (jogo, &jogo->shields[i]);
-=======
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
+        
+        // for (int i = 0; i < jogo->numero_shields; i++)
+        //     colisao_shield_vs_projetil (jogo, &jogo->shields[i]);
         /*---------------------------------------------------------------*/
 
 		if (ev.type == ALLEGRO_EVENT_TIMER) {
@@ -199,7 +129,7 @@ void loop_de_jogo (Jogo* jogo) {
                 jogo->loop_count_projetil = 0;
                 cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
                               get_posicao_x_centro_player(&jogo->player),
-                              jogo->player.posicao_y,
+                              jogo->player.posicao_y + 10,
                               CIMA);
                 jogo->numero_de_projeteis++;
             }
@@ -247,14 +177,20 @@ void loop_de_jogo (Jogo* jogo) {
     }
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
+            
+            colisao_player_vs_projetil(jogo);
+            colisao_alien_vs_projetil(jogo);
+            colisao_mothership_vs_projetil(jogo);
+            for (int i = 0; i < jogo->numero_shields; i++)
+                colisao_shield_vs_projetil (jogo, &jogo->shields[i]);
+            
         	redraw = false;
-        	
 			jogo->key[KEY_ESCAPE] = false;
 
 			if (!(jogo->loop_alien_movement % (GAME_FPS/2)))
 				rota_tropa (jogo->alien, jogo);
 
-			if (!(jogo->loop_alien_shots % (GAME_FPS/2*3))) {
+			if (!(jogo->loop_alien_shots % (GAME_FPS/2))) {
 				atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
 				jogo->numero_de_projeteis++;
 			}
@@ -270,10 +206,6 @@ void loop_de_jogo (Jogo* jogo) {
 
 void incremento_loop_elementos_jogo (Jogo* jogo) {
 	jogo->loop_count_projetil++;
-<<<<<<< HEAD
-=======
-	jogo->loop_count++;
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 	jogo->loop_count_menu_pause++;
 	jogo->loop_alien_movement++;
 	jogo->loop_alien_shots++;
@@ -294,11 +226,8 @@ void tela_boot_jogo (Jogo* jogo) {
 
 	ALLEGRO_BITMAP* minerva = al_load_bitmap("resources/minerva.png");
 	if (minerva == NULL) {
-<<<<<<< HEAD
 		puts("Erro ao carregar o arquivo \"resources/minerva.png\"");
-=======
 		puts("Erro ao carregar o arquivo resources/minerva.png");
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 		exit(0);
 	}
 

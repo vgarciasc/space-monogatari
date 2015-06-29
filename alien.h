@@ -45,8 +45,14 @@ void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Jogo* jogo);
 
 void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Projetil* projetil);
 
-int get_posicao_x_max_alien (Alien* alien);
+void colisao_alien_vs_projetil (Jogo *jogo);
 
 int get_posicao_x_min_alien (Alien* alien);
+
+int get_posicao_x_max_alien (Alien* alien);
+
+int get_posicao_y_min_alien (Alien* alien);
+
+int get_posicao_y_max_alien (Alien* alien);
 
 #endif

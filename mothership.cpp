@@ -84,6 +84,26 @@ bool autoriza_mothership(Mothership *mothership){
 	return false;
 }
 
+void colisao_mothership_vs_projetil (Jogo *jogo) {
+	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
+		if (!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_mothership(&jogo->mothership)
+			|| jogo->projetil_stack[i].posicao_y > get_posicao_y_max_mothership(&jogo->mothership)
+			|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_min_mothership(&jogo->mothership)
+			|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_mothership(&jogo->mothership))) {
+
+				copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+				desenha_projetil (&jogo->projetil_stack[i]);
+				finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+				jogo->numero_de_projeteis--;
+
+				jogo->hud.score += PONTOS_MOTHERSHIP;
+				reinicia_mothership(&jogo->mothership);
+
+				return;
+		}
+	}
+}
+
 int get_posicao_x_max_mothership (Mothership *mothership) {
 	return mothership->posicao_x + LARGURA_SPRITES_MOTHERSHIP - mothership->delta_x;
 }
@@ -98,26 +118,4 @@ int get_posicao_y_max_mothership (Mothership *mothership) {
 
 int get_posicao_y_min_mothership (Mothership *mothership) {
 	return mothership->posicao_y + mothership->delta_y;
-}
-
-
-
-void colisao_mothership_vs_projetil (Jogo *jogo) {
-	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-		if (!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_mothership(&jogo->mothership)
-			|| jogo->projetil_stack[i].posicao_y > get_posicao_y_max_mothership(&jogo->mothership)
-			|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_min_mothership(&jogo->mothership)
-			|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_mothership(&jogo->mothership))) {
-
-				copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-				desenha_projetil (&jogo->projetil_stack[i]);
-				finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-
-				jogo->numero_de_projeteis--;
-				jogo->hud.score += PONTOS_MOTHERSHIP;
-				reinicia_mothership(&jogo->mothership);
-
-				return;
-		}
-	}
 }

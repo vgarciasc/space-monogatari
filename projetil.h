@@ -7,7 +7,7 @@
 #include "player.h"
 #include "config.h"
 
-#define VELOCIDADE_PROJETIL 10
+struct Jogo;
 
 struct Projetil {
 	double posicao_x, posicao_y;

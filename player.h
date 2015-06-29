@@ -6,6 +6,8 @@
 
 #include "config.h"
 
+struct Jogo;
+
 struct Player {
 	double posicao_x, posicao_y;
 	double delta_x, delta_y;
@@ -29,9 +31,15 @@ void finaliza_sprites_player (Player* player);
 
 void move_player (Player* player, DIRECAO direcao);
 
-int get_posicao_x_max_player (Player* player);
+void colisao_player_vs_projetil (Jogo *jogo);
 
 int get_posicao_x_min_player (Player* player);
+
+int get_posicao_x_max_player (Player* player);
+
+int get_posicao_y_min_player (Player* player);
+
+int get_posicao_y_max_player (Player* player);
 
 int get_posicao_x_centro_player (Player* player);
 

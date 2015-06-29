@@ -20,4 +20,12 @@ void desenha_shield (Shield* shield);
 
 void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield);
 
+double get_posicao_x_min_part_n (Shield* shield, int n);
+
+double get_posicao_y_min_part_n (Shield* shield, int n);
+
+double get_posicao_x_max_part_n (Shield* shield, int n);
+
+double get_posicao_y_max_part_n (Shield* shield, int n);
+
 #endif

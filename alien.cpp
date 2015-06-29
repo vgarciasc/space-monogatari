@@ -18,6 +18,7 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 	inicializa_sprites_alien (alien);
 
 	alien->delta_x = LARGURA_SPRITES_ALIEN/2;
+	alien->delta_y = ALTURA_SPRITES_ALIEN/2;
 }
 
 void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, int posicao_y) {
@@ -178,10 +179,44 @@ void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Projetil* projetil) 
 		
 }
 
-int get_posicao_x_max_alien (Alien* alien){
-	return alien->posicao_x + alien->delta_x;
+void colisao_alien_vs_projetil (Jogo *jogo) {
+	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
+		for (int j = 0; j < COLUNAS_TROPA; j++) {
+			for (int v = 0; v < LINHAS_TROPA; v++) {
+				if ((!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_alien(&jogo->alien[j][v])
+					|| jogo->projetil_stack[i].posicao_y > get_posicao_y_max_alien(&jogo->alien[j][v])
+					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_min_alien(&jogo->alien[j][v])
+					|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_alien(&jogo->alien[j][v])))
+					&& jogo->alien[j][v].vivo) {
+
+						copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+						desenha_projetil (&jogo->projetil_stack[i]);
+						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+
+						jogo->numero_de_projeteis--;
+						jogo->hud.score += PONTOS_ALIEN;
+
+						jogo->alien[j][v].vivo = false;
+
+						return;
+				}
+			}
+		}
+	}
 }
 
 int get_posicao_x_min_alien (Alien* alien){
 	return alien->posicao_x - alien->delta_x;
+}
+
+int get_posicao_x_max_alien (Alien* alien){
+	return alien->posicao_x + alien->delta_x;
+}
+
+int get_posicao_y_min_alien (Alien* alien){
+	return alien->posicao_y - alien->delta_y;
+}
+
+int get_posicao_y_max_alien (Alien* alien){
+	return alien->posicao_y + alien->delta_y;
 }

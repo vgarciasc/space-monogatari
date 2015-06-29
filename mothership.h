@@ -39,14 +39,15 @@ void inicializar_timer_mothership (Mothership*);
 
 void colisao_mothership_vs_projetil (Jogo*);
 
-int get_posicao_x_max_mothership (Mothership*);
-int get_posicao_y_max_mothership (Mothership*);
-
-int get_posicao_x_min_mothership (Mothership*);
-int get_posicao_y_min_mothership (Mothership*);
-
 //destroi a mothership mae
 void finaliza_mothership (Mothership*);
 
-#endif
+int get_posicao_x_max_mothership (Mothership*);
 
+int get_posicao_y_max_mothership (Mothership*);
+
+int get_posicao_x_min_mothership (Mothership*);
+
+int get_posicao_y_min_mothership (Mothership*);
+
+#endif

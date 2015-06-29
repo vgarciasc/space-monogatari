@@ -67,7 +67,7 @@ void inicializa_lives (Hud *hud){
 		exit(0);
 	}
 
-	hud->lives = 3;
+	hud->lives = NUMERO_VIDAS;
 	hud->lives_posicao_x = 440;
 	hud->lives_posicao_y = 0;
 }
