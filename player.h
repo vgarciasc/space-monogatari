@@ -4,13 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DISTANCIA_PASSO 5
-
-enum DIRECAO { ESQUERDA, DIREITA, CIMA, BAIXO };
+#include "config.h"
 
 struct Player {
 	double posicao_x, posicao_y;
-	double delta_x;
+	double delta_x, delta_y;
 	DIRECAO direcao_atual;
 
 	int projetil_cooldown;
@@ -25,7 +23,7 @@ void finaliza_player (Player* player);
 
 void desenha_player (Player* player);
 
-void inicializa_sprites_player (Player* player);
+ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename, int largura, int altura);
 
 void finaliza_sprites_player (Player* player);
 

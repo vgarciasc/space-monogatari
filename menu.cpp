@@ -1,129 +1,284 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 
 #include "menu.h"
 
-const ALLEGRO_COLOR MARROM_CLARO = al_map_rgb(247, 180, 109);
-const ALLEGRO_COLOR BRANCO = al_map_rgb(255, 255, 255);
+void inicializa_menus (Menu* menu) {
+    menu->event_queue = NULL;
+    menu->timer = NULL;
 
-void inicializa_menu (Menu* menu) {
-  //botoes funcionam com logica de array (primeiro botao 0, segundo botao 1, etc)
-  menu->numero_de_botoes = 1;
-  menu->event_queue = NULL;
-  menu->timer = NULL;
-  menu->botao_selecionado = 0;
-  
-  inicializa_timer_menu (menu);
-  inicializa_event_queue_menu(menu);
+    inicializa_timer_menu_pause (menu);
+    inicializa_event_queue_menu_pause(menu);
 
-	menu->font_title = al_load_font("resources/verdana.ttf", 48, 0);
-  menu->font_items = al_load_font("resources/verdana.ttf", 24, 0);
+    menu->botao_selecionado = 0;
 
-	if (menu->font_title == NULL || menu->font_items == NULL) {
-		puts("Erro ao carregar o arquivo resources/verdana.ttf");
-		exit(0);
-	}
-}
+    menu->numero_de_botoes[0] = 3;
+    menu->numero_de_botoes[1] = 2;
+    menu->numero_de_botoes[2] = 1;
+    menu->numero_de_botoes[3] = 2;
 
-void desenha_fundo_menu () {
-	al_clear_to_color(al_map_rgb(20,20,12));
-}
+    menu->font_size = 24;
+    menu->font_title = al_load_font("resources/acknowledge.ttf", menu->font_size*2, 0);
+    menu->font_items = al_load_font("resources/acknowledge.ttf", menu->font_size, 0);
 
-void desenha_menu (Menu* menu) {
-	desenha_fundo_menu ();
-  al_draw_text(menu->font_title, al_map_rgb(255,255,255), 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "PAUSE");
-
-  if (menu->botao_selecionado == 0)
-    al_draw_text(menu->font_items, al_map_rgb(247,150,220), 640/2, 240, ALLEGRO_ALIGN_CENTRE, "RESUME");
-  else
-    al_draw_text(menu->font_items, al_map_rgb(255,255,255), 640/2, 240, ALLEGRO_ALIGN_CENTRE, "RESUME");
-  
-  if (menu->botao_selecionado == 1)
-    al_draw_text(menu->font_items, al_map_rgb(150,150,220), 640/2, 240 + 30, ALLEGRO_ALIGN_CENTRE, "EXIT GAME");
-  else
-    al_draw_text(menu->font_items, al_map_rgb(255,255,255), 640/2, 240 + 30, ALLEGRO_ALIGN_CENTRE, "EXIT GAME");
-}
-
-bool loop_menu (Menu* menu) {
-  al_start_timer(menu->timer);
-  bool doexit = false;
-  bool redraw = true;
-
-  while (!doexit) {
-    ALLEGRO_EVENT ev;
-    al_wait_for_event(menu->event_queue, &ev);
-
-		if (ev.type == ALLEGRO_EVENT_TIMER) {
-      redraw = true;
+    if (menu->font_title == NULL || menu->font_items == NULL) {
+        puts("Erro ao carregar o arquivo \"resources/acknowledge.ttf\"");
+        exit(0);
     }
-    	
-    	else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-        	break;
-      	}
 
-      	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-        	switch(ev.keyboard.keycode) {
-            	case ALLEGRO_KEY_UP: 
-            		  if (menu->botao_selecionado == 0) {
-                    menu->botao_selecionado = menu->numero_de_botoes;
-                  }
-                  else {
-                    menu->botao_selecionado--;
-                	}
-                  break;
- 
-            	case ALLEGRO_KEY_DOWN:
-               		if (menu->botao_selecionado == menu->numero_de_botoes) {
-                    menu->botao_selecionado = 0;
-                  }
-                  else {
-                    menu->botao_selecionado++;
-               		}
-                  break;
+    for(int i = 0; i < N_KEYS; i++)
+        menu->key[i] = false;
+}
 
-              case ALLEGRO_KEY_Z:
-                  if (menu->botao_selecionado == 0) {
-                    doexit = true;
-                    return false;
-                  }
-                  if (menu->botao_selecionado == 1) {
-                    doexit = true;
-                    return true;
-                  }
-                  break;
+void desenha_fundo_menu_pause () {
+	al_clear_to_color(MARROM_ESCURO);
+}
 
-              case ALLEGRO_KEY_ESCAPE:
-                  doexit = true;
-                  break;
+void desenha_menu_pause (Menu* menu) {
+    desenha_fundo_menu_pause ();
+
+    char tela_0_botoes[menu->numero_de_botoes[0]][50];
+    strcpy(tela_0_botoes[0], "RESUME");
+    strcpy(tela_0_botoes[1], "OPTIONS");
+    strcpy(tela_0_botoes[2], "TITLE SCREEN");
+    strcpy(tela_0_botoes[3], "QUIT GAME");
+
+    if (menu->tela_selecionada == 0) {
+        al_draw_text(menu->font_title, BRANCO, 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "PAUSE");
+
+        for (int i = 0; i < menu->numero_de_botoes[menu->tela_selecionada] + 1; i++) {
+            if (menu->botao_selecionado == i)
+                al_draw_text(menu->font_items, MARROM_CLARO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_0_botoes[i]);
+            else
+                al_draw_text(menu->font_items, BRANCO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_0_botoes[i]);
         }
     }
- 
-    	if (redraw && al_is_event_queue_empty(menu->event_queue)) {
-        	redraw = false;
 
-          desenha_menu(menu);
+    char tela_1_botoes[menu->numero_de_botoes[1]][20];
+    strcpy(tela_1_botoes[0], "RESOLUTIONS");
+    strcpy(tela_1_botoes[1], "LANGUAGES");
+    strcpy(tela_1_botoes[2], "<===");
 
-        	al_flip_display();
-      	}
-   }
+    if (menu->tela_selecionada == 1) {
+        al_draw_text(menu->font_title, BRANCO, 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "PAUSE");
+
+        for (int i = 0; i < menu->numero_de_botoes[menu->tela_selecionada] + 1; i++) {
+            if (menu->botao_selecionado == i)
+                al_draw_text(menu->font_items, MARROM_CLARO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_1_botoes[i]);
+            else
+                al_draw_text(menu->font_items, BRANCO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_1_botoes[i]);
+        }
+    }
+
+    char tela_2_botoes[menu->numero_de_botoes[2]][20];
+    strcpy(tela_2_botoes[0], "NEW GAME");
+    strcpy(tela_2_botoes[1], "QUIT GAME");
+
+    if (menu->tela_selecionada == 2) {
+        al_draw_text(menu->font_title, BRANCO, 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "GAME OVER");
+
+        for (int i = 0; i < menu->numero_de_botoes[menu->tela_selecionada] + 1; i++) {
+            if (menu->botao_selecionado == i)
+                al_draw_text(menu->font_items, MARROM_CLARO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_2_botoes[i]);
+            else
+                al_draw_text(menu->font_items, BRANCO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_2_botoes[i]);
+        }
+    }
+
+    char tela_3_botoes[menu->numero_de_botoes[3]][20];
+    strcpy(tela_3_botoes[0], "NEW GAME");
+    strcpy(tela_3_botoes[1], "HIGH SCORES");
+    strcpy(tela_3_botoes[2], "QUIT GAME");
+
+    if (menu->tela_selecionada == 3) {
+        al_draw_text(menu->font_title, BRANCO, 640/2, (480/4), ALLEGRO_ALIGN_CENTRE, "space monogatari");
+    
+        for (int i = 0; i < menu->numero_de_botoes[menu->tela_selecionada] + 1; i++) {
+            if (menu->botao_selecionado == i)
+                al_draw_text(menu->font_items, MARROM_CLARO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_3_botoes[i]);
+            else
+                al_draw_text(menu->font_items, BRANCO, 640/2, 240 + (menu->font_size + 6)*i, ALLEGRO_ALIGN_CENTRE, tela_3_botoes[i]);
+        }
+    }  
+}    
+
+bool loop_menu (Menu* menu, TELA tela) {
+    al_start_timer(menu->timer);
+    ALLEGRO_EVENT ev;
+
+    menu->tela_selecionada = tela;
+
+    int loop_count = 0;
+    bool doexit = false;
+    bool redraw = true;
+
+    while (!doexit) {
+        loop_count++;
+        al_wait_for_event(menu->event_queue, &ev);
+
+        if (ev.type == ALLEGRO_EVENT_TIMER) {
+            redraw = true;
+
+            if (menu->key[KEY_UP])
+                navega_botoes(menu, CIMA);
+
+            else if (menu->key[KEY_DOWN])
+                navega_botoes(menu, BAIXO);
+
+            else if ((menu->key[KEY_ENTER] || menu->key[KEY_Z]) && loop_count > 10){
+                loop_count = 0;
+                switch (menu->tela_selecionada) {
+                    case PAUSE:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                return false;
+                                break;
+                            case 1:
+                                seleciona_nova_tela(menu, OPTIONS);
+                                break;
+                            case 2:
+                                seleciona_nova_tela(menu, TITLE_SCREEN);
+                                break;                      
+                            case 3:
+                                return true;
+                                break;
+                        }
+                    break;
+
+                    case OPTIONS:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                seleciona_nova_tela(menu, PAUSE);
+                                break;
+                            case 1:
+                                seleciona_nova_tela(menu, PAUSE);
+                                break;
+                            case 2:
+                                seleciona_nova_tela(menu, PAUSE);
+                                break;
+                        }  
+                    break;
+
+                    case GAME_OVER:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                return true;
+                                break;
+                            case 1:
+                                return true;
+                                break;                        
+                        }
+                    break;
+
+                    case TITLE_SCREEN:
+                        switch (menu->botao_selecionado) {
+                            case 0:
+                                menu->new_game = 1;
+                                return true;
+                                break;
+                            case 1:
+                                // seleciona_nova_tela(menu, 4);
+                                return true;
+                                break;
+                            case 2:
+                                return true;
+                                break;   
+                        }  
+                    break;                   
+                }
+            }                  
+        }
+
+        else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch(ev.keyboard.keycode) {
+                case ALLEGRO_KEY_UP: 
+                    menu->key[KEY_UP] = true;
+                    break;
+
+                case ALLEGRO_KEY_DOWN:
+                    menu->key[KEY_DOWN] = true;
+                    break;
+
+                case ALLEGRO_KEY_Z:
+                    menu->key[KEY_Z] = true;
+                    break;
+
+                case ALLEGRO_KEY_ENTER:
+                    menu->key[KEY_ENTER] = true;
+                    break;
+            }
+        }
+
+        else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            switch(ev.keyboard.keycode) {
+                case ALLEGRO_KEY_UP: 
+                    menu->key[KEY_UP] = false;
+                    break;
+
+                case ALLEGRO_KEY_DOWN:
+                    menu->key[KEY_DOWN] = false;
+                    break;
+
+                case ALLEGRO_KEY_Z:
+                    menu->key[KEY_Z] = false;
+                    break;
+
+                case ALLEGRO_KEY_ENTER:
+                    menu->key[KEY_ENTER] = false;
+                    break;
+            }
+        }
+
+        if (redraw && al_is_event_queue_empty(menu->event_queue)) {
+           redraw = false;
+
+           desenha_menu_pause(menu);
+
+           al_flip_display();
+        }
+    }
 }
 
-void inicializa_event_queue_menu (Menu* menu) {
+void seleciona_nova_tela (Menu* menu, TELA tela) {
+    menu->tela_selecionada = tela;
+    menu->botao_selecionado = 0;
+}
+
+void navega_botoes (Menu* menu, DIRECAO direcao) {
+    if (direcao == CIMA) {
+        if (menu->botao_selecionado == 0)
+            menu->botao_selecionado = menu->numero_de_botoes[menu->tela_selecionada];
+        else
+            menu->botao_selecionado--;
+    }
+
+    if (direcao == BAIXO) {
+        if (menu->botao_selecionado == menu->numero_de_botoes[menu->tela_selecionada])
+            menu->botao_selecionado = 0;
+        else
+            menu->botao_selecionado++;
+    }
+}
+
+void inicializa_event_queue_menu_pause (Menu* menu) {
 	menu->event_queue = al_create_event_queue();
 
 	if(!menu->event_queue) {
 		fprintf(stderr, "Falha em executar lista de eventos do menu!\n");
 		exit(-1);
 	}
-  al_install_keyboard();
-  al_register_event_source(menu->event_queue, al_get_keyboard_event_source());
-  al_register_event_source(menu->event_queue, al_get_timer_event_source(menu->timer));
+
+    al_install_keyboard();
+    al_register_event_source(menu->event_queue, al_get_keyboard_event_source());
+    al_register_event_source(menu->event_queue, al_get_timer_event_source(menu->timer));
 }
 
-void inicializa_timer_menu (Menu* menu) {
-	menu->timer = al_create_timer(1.0/FPS);
+void inicializa_timer_menu_pause (Menu* menu) {
+	menu->timer = al_create_timer(1.0/MENU_FPS);
 
 	if(!menu->timer){
 		fprintf(stderr, "Falha em executar timer do menu!\n");

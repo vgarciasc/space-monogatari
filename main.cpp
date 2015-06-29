@@ -11,11 +11,26 @@ int main(int argc, char **argv) {
 
 	Alien alien[LINHAS_TROPA][COLUNAS_TROPA];
 
-    inicializa_jogo (&jogo, 640, 480);
+	inic_allegro();
 
-    loop_de_jogo (&jogo);
+   	inicializa_display (&jogo, LARGURA_DISPLAY, ALTURA_DISPLAY);
 
-    finaliza_jogo (&jogo);
+    // TITLE SCREEN
+	tela_boot_jogo(&jogo);
+
+	inicializa_menus(&jogo.menu);
+
+	loop_menu(&jogo.menu, TITLE_SCREEN);
+
+    while (jogo.menu.new_game == 1) {
+    	inicializa_jogo (&jogo);
+
+    	loop_de_jogo (&jogo);
+
+    	finaliza_jogo (&jogo);
+    }
+
+	finaliza_display (&jogo);
 
     return 0;
 }

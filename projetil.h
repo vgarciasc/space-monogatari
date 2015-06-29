@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "player.h"
+#include "config.h"
 
 #define VELOCIDADE_PROJETIL 10
 
