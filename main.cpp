@@ -13,11 +13,7 @@ int main(int argc, char **argv) {
 
 	inic_allegro();
 
-<<<<<<< HEAD
    	inicializa_display (&jogo, LARGURA_DISPLAY, ALTURA_DISPLAY);
-=======
-   	inicializa_display (&jogo, 640, 480);
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 
     // TITLE SCREEN
 	tela_boot_jogo(&jogo);
