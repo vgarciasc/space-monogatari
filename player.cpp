@@ -46,8 +46,8 @@ void desenha_player (Player* player) {
 						  al_get_bitmap_width(player->sprites[0]),
 						  al_get_bitmap_height(player->sprites[0]),
 
-						  player->posicao_x ,
-						  player->posicao_y ,
+						  player->posicao_x - player->delta_x,
+						  player->posicao_y + player->delta_y,
 						  LARGURA_SPRITES_PLAYER,
 						  ALTURA_SPRITES_PLAYER,
 
@@ -95,16 +95,14 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
 				if ((!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_player(&jogo->player)
-					|| jogo->projetil_stack[i].posicao_y > get_posicao_y_max_player(&jogo->player)
-					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_max_player(&jogo->player)
+					|| jogo->projetil_stack[i].posicao_y > 5 + get_posicao_y_max_player(&jogo->player)
+					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < 5 + get_posicao_y_max_player(&jogo->player)
 					|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_player(&jogo->player)))) {
 
 						copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						desenha_projetil (&jogo->projetil_stack[i]);
 						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						jogo->numero_de_projeteis--;
-
-						puts("A");
 
 						return;
 				}
@@ -114,19 +112,19 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 }
 
 int get_posicao_x_min_player (Player* player){
-	return player->posicao_x;
+	return player->posicao_x - player->delta_x;
 }
 
 int get_posicao_x_max_player (Player* player){
-	return player->posicao_x + al_get_bitmap_width(player->sprites[0]);
+	return player->posicao_x + player->delta_x;
 }
 
 int get_posicao_y_min_player (Player* player){
-	return player->posicao_y;
+	return player->posicao_y - player->delta_y;
 }
 
 int get_posicao_y_max_player (Player* player){
-	return player->posicao_y + al_get_bitmap_height(player->sprites[0]);
+	return player->posicao_y + player->delta_y;
 }
 
 int get_posicao_x_centro_player (Player* player){
