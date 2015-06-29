@@ -4,19 +4,14 @@
 
 #include "config.h"
 
-<<<<<<< HEAD
-=======
 struct Jogo;
 
->>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 struct Mothership {
 	ALLEGRO_BITMAP *imagem = NULL;
 	ALLEGRO_TIMER *tempo = NULL;
 	ALLEGRO_EVENT_QUEUE *fila_evento = NULL;
 
-	int segundos;
 	int posicao_x, posicao_y, delta_x, delta_y;
-	int velocidade, frequencia;
 	bool ativo;
 	int altura_sprite,largura_sprite;
 	int largura_tela;
@@ -38,11 +33,9 @@ void movimenta_mothership (Mothership*);
 void inicializa_mothership (Mothership*, Jogo*);
 
 //função que controla se a mothership mae aparece ou n
-int autoriza_mothership (Mothership*);
+bool autoriza_mothership (Mothership*);
 
 void inicializar_timer_mothership (Mothership*);
-
-void disparar_timer_mothership (Mothership*);
 
 void colisao_mothership_vs_projetil (Jogo*);
 
