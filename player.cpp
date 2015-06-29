@@ -95,7 +95,7 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
 				if ((!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_player(&jogo->player)
-					|| jogo->projetil_stack[i].posicao_y > get_posicao_y_min_player(&jogo->player)
+					|| jogo->projetil_stack[i].posicao_y < get_posicao_y_min_player(&jogo->player)
 					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_max_player(&jogo->player)
 					|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_player(&jogo->player)))) {
 
