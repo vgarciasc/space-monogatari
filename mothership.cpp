@@ -6,7 +6,6 @@
 #include "mothership.h"
 
 void desenha_mothership (Mothership *mothership) {
-	disparar_timer_mothership(mothership);
 
 	if (autoriza_mothership(mothership) || mothership->ativo) {
 		al_draw_scaled_bitmap(mothership->imagem,
@@ -32,12 +31,12 @@ void desenha_mothership (Mothership *mothership) {
 }
 
 void movimenta_mothership (Mothership *mothership) {
-	mothership->posicao_x += mothership->velocidade;
+	mothership->posicao_x += VELOCIDADE_MOTHERSHIP;
 }
 
 void reinicia_mothership (Mothership *mothership) {
-	mothership->posicao_x = - mothership->largura_sprite;
-	mothership->posicao_y = (mothership->altura_sprite - mothership->delta_y);
+	mothership->posicao_x = -LARGURA_SPRITES_MOTHERSHIP;
+	mothership->posicao_y = (ALTURA_SPRITES_MOTHERSHIP + mothership->delta_y);
 	mothership->ativo = false;
 }
 
@@ -48,16 +47,10 @@ void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
 		exit(0);
 	}
 
-	mothership->velocidade = 3;
-	mothership->frequencia = 30;
-	mothership->segundos = 1;
-
 	mothership->largura_tela = jogo->largura;
-	mothership->largura_sprite = al_get_bitmap_width(mothership->imagem);
-	mothership->altura_sprite = al_get_bitmap_height(mothership->imagem);
 
-	mothership->delta_x = (0.7*LARGURA_SPRITES_MOTHERSHIP)/2;
-	mothership->delta_y = (ALTURA_SPRITES_MOTHERSHIP)/2;
+	mothership->delta_x = (LARGURA_SPRITES_MOTHERSHIP)/3;
+	mothership->delta_y = (ALTURA_SPRITES_MOTHERSHIP)/6;
 
 	reinicia_mothership(mothership);
 	inicializar_timer_mothership(mothership);
@@ -65,38 +58,34 @@ void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
 
 void inicializar_timer_mothership(Mothership *mothership) {
     mothership->fila_evento = al_create_event_queue();
-    mothership->tempo = al_create_timer(1.0);
+    mothership->tempo = al_create_timer(FREQUENCIA_MOTHERSHIP);
 
     al_register_event_source(mothership->fila_evento, al_get_timer_event_source(mothership->tempo));
 	al_start_timer(mothership->tempo);
 }
 
-void disparar_timer_mothership(Mothership *mothership) {
-	if (!al_is_event_queue_empty(mothership->fila_evento)){
-	    ALLEGRO_EVENT evento;
-        al_wait_for_event(mothership->fila_evento, &evento);
-
-        if (evento.type == ALLEGRO_EVENT_TIMER)
-            mothership->segundos++;
-	}
-}
 
 void finaliza_mothership(Mothership *mothership){
 	al_destroy_bitmap(mothership->imagem);
 }
 
 
-int autoriza_mothership(Mothership *mothership){
-	if (((mothership->segundos % mothership->frequencia) == 0) && (!mothership->ativo)){
-		mothership->ativo = true;
-		return 1;
+bool autoriza_mothership(Mothership *mothership){
+	if (!al_is_event_queue_empty(mothership->fila_evento)){
+	    ALLEGRO_EVENT evento;
+        al_wait_for_event(mothership->fila_evento, &evento);
+
+        if (evento.type == ALLEGRO_EVENT_TIMER && !(mothership->ativo)){
+           	mothership->ativo = true;
+           	return true;
+        }   	
 	}
-	else
-		return 0;
+	
+	return false;
 }
 
 int get_posicao_x_max_mothership (Mothership *mothership) {
-	return mothership->posicao_x + mothership->largura_sprite - mothership->delta_x;
+	return mothership->posicao_x + LARGURA_SPRITES_MOTHERSHIP - mothership->delta_x;
 }
 
 int get_posicao_x_min_mothership (Mothership *mothership) {
@@ -104,12 +93,14 @@ int get_posicao_x_min_mothership (Mothership *mothership) {
 }
 
 int get_posicao_y_max_mothership (Mothership *mothership) {
-	return mothership->posicao_y + mothership->altura_sprite - mothership->delta_y;
+	return mothership->posicao_y + ALTURA_SPRITES_MOTHERSHIP - mothership->delta_y;
 }
 
 int get_posicao_y_min_mothership (Mothership *mothership) {
 	return mothership->posicao_y + mothership->delta_y;
 }
+
+
 
 void colisao_mothership_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
@@ -124,7 +115,6 @@ void colisao_mothership_vs_projetil (Jogo *jogo) {
 
 				jogo->numero_de_projeteis--;
 				jogo->hud.score += PONTOS_MOTHERSHIP;
-				jogo->mothership.segundos++;
 				reinicia_mothership(&jogo->mothership);
 
 				return;
