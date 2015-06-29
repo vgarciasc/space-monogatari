@@ -8,7 +8,10 @@
 #include "menu.h"
 #include "mothership.h"
 #include "hud.h"
+<<<<<<< HEAD
 #include "shield.h"
+=======
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 
 struct Jogo {
 	ALLEGRO_DISPLAY *display;
@@ -23,13 +26,20 @@ struct Jogo {
 	Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
 	Menu menu;
 	Hud hud;
+<<<<<<< HEAD
 
 	int numero_shields;
 	Shield* shields;
+=======
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 
 	Projetil projetil_stack[50];
 	int numero_de_projeteis;
 
+<<<<<<< HEAD
+=======
+	int loop_count;
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 	int loop_count_projetil;
 	int loop_count_menu_pause;
 	int loop_alien_movement;
@@ -51,9 +61,15 @@ void desenha_jogo (Jogo* jogo);
 void loop_de_jogo (Jogo* jogo);
 
 void desenha_fundo_jogo (Jogo* jogo);
+<<<<<<< HEAD
 
 void incremento_loop_elementos_jogo (Jogo* jogo);
 
+=======
+
+void incremento_loop_elementos_jogo (Jogo* jogo);
+
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 void inicializa_teclado_jogo (Jogo* jogo);
 
 void inicializa_event_queue_jogo (Jogo* jogo);

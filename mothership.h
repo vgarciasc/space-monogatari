@@ -4,6 +4,11 @@
 
 #include "config.h"
 
+<<<<<<< HEAD
+=======
+struct Jogo;
+
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 struct Mothership {
 	ALLEGRO_BITMAP *imagem = NULL;
 	ALLEGRO_TIMER *tempo = NULL;

@@ -6,10 +6,17 @@
 
 #include "player.h"
 
+<<<<<<< HEAD
+=======
+#define ALTURA_SPRITES_PLAYER 48
+#define LARGURA_SPRITES_PLAYER 48
+
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
 	player->posicao_y = posicao_y;
 	player->projetil_cooldown = 30;
+<<<<<<< HEAD
 
 	player->sprites[0] = al_load_bitmap("resources/player4.png");
 
@@ -18,6 +25,18 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 		exit(0);
 	}
 
+=======
+
+	// player->sprites[0] = inicializa_sprites_player (player, "resources/player4.png", 16, 16);
+
+	player->sprites[0] = al_load_bitmap("resources/player4.png");
+
+	if (player->sprites[0] == NULL) {
+		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
+		exit(0);
+	}
+
+>>>>>>> 00a5a2ad6cdbba4eaf3f3c8ef5aab7000430e263
 	player->delta_x = LARGURA_SPRITES_PLAYER/2;
 	player->delta_y = ALTURA_SPRITES_PLAYER/2;
 }
