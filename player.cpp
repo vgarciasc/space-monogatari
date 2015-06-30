@@ -7,7 +7,6 @@
 #include "game.h"
 #include "player.h"
 
-Jogo jogo;
 void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
 	player->posicao_y = posicao_y;
