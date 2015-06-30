@@ -36,7 +36,7 @@ void movimenta_mothership (Mothership *mothership) {
 
 void reinicia_mothership (Mothership *mothership) {
 	mothership->posicao_x = -LARGURA_SPRITES_MOTHERSHIP;
-	mothership->posicao_y = (ALTURA_SPRITES_MOTHERSHIP + mothership->delta_y);
+	mothership->posicao_y = (ALTURA_SPRITES_MOTHERSHIP);
 	mothership->ativo = false;
 }
 
@@ -49,7 +49,7 @@ void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
 
 	mothership->largura_tela = jogo->largura;
 
-	mothership->delta_x = (LARGURA_SPRITES_MOTHERSHIP)/3;
+	mothership->delta_x = (LARGURA_SPRITES_MOTHERSHIP)/6;
 	mothership->delta_y = (ALTURA_SPRITES_MOTHERSHIP)/6;
 
 	reinicia_mothership(mothership);
