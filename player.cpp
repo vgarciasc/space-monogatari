@@ -104,6 +104,9 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						jogo->numero_de_projeteis--;
 
+						jogo->lives--;
+						//lugar para botar a explosão
+
 						return;
 				}
 			}

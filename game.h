@@ -27,6 +27,8 @@ struct Jogo {
 	int numero_shields;
 	Shield* shields;
 
+	int lives;
+
 	Projetil projetil_stack[50];
 	int numero_de_projeteis;
 

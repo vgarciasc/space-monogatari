@@ -17,7 +17,7 @@ struct Menu {
 	int font_size;
 
 	//Telas e Botões funcionam com lógica de array: o primeiro é 0, o segundo é 1, etc
-	int numero_de_botoes[MAX_BOTOES];
+	int numero_de_botoes[N_TELAS];
 	int botao_selecionado;
 
 	TELA tela_selecionada;

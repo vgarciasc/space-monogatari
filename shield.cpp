@@ -24,10 +24,7 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y) {
 
 	for (int i = 0; i < PARTES_X; i++) {
 		for (int j = 0; j < PARTES_Y; j++) {
-			if (i == 1)
-				shield->part_state[i][j] = DANIFICADO;
-			else
-				shield->part_state[i][j] = INTEIRO;
+			shield->part_state[i][j] = INTEIRO;
 		}
 	}	
 }

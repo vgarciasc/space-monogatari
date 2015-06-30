@@ -3,23 +3,27 @@
 
 #include "config.h"
 
+struct Jogo;
+
 struct Hud {
 	ALLEGRO_FONT *fonte=NULL;
 	ALLEGRO_BITMAP *life=NULL;
-	int score, score_posicao_x, score_posicao_y;
-	int lives, lives_posicao_x, lives_posicao_y;
+	int score, score_posicao_x;
+	int lives, lives_posicao_x;
+
+	int posicao_y;
 };
 
-void desenha_hud (Hud*);
+void desenha_hud (Hud* hud, Jogo* jogo);
 
-void desenha_score (Hud*);
+void desenha_score (Hud* hud);
 
-void desenha_lives (Hud*);
+void desenha_lives (Hud* hud, Jogo* jogo);
 
-void inicializa_hud (Hud*);
+void inicializa_hud (Hud *hud, Jogo* jogo);
 
-void inicializa_score (Hud*);
+void inicializa_score (Hud* hud);
 
-void inicializa_lives (Hud*);
+void inicializa_lives (Hud* hud, Jogo* jogo);
 
 #endif

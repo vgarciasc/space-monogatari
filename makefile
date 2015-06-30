@@ -9,7 +9,7 @@ all: game.o player.o projetil.o menu.o alien.o mothership.o hud.o shield.o
 	rm hud.o
 	rm shield.o
 game.o:
-	g++ -c game.cpp
+	g++ -c -g game.cpp
 player.o:
 	g++ -c player.cpp
 projetil.o:

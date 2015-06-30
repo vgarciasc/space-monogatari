@@ -27,6 +27,8 @@ void inicializa_jogo (Jogo* jogo) {
     jogo->event_queue = NULL;
     jogo->menu.new_game = 1;
 
+    jogo->lives = NUMERO_VIDAS;
+
     jogo->numero_de_projeteis = 0;
     jogo->loop_count_projetil = jogo->player.projetil_cooldown;
     jogo->loop_count_menu_pause = 1;
@@ -50,7 +52,7 @@ void inicializa_jogo (Jogo* jogo) {
     inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
     inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
     inicializa_mothership(&jogo->mothership, jogo);
-    inicializa_hud(&jogo->hud);
+    inicializa_hud(&jogo->hud, jogo);
     inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
     
     for (int i = 0; i < jogo->numero_shields; i++) {
@@ -68,7 +70,7 @@ void finaliza_jogo (Jogo* jogo) {
 void desenha_jogo (Jogo* jogo) {
     desenha_fundo_jogo(jogo);
     desenha_mothership(&jogo->mothership);
-    desenha_hud(&jogo->hud);
+    desenha_hud(&jogo->hud, jogo);
 
     for (int i = 0; i < jogo->numero_shields; i++)
         desenha_shield(&jogo->shields[i]);
@@ -126,6 +128,8 @@ void loop_de_jogo (Jogo* jogo) {
             if (jogo->key[KEY_Z]
                 && jogo->loop_count_projetil > jogo->player.projetil_cooldown
                 && jogo->loop_count_menu_pause > 1) {
+                puts("B");
+                printf("BOOLEAN jogo->key[KEY_Z] = %d \n", jogo->key[KEY_Z]);
                 jogo->loop_count_projetil = 0;
                 cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
                               get_posicao_x_centro_player(&jogo->player),
@@ -177,29 +181,34 @@ void loop_de_jogo (Jogo* jogo) {
     }
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
-            
+
             colisao_player_vs_projetil(jogo);
             colisao_alien_vs_projetil(jogo);
             colisao_mothership_vs_projetil(jogo);
             for (int i = 0; i < jogo->numero_shields; i++)
                 colisao_shield_vs_projetil (jogo, &jogo->shields[i]);
             
-        	redraw = false;
-			jogo->key[KEY_ESCAPE] = false;
+            redraw = false;
+            jogo->key[KEY_ESCAPE] = false;
 
-			if (!(jogo->loop_alien_movement % (GAME_FPS/2)))
-				rota_tropa (jogo->alien, jogo);
+            if (!(jogo->loop_alien_movement % (GAME_FPS/2)))
+                rota_tropa (jogo->alien, jogo);
 
-			if (!(jogo->loop_alien_shots % (GAME_FPS/2))) {
-				atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
-				jogo->numero_de_projeteis++;
-			}
+            if (!(jogo->loop_alien_shots % (GAME_FPS/2))) {
+                atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
+                jogo->numero_de_projeteis++;
+            }
 
-			incremento_loop_elementos_jogo(jogo);
+            incremento_loop_elementos_jogo(jogo);
 
-			desenha_jogo(jogo);
+            desenha_jogo(jogo);
 
-			al_flip_display();
+            al_flip_display();
+
+            if (jogo->lives < 0) {
+                inicializa_menus(&jogo->menu);
+                doexit = loop_menu(&jogo->menu, GAME_OVER);
+            }
 		}
     }
 }
