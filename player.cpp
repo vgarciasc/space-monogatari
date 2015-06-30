@@ -7,6 +7,7 @@
 #include "game.h"
 #include "player.h"
 
+Jogo jogo;
 void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_x = posicao_x;
 	player->posicao_y = posicao_y;
@@ -52,6 +53,8 @@ void desenha_player (Player* player) {
 						  ALTURA_SPRITES_PLAYER,
 
 						  flags);
+
+
 }
 
 ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename, int largura, int altura) {
@@ -90,30 +93,69 @@ void move_player (Player* player, DIRECAO direcao) {
 	}
 }
 
+
 void colisao_player_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
-				if ((!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_player(&jogo->player)
-					|| jogo->projetil_stack[i].posicao_y > 5 + get_posicao_y_max_player(&jogo->player)
-					|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < 5 + get_posicao_y_max_player(&jogo->player)
-					|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_player(&jogo->player)))) {
-
+				if((verificar_se_ponto_esta_dentro( jogo->projetil_stack[i].posicao_x,
+												   jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite,
+												   &jogo->player) 	) ||
+				(verificar_se_ponto_esta_dentro( jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite,
+												       jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite,
+												       &jogo->player)) 	)
+				{
 						copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						desenha_projetil (&jogo->projetil_stack[i]);
 						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
 						jogo->numero_de_projeteis--;
-
-						jogo->lives--;
-						//lugar para botar a explosão
+						jogo->hud.lives--;
 
 						return;
+
+
 				}
 			}
 		}
 	}
 }
+/*
+ *
+ *
+ * AQUI VAI FICAR A APROXIMAÇÃO PARA TRIANGULO
+ *
+ *
+ */
+bool verificar_se_ponto_esta_dentro(float x, float y, Player* player){
 
+	float coordenada_1[2]={get_posicao_x_min_player(player), get_posicao_y_max_player(player)};
+	float coordenada_2[2]={get_posicao_x_max_player(player), get_posicao_y_max_player(player)};
+	float coordenada_3[2]={get_posicao_x_min_player(player)+LARGURA_SPRITES_PLAYER/2, get_posicao_y_min_player(player)};
+	float coordenada_4[2]={x,y};
+
+	if( calcular_area(coordenada_1,coordenada_2,coordenada_3) == calcular_area(coordenada_1,coordenada_2,coordenada_4)
+																+ calcular_area(coordenada_1,coordenada_3, coordenada_4)
+																+ calcular_area(coordenada_2, coordenada_3, coordenada_4)) {
+		return true;
+	}
+	else
+	return false;
+}
+
+float calcular_area(float coordenada1[], float coordenada2[], float coordenada3[]){
+	float x = coordenada1[0]*coordenada2[1] + coordenada1[1]*coordenada3[0] + coordenada2[0]*coordenada3[1] - coordenada2[1]*coordenada3[0] - coordenada1[0]*coordenada3[1] - coordenada1[1]*coordenada2[0];
+	if(x>=0)
+		return x;
+	else
+		return -x;
+}
+
+
+
+
+/*
+ * FIM DA APROXIMAÇÃO
+ */
 int get_posicao_x_min_player (Player* player){
 	return player->posicao_x - player->delta_x;
 }
@@ -123,11 +165,11 @@ int get_posicao_x_max_player (Player* player){
 }
 
 int get_posicao_y_min_player (Player* player){
-	return player->posicao_y - player->delta_y;
+	return player->posicao_y + player->delta_y;
 }
 
 int get_posicao_y_max_player (Player* player){
-	return player->posicao_y + player->delta_y;
+	return player->posicao_y + 3*player->delta_y;
 }
 
 int get_posicao_x_centro_player (Player* player){
