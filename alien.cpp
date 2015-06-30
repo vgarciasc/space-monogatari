@@ -13,6 +13,8 @@ void inicializa_alien (Alien* alien, int posicao_x, int posicao_y) {
 
 	alien->vivo = true;
 
+	alien->velocidade = DISTANCIA_PASSO_ALIEN;
+
 	alien->direcao_atual = DIREITA;
 
 	inicializa_sprites_alien (alien);
@@ -26,7 +28,6 @@ void inicializa_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], int posicao_x, 
 		for (int j = 0; j < LINHAS_TROPA; j++)
 			inicializa_alien (&alien[i][j], posicao_x + i * (LARGURA_SPRITES_ALIEN + LARGURA_SPRITES_ALIEN/2),
 									posicao_y + j * (ALTURA_SPRITES_ALIEN + ALTURA_SPRITES_ALIEN/2) ); 
-
 }
 
 void finaliza_alien (Alien* alien) {
@@ -66,12 +67,12 @@ void inicializa_sprites_alien (Alien* alien) {
 	alien->sprite_atual = 0;
 
 	if (alien->sprites[0] == NULL) {
-		puts("Erro ao carregar o arquivo resources/alien1.png");
+		puts("Erro ao carregar o arquivo \"resources/alien1.png\"");
 		exit(0);
 	}
 
 	if (alien->sprites[1] == NULL) {
-		puts("Erro ao carregar o arquivo resources/alien1-2.png");
+		puts("Erro ao carregar o arquivo \"resources/alien1-2.png\"");
 		exit(0);
 	}
 }
@@ -92,19 +93,19 @@ void move_alien (Alien* alien, DIRECAO direcao) {
 	alien->sprites[1] = temp;
 
 	if (direcao == ESQUERDA) {
-		alien->posicao_x -= DISTANCIA_PASSO_ALIEN;
+		alien->posicao_x -= alien->velocidade;
 		alien->direcao_atual = ESQUERDA;
 	}
 	if (direcao == DIREITA) {
-		alien->posicao_x += DISTANCIA_PASSO_ALIEN;
+		alien->posicao_x += alien->velocidade;
 		alien->direcao_atual = DIREITA;
 	}
 	if (direcao == CIMA) {
-		alien->posicao_y -= DISTANCIA_PASSO_ALIEN;
+		alien->posicao_y -= alien->velocidade;
 		alien->direcao_atual = CIMA;
 	}
 	if (direcao == BAIXO) {
-		alien->posicao_y += DISTANCIA_PASSO_ALIEN;
+		alien->posicao_y += alien->velocidade;
 		alien->direcao_atual = BAIXO;
 	}
 }
@@ -145,20 +146,20 @@ void move_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], DIRECAO direcao) {
 }
 
 void rota_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Jogo* jogo) {
-	if (alien[0][0].direcao_atual == ESQUERDA && get_posicao_x_min_alien(&alien[0][0]) > 0 + 10 + DISTANCIA_PASSO_ALIEN)
+	if (alien[0][0].direcao_atual == ESQUERDA && get_posicao_x_min_alien(&alien[0][0]) > 0 + 10 + alien[0][0].velocidade)
 		move_tropa (alien, ESQUERDA);
 
-	if (get_posicao_x_min_alien(&alien[0][0]) <= 0 + 10 + DISTANCIA_PASSO_ALIEN) {
+	if (get_posicao_x_min_alien(&alien[0][0]) <= 0 + 10 + alien[0][0].velocidade) {
 			move_tropa (alien, BAIXO);
 			muda_direcao_tropa(alien, DIREITA);
 	}
 
-	if (get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) >= jogo->largura - 10 - DISTANCIA_PASSO_ALIEN) {
+	if (get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) >= jogo->largura - 10 - alien[0][0].velocidade) {
 			move_tropa (alien, BAIXO);
 			muda_direcao_tropa(alien, ESQUERDA);
 	}
 
-	if (alien[COLUNAS_TROPA-1][0].direcao_atual == DIREITA && get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) < jogo->largura - 10 - DISTANCIA_PASSO_ALIEN)
+	if (alien[COLUNAS_TROPA-1][0].direcao_atual == DIREITA && get_posicao_x_max_alien(&alien[COLUNAS_TROPA-1][0]) < jogo->largura - 10 - alien[0][0].velocidade)
 		move_tropa (alien, DIREITA);
 
 }

@@ -18,6 +18,8 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y);
 
 void desenha_shield (Shield* shield); 
 
+void inicializa_sprite_shield (Shield* shield);
+
 void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield);
 
 double get_posicao_x_min_part_n (Shield* shield, int n);

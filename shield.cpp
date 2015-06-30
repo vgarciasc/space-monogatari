@@ -10,17 +10,7 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y) {
 	shield->posicao_x = posicao_x;
 	shield->posicao_y = posicao_y;
 
-	shield->bitmap_inteiro = al_load_bitmap("resources/shield_inteiro.png");
-	if (shield->bitmap_inteiro == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/shield_inteiro.png\"");
-		exit(0);
-	}
-
-	shield->bitmap_danificado = al_load_bitmap("resources/shield_danificado.png");
-	if (shield->bitmap_danificado == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/shield_danificado.png\"");
-		exit(0);
-	}
+	inicializa_sprite_shield (shield);
 
 	for (int i = 0; i < PARTES_X; i++) {
 		for (int j = 0; j < PARTES_Y; j++) {
@@ -55,6 +45,47 @@ void desenha_shield (Shield* shield) {
 			}
 		}
 	}
+}
+
+void inicializa_sprite_shield (Shield* shield) {
+	ALLEGRO_BITMAP* resized_bmp, *loaded_bmp, *prev_target;
+	prev_target = al_get_target_bitmap();
+
+	shield->bitmap_inteiro = al_create_bitmap(LARGURA_SHIELD, ALTURA_SHIELD);
+	loaded_bmp = al_load_bitmap("resources/shield_inteiro.png");
+	if (loaded_bmp == NULL) {
+		puts("Erro ao carregar o arquivo \"resources/shield_inteiro.png\"");
+		exit(0);
+	}
+	al_set_target_bitmap(shield->bitmap_inteiro);
+	al_draw_scaled_bitmap(loaded_bmp,
+						  0, 0,
+						  al_get_bitmap_width(loaded_bmp),
+						  al_get_bitmap_height(loaded_bmp),
+						  0, 0,
+						  LARGURA_SHIELD,
+						  ALTURA_SHIELD,
+						  0);
+	// al_destroy_bitmap(loaded_bmp);
+
+	shield->bitmap_danificado = al_create_bitmap(LARGURA_SHIELD, ALTURA_SHIELD);
+	loaded_bmp = al_load_bitmap("resources/shield_danificado.png");
+	if (loaded_bmp == NULL) {
+		puts("Erro ao carregar o arquivo \"resources/shield_danificado.png\"");
+		exit(0);
+	}
+	al_set_target_bitmap(shield->bitmap_danificado);
+	al_draw_scaled_bitmap(loaded_bmp,
+						  0, 0,
+						  al_get_bitmap_width(loaded_bmp),
+						  al_get_bitmap_height(loaded_bmp),
+						  0, 0,
+						  LARGURA_SHIELD,
+						  ALTURA_SHIELD,
+						  0);
+
+	al_destroy_bitmap(loaded_bmp);
+	al_set_target_bitmap(prev_target);
 }
 
 void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield) {

@@ -7,6 +7,8 @@
 
 int main(int argc, char **argv) {
 
+    int fase = 0;
+
     Jogo jogo;
 
 	Alien alien[LINHAS_TROPA][COLUNAS_TROPA];
@@ -20,12 +22,13 @@ int main(int argc, char **argv) {
 
 	inicializa_menus(&jogo.menu);
 
-	loop_menu(&jogo.menu, TITLE_SCREEN);
+	loop_menu(&jogo.menu, &jogo.hud, TITLE_SCREEN);
 
     while (jogo.menu.new_game == 1) {
-    	inicializa_jogo (&jogo);
+    	inicializa_jogo (&jogo, fase);
 
-    	loop_de_jogo (&jogo, &jogo.hud);
+    	if (loop_de_jogo (&jogo))
+            fase++;
 
     	finaliza_jogo (&jogo);
     }

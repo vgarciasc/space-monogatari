@@ -6,6 +6,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
+#include "hud.h"
 #include "config.h"
 
 struct Menu {
@@ -13,14 +14,18 @@ struct Menu {
 	ALLEGRO_TIMER* timer;
 
 	ALLEGRO_FONT* font_title;
+	ALLEGRO_FONT* font_subtitle;
 	ALLEGRO_FONT* font_items;
 	int font_size;
 
 	//Telas e Botões funcionam com lógica de array: o primeiro é 0, o segundo é 1, etc
 	int numero_de_botoes[N_TELAS];
 	int botao_selecionado;
-
 	TELA tela_selecionada;
+
+	int score;
+
+	MODO modo;
 
 	int new_game;
 
@@ -33,7 +38,7 @@ void desenha_fundo_menu_pause ();
 
 void desenha_menu_pause (Menu* menu);
 
-bool loop_menu (Menu* menu, TELA tela);
+bool loop_menu (Menu* menu, Hud* hud, TELA tela);
 
 void seleciona_nova_tela (Menu* menu, TELA tela);
 

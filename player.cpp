@@ -19,13 +19,6 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 		exit(0);
 	}
 
-	player->sprites[0] = al_load_bitmap("resources/player4.png");
-
-	if (player->sprites[0] == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
-		exit(0);
-	}
-
 	player->delta_x = LARGURA_SPRITES_PLAYER/2;
 	player->delta_y = ALTURA_SPRITES_PLAYER/2;
 }
@@ -66,11 +59,6 @@ ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename,
 	prev_target = al_get_target_bitmap();
 	al_set_target_bitmap(resized_bmp);
 
-	if (loaded_bmp == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
-		exit(0);
-	}
-
     al_set_target_bitmap(prev_target);
   	al_destroy_bitmap(loaded_bmp);
 
@@ -93,7 +81,7 @@ void move_player (Player* player, DIRECAO direcao) {
 }
 
 
-bool colisao_player_vs_projetil (Jogo *jogo) {
+void colisao_player_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
@@ -110,13 +98,11 @@ bool colisao_player_vs_projetil (Jogo *jogo) {
 						jogo->numero_de_projeteis--;
 						jogo->hud.lives--;
 
-						return true;
+						return;
 				}
 			}
 		}
 	}
-
-	return false;
 }
 /*
  *

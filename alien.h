@@ -15,6 +15,8 @@ struct Alien {
 	int delta_x, delta_y;
 	DIRECAO direcao_atual;
 
+	int velocidade;
+	
 	bool vivo;
 
 	int sprite_atual;

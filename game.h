@@ -27,6 +27,8 @@ struct Jogo {
 	int numero_shields;
 	Shield* shields;
 
+	int fase;
+
 	Projetil projetil_stack[50];
 	int numero_de_projeteis;
 
@@ -42,13 +44,13 @@ void inicializa_display (Jogo* jogo, int largura, int altura);
 
 void finaliza_display (Jogo* jogo);
 
-void inicializa_jogo (Jogo* jogo);
+void inicializa_jogo (Jogo* jogo, int fase);
 
 void finaliza_jogo (Jogo* jogo);
 
 void desenha_jogo (Jogo* jogo);
 
-void loop_de_jogo (Jogo* jogo, Hud* hud);
+bool loop_de_jogo (Jogo* jogo);
 
 void desenha_fundo_jogo (Jogo* jogo);
 
