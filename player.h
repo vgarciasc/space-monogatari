@@ -43,4 +43,21 @@ int get_posicao_y_max_player (Player* player);
 
 int get_posicao_x_centro_player (Player* player);
 
+/*
+ *
+ *
+ * AQUI VAI FICAR A APROXIMAÇÃO PARA TRIANGULO
+ *
+ *
+ */
+
+
+float calcular_area(float*, float *, float *);
+bool verificar_se_ponto_esta_dentro(float x, float y, Player* player);
+
+
+/*
+ * FIM DA APROXIMAÇÃO
+ */
+
 #endif
