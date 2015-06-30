@@ -165,7 +165,7 @@ int get_posicao_x_max_player (Player* player){
 }
 
 int get_posicao_y_min_player (Player* player){
-	return player->posicao_y + player->delta_y;
+	return player->posicao_y + player->delta_y + 4;
 }
 
 int get_posicao_y_max_player (Player* player){
