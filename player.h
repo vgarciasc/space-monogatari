@@ -31,7 +31,7 @@ void finaliza_sprites_player (Player* player);
 
 void move_player (Player* player, DIRECAO direcao);
 
-void colisao_player_vs_projetil (Jogo *jogo);
+bool colisao_player_vs_projetil (Jogo *jogo);
 
 int get_posicao_x_min_player (Player* player);
 

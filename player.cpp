@@ -93,7 +93,7 @@ void move_player (Player* player, DIRECAO direcao) {
 }
 
 
-void colisao_player_vs_projetil (Jogo *jogo) {
+bool colisao_player_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
@@ -110,13 +110,13 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 						jogo->numero_de_projeteis--;
 						jogo->hud.lives--;
 
-						return;
-
-
+						return true;
 				}
 			}
 		}
 	}
+
+	return false;
 }
 /*
  *

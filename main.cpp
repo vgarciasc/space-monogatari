@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
     while (jogo.menu.new_game == 1) {
     	inicializa_jogo (&jogo);
 
-    	loop_de_jogo (&jogo);
+    	loop_de_jogo (&jogo, &jogo.hud);
 
     	finaliza_jogo (&jogo);
     }

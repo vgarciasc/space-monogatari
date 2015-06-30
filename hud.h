@@ -14,16 +14,16 @@ struct Hud {
 	int posicao_y;
 };
 
-void desenha_hud (Hud* hud, Jogo* jogo);
+void desenha_hud (Hud* hud);
 
 void desenha_score (Hud* hud);
 
-void desenha_lives (Hud* hud, Jogo* jogo);
+void desenha_lives (Hud* hud);
 
-void inicializa_hud (Hud *hud, Jogo* jogo);
+void inicializa_hud (Hud *hud);
 
 void inicializa_score (Hud* hud);
 
-void inicializa_lives (Hud* hud, Jogo* jogo);
+void inicializa_lives (Hud* hud);
 
 #endif

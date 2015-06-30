@@ -27,8 +27,6 @@ void inicializa_jogo (Jogo* jogo) {
     jogo->event_queue = NULL;
     jogo->menu.new_game = 1;
 
-    jogo->lives = NUMERO_VIDAS;
-
     jogo->numero_de_projeteis = 0;
     jogo->loop_count_projetil = jogo->player.projetil_cooldown;
     jogo->loop_count_menu_pause = 1;
@@ -52,7 +50,7 @@ void inicializa_jogo (Jogo* jogo) {
     inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
     inicializa_tropa(jogo->alien, jogo->largura/10, jogo->altura/12);
     inicializa_mothership(&jogo->mothership, jogo);
-    inicializa_hud(&jogo->hud, jogo);
+    inicializa_hud(&jogo->hud);
     inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
     
     for (int i = 0; i < jogo->numero_shields; i++) {
@@ -70,7 +68,7 @@ void finaliza_jogo (Jogo* jogo) {
 void desenha_jogo (Jogo* jogo) {
     desenha_fundo_jogo(jogo);
     desenha_mothership(&jogo->mothership);
-    desenha_hud(&jogo->hud, jogo);
+    desenha_hud(&jogo->hud);
 
     for (int i = 0; i < jogo->numero_shields; i++)
         desenha_shield(&jogo->shields[i]);
@@ -93,7 +91,7 @@ void desenha_jogo (Jogo* jogo) {
 	al_flip_display();
 }
 
-void loop_de_jogo (Jogo* jogo) {
+void loop_de_jogo (Jogo* jogo, Hud* hud) {
     al_start_timer(jogo->timer);
     bool doexit = false;
     bool redraw = true;
@@ -182,9 +180,12 @@ void loop_de_jogo (Jogo* jogo) {
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
 
-            colisao_player_vs_projetil(jogo);
+            if (colisao_player_vs_projetil(jogo))
+                hud->lives--;
+
             colisao_alien_vs_projetil(jogo);
             colisao_mothership_vs_projetil(jogo);
+            
             for (int i = 0; i < jogo->numero_shields; i++)
                 colisao_shield_vs_projetil (jogo, &jogo->shields[i]);
             
@@ -205,10 +206,10 @@ void loop_de_jogo (Jogo* jogo) {
 
             al_flip_display();
 
-            if (jogo->lives < 0) {
-                inicializa_menus(&jogo->menu);
-                doexit = loop_menu(&jogo->menu, GAME_OVER);
-            }
+            // if (hud->lives < 0) {
+            //     inicializa_menus(&jogo->menu);
+            //     doexit = loop_menu(&jogo->menu, GAME_OVER);
+            // }
 		}
     }
 }
