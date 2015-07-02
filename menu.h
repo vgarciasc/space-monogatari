@@ -30,11 +30,11 @@ struct Menu {
 	bool key[N_KEYS];
 };
 
-void inicializa_menus (Menu* menu);
+void inicializa_menus (Menu* menu, Hud* hud);
 
 void desenha_fundo_menu_pause ();
 
-void desenha_menu_pause (Menu* menu);
+void desenha_menu_pause (Menu* menu, Hud* hud);
 
 bool loop_menu (Menu* menu, Hud* hud, TELA tela);
 

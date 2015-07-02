@@ -114,7 +114,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 move_player(&jogo->player, DIREITA);
  
             if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
-                inicializa_menus(&jogo->menu);
+                inicializa_menus(&jogo->menu, &jogo->hud);
                 doexit = loop_menu(&jogo->menu, &jogo->hud, PAUSE);
                 jogo->key[KEY_Z] = false;
                 jogo->loop_count_menu_pause = 0;
@@ -201,7 +201,7 @@ bool loop_de_jogo (Jogo* jogo) {
             al_flip_display();
 
             if (jogo->hud.lives < 0) {
-                inicializa_menus(&jogo->menu);
+                inicializa_menus(&jogo->menu, &jogo->hud);
                 doexit = loop_menu(&jogo->menu, &jogo->hud, GAME_OVER);
             }
 		}
