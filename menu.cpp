@@ -7,13 +7,12 @@
 
 #include "menu.h"
 
-void inicializa_menus (Menu* menu, Hud* hud) {
+void inicializa_menus (Menu* menu) {
     menu->event_queue = NULL;
     menu->timer = NULL;
 
     inicializa_timer_menu_pause (menu);
     inicializa_event_queue_menu_pause(menu);
-    inicializar_high_score(hud);
 
     menu->botao_selecionado = 0;
 
@@ -35,7 +34,7 @@ void desenha_fundo_menu_pause () {
 	al_clear_to_color(MARROM_ESCURO);
 }
 
-void desenha_menu_pause (Menu* menu, Hud* hud) {
+void desenha_menu_pause (Menu* menu) {
     desenha_fundo_menu_pause ();
 
     char tela_botao[N_TELAS - 1][MAX_BOTOES - 1][20];
@@ -59,10 +58,9 @@ void desenha_menu_pause (Menu* menu, Hud* hud) {
 
     //GAME_OVER
     strcpy(titulo_tela[2], "GAME OVER");
-    strcpy(tela_botao[2][0], "SUBMIT SCORE");
-    strcpy(tela_botao[2][1], "NEW GAME");
-    strcpy(tela_botao[2][2], "QUIT GAME");
-    menu->numero_de_botoes[2] = 2;
+    strcpy(tela_botao[2][0], "NEW GAME");
+    strcpy(tela_botao[2][1], "QUIT GAME");
+    menu->numero_de_botoes[2] = 1;
 
     //TITLE_SCREEN
     strcpy(titulo_tela[3], "space monogatari");
@@ -107,18 +105,8 @@ void desenha_menu_pause (Menu* menu, Hud* hud) {
     strcpy(tela_botao[8][0], "<===");
     menu->numero_de_botoes[8] = 0;
 
-    //SUBMIT_SCORE
-    strcpy(titulo_tela[9], "SUBMIT SCORE");
-    strcpy(tela_botao[9][0], "SUBMIT");
-    menu->numero_de_botoes[9] = 0;
-
-    //HIGH SCORES
-    strcpy(titulo_tela[10], "HIGH SCORES");
-    strcpy(tela_botao[10][0],"<===");
-    menu->numero_de_botoes[10] = 0;
-
     for (int i = 0; i < N_TELAS - 1; i++) {
-        if (menu->tela_selecionada == i && i != 2 && i != 8 && i != 9 && i != 10) {
+        if (menu->tela_selecionada == i && i != 2 && i != 8) {
             for (int j = 0; j < menu->numero_de_botoes[i] + 1; j++) {
                 al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[i]);
                 
@@ -132,9 +120,6 @@ void desenha_menu_pause (Menu* menu, Hud* hud) {
 
     //CASO ESPECIAL: GAME_OVER
     if (menu->tela_selecionada == 2) {
-        if (hud->score <= hud->scores_high_score[9])
-            // menu->numero_de_botoes[2]--;
-
         for (int j = 0; j < menu->numero_de_botoes[2] + 1; j++) {
             al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[2]);
             al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*2, ALLEGRO_ALIGN_CENTRE, "your score was:");
@@ -161,37 +146,6 @@ void desenha_menu_pause (Menu* menu, Hud* hud) {
             else
                 al_draw_text(menu->font_items, BRANCO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+5), ALLEGRO_ALIGN_CENTRE, tela_botao[8][j]);
         }
-    }
-    //CASO ESPECIAL: SUBMIT_SCORE
-    if (menu->tela_selecionada == 9 ) {
-       iniciar_salvar_score(hud);
-       for (int j = 0; j < menu->numero_de_botoes[9] + 1; j++) {
-           al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[9]);
-           al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*2, ALLEGRO_ALIGN_CENTRE, "PLEASE ENTER YOUR INITIALS");
-           al_draw_textf(menu->font_title, VERDE, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.75)*2, ALLEGRO_ALIGN_CENTRE,"%c%c%c" ,hud->nome_score[0],hud->nome_score[1],hud->nome_score[2]);
-
-          if (menu->botao_selecionado == j)
-               al_draw_text(menu->font_items, MARROM_CLARO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[9][j]);
-           else
-               al_draw_text(menu->font_items, BRANCO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[9][j]);
-           }
-
-    }
-
-    //CASO ESPECIAL: HIGH_SCORES
-    if (menu->tela_selecionada == 10 ) {
-           ler_high_score(hud);
-           for (int j = 0; j < menu->numero_de_botoes[9] + 1; j++) {
-               al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/10), ALLEGRO_ALIGN_CENTRE, titulo_tela[9]);
-               
-               for(int i = 0;i < 10; i++)
-                   al_draw_textf(menu->font_subtitle, AMARELO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/8) + (menu->font_size*1.25)*(2+i), ALLEGRO_ALIGN_CENTRE, "%d°___%c%c%c___%d", i+1, hud->nomes_high_score[i][0], hud->nomes_high_score[i][1], hud->nomes_high_score[i][2], hud->scores_high_score[i]);
-
-               if (menu->botao_selecionado == j)
-                   al_draw_text(menu->font_items, MARROM_CLARO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/1.2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[9][j]);
-               else
-                   al_draw_text(menu->font_items, BRANCO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/1.2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[9][j]);
-            }
     }
 }    
 
@@ -280,15 +234,12 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         case GAME_OVER:
                             switch (menu->botao_selecionado) {
                                 case 0:
-                                    seleciona_nova_tela(menu, SUBMIT_SCORE);               
-                                    break;
-                                case 1:
                                     menu->new_game = 1;
                                     seleciona_nova_tela(menu, MODES);
                                     break;
-                                case 2:
+                                case 1:
                                     return true;
-                                    break;         
+                                    break;                        
                             }
                             break;
 
@@ -302,7 +253,8 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                     seleciona_nova_tela(menu, INSTRUCTIONS);
                                     break;
                                 case 2:
-                                    seleciona_nova_tela(menu, HIGH_SCORES);
+                                    // seleciona_nova_tela(menu, 4);
+                                    return true;
                                     break;
                                 case 3:
                                     return true;
@@ -383,41 +335,16 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                     seleciona_nova_tela(menu, TITLE_SCREEN);
                                     break;
                             } 
-                            break;
-
-                        case SUBMIT_SCORE:
-                            switch(menu->botao_selecionado) {
-                                case 0:
-                                    ler_high_score(hud);
-
-                                    if (hud->nome_score[2] != '_') {
-                                        enviar_score(hud);
-                                        seleciona_nova_tela(menu, HIGH_SCORES);
-                                    }
-
-                                    break;
-                                case 1:
-                                    seleciona_nova_tela(menu, TITLE_SCREEN);
-                                    break;
-                           }
-                           break;
-
-                        case HIGH_SCORES:
-                           switch(menu->botao_selecionado) {
-                               case 0:
-                                   seleciona_nova_tela(menu, TITLE_SCREEN);
-                                   break;
-                           }
-                           break;    
-                   }
-                   break; break;
-           }                  
-       }
+                            break;    
+                    }
+                    break; break;
+            }                  
+        }
 
         if (redraw && al_is_event_queue_empty(menu->event_queue)) {
            redraw = false;
 
-           desenha_menu_pause(menu, hud);
+           desenha_menu_pause(menu);
 
            al_flip_display();
         }
