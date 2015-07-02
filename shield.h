@@ -3,10 +3,10 @@
 
 #include "config.h"
 
-struct Jogo;
-
 struct Shield {
 	double posicao_x, posicao_y;
+	double altura, largura;
+	
 	ALLEGRO_BITMAP* part_bitmap[PARTES_X][PARTES_Y];
 	ESTADO part_state[PARTES_X][PARTES_Y];
 
@@ -20,7 +20,7 @@ void desenha_shield (Shield* shield);
 
 void inicializa_sprite_shield (Shield* shield);
 
-void colisao_shield_vs_projetil (Jogo *jogo, Shield *shield);
+void colisao_shield_vs_projetil (Jogo *jogo);
 
 double get_posicao_x_min_part_n (Shield* shield, int n);
 

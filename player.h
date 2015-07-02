@@ -11,12 +11,13 @@ struct Jogo;
 struct Player {
 	double posicao_x, posicao_y;
 	double delta_x, delta_y;
+
 	DIRECAO direcao_atual;
 
 	int projetil_cooldown;
 
 	int sprite_atual;
-	ALLEGRO_BITMAP* sprites[10];
+	ALLEGRO_BITMAP* bitmap;
 };
 
 void inicializa_player (Player* player, double posicao_x, double posicao_y);
@@ -24,8 +25,6 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y);
 void finaliza_player (Player* player);
 
 void desenha_player (Player* player);
-
-ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename, int largura, int altura);
 
 void finaliza_sprites_player (Player* player);
 

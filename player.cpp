@@ -12,9 +12,9 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->posicao_y = posicao_y;
 	player->projetil_cooldown = PROJETIL_COOLDOWN;
 
-	player->sprites[0] = al_load_bitmap("resources/player4.png");
+	player->bitmap = al_load_bitmap("resources/player4.png");
 
-	if (player->sprites[0] == NULL) {
+	if (player->bitmap == NULL) {
 		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
 		exit(0);
 	}
@@ -33,11 +33,11 @@ void desenha_player (Player* player) {
 	if (player->direcao_atual == DIREITA)
 		flags = ALLEGRO_FLIP_HORIZONTAL;
 
-	al_draw_scaled_bitmap(player->sprites[0],
+	al_draw_scaled_bitmap(player->bitmap,
 						  0, 
 						  0,
-						  al_get_bitmap_width(player->sprites[0]),
-						  al_get_bitmap_height(player->sprites[0]),
+						  al_get_bitmap_width(player->bitmap),
+						  al_get_bitmap_height(player->bitmap),
 
 						  player->posicao_x - player->delta_x,
 						  player->posicao_y + player->delta_y,
@@ -66,7 +66,7 @@ ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename,
 }
 
 void finaliza_sprites_player (Player* player) {
-	al_destroy_bitmap(player->sprites[0]);
+	al_destroy_bitmap(player->bitmap);
 }
 
 void move_player (Player* player, DIRECAO direcao) {
@@ -85,16 +85,16 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
-				if((verificar_se_ponto_esta_dentro( jogo->projetil_stack[i].posicao_x,
-												   jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite,
+				if((verificar_se_ponto_esta_dentro( get_posicao_x_min_projetil(&jogo->conjunto_projeteis[i]),
+												   get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]),
 												   &jogo->player) 	) ||
-				(verificar_se_ponto_esta_dentro( jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite,
-												       jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite,
+				(verificar_se_ponto_esta_dentro( get_posicao_x_max_projetil(&jogo->conjunto_projeteis[i]),
+												       get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]),
 												       &jogo->player)) 	)
 				{
-						copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-						desenha_projetil (&jogo->projetil_stack[i]);
-						finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+						copy_projetil (&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
+						desenha_projetil (&jogo->conjunto_projeteis[i]);
+						finaliza_projetil (&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
 						jogo->numero_de_projeteis--;
 						jogo->hud.lives--;
 

@@ -7,13 +7,13 @@
 #include "hud.h"
 
 void inicializa_hud (Hud *hud){
-	hud->fonte = al_load_font("resources/acknowledge.ttf", 20, 0);
+	hud->fonte = al_load_font("resources/acknowledge.ttf", (LARGURA_DISPLAY/32), 0);
 	if (hud->fonte == NULL){
 		puts("Erro ao carregar \"resources/acknowledge.ttf\"");
 		exit(0);
 	}
 
-	hud->posicao_y = 10;
+	hud->posicao_y = (ALTURA_DISPLAY/48);
 
 	inicializa_score(hud);
 	inicializa_lives(hud);
@@ -21,7 +21,7 @@ void inicializa_hud (Hud *hud){
 
 void inicializa_score (Hud *hud){
 	hud->score = 0;
-	hud->score_posicao_x = 40;
+	hud->score_posicao_x = (LARGURA_DISPLAY/12);
 }
 
 void inicializa_lives (Hud *hud){
@@ -31,11 +31,11 @@ void inicializa_lives (Hud *hud){
 		exit(0);
 	}
 
-	hud->altura_sprite_vida = 24;
-	hud->largura_sprite_vida = 24;
+	hud->altura_sprite_vida = 24*(ALTURA_DISPLAY/480);
+	hud->largura_sprite_vida = 24*(LARGURA_DISPLAY/640);
 
 	hud->lives = NUMERO_VIDAS;
-	hud->lives_posicao_x = (LARGURA_DISPLAY/12)*8;
+	hud->lives_posicao_x = (LARGURA_DISPLAY/12)*6;
 }
 
 void desenha_hud (Hud *hud){
@@ -53,7 +53,7 @@ void desenha_score (Hud *hud){
 
 	al_draw_textf(hud->fonte, 
 				  VERDE, 
-				  hud->score_posicao_x + LARGURA_DISPLAY/8.5, 
+				  hud->score_posicao_x + (LARGURA_DISPLAY/12)*1.5, 
 				  hud->posicao_y, 
 				  0, 
 				  "%d", 
@@ -66,13 +66,13 @@ void desenha_lives (Hud *hud){
 
 	al_draw_text(hud->fonte, 
 				 CINZA,
-				 hud->lives_posicao_x - LARGURA_DISPLAY/12,
+				 hud->lives_posicao_x,
 				 hud->posicao_y,
 				 0,
 				 "LIVES:");
 
 	for (int i = 0; i < hud->lives; i++) {
-		if (hud->lives_posicao_x + LARGURA_DISPLAY/12 + hud->largura_sprite_vida*1.25*(coluna_vidas) > LARGURA_DISPLAY - hud->largura_sprite_vida) {
+		if (hud->lives_posicao_x + (LARGURA_DISPLAY/12)*1.5 + hud->largura_sprite_vida*1.25*(coluna_vidas) > LARGURA_DISPLAY - hud->largura_sprite_vida) {
 			linha_vidas++;
 			coluna_vidas = 0;
 		}
@@ -81,7 +81,7 @@ void desenha_lives (Hud *hud){
 							  0, 0,
 							  al_get_bitmap_width(hud->life),
 							  al_get_bitmap_height(hud->life),
-							  hud->lives_posicao_x + LARGURA_DISPLAY/12 + hud->largura_sprite_vida*1.25*(coluna_vidas),
+							  hud->lives_posicao_x + (LARGURA_DISPLAY/12)*1.5 + hud->largura_sprite_vida*1.25*(coluna_vidas),
 							  hud->posicao_y + linha_vidas*(hud->altura_sprite_vida*1.25),
 							  hud->largura_sprite_vida, hud->altura_sprite_vida,
 							  0);

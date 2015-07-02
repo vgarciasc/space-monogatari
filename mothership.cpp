@@ -86,14 +86,14 @@ bool autoriza_mothership(Mothership *mothership){
 
 void colisao_mothership_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-		if (!(jogo->projetil_stack[i].posicao_x > get_posicao_x_max_mothership(&jogo->mothership)
-			|| jogo->projetil_stack[i].posicao_y > get_posicao_y_max_mothership(&jogo->mothership)
-			|| jogo->projetil_stack[i].posicao_y + jogo->projetil_stack[i].altura_sprite < get_posicao_y_min_mothership(&jogo->mothership)
-			|| jogo->projetil_stack[i].posicao_x + jogo->projetil_stack[i].largura_sprite < get_posicao_x_min_mothership(&jogo->mothership))) {
+		if (!(get_posicao_x_min_projetil(&jogo->conjunto_projeteis[i]) > get_posicao_x_max_mothership(&jogo->mothership)
+			|| get_posicao_y_min_projetil(&jogo->conjunto_projeteis[i]) > get_posicao_y_max_mothership(&jogo->mothership)
+			|| get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]) < get_posicao_y_min_mothership(&jogo->mothership)
+			|| get_posicao_x_max_projetil(&jogo->conjunto_projeteis[i]) < get_posicao_x_min_mothership(&jogo->mothership))) {
 
-				copy_projetil (&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-				desenha_projetil (&jogo->projetil_stack[i]);
-				finaliza_projetil (&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+				copy_projetil (&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
+				desenha_projetil (&jogo->conjunto_projeteis[i]);
+				finaliza_projetil (&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
 				jogo->numero_de_projeteis--;
 
 				jogo->hud.score += PONTOS_MOTHERSHIP;

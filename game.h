@@ -29,7 +29,7 @@ struct Jogo {
 
 	int fase;
 
-	Projetil projetil_stack[50];
+	Projetil conjunto_projeteis[MAX_PROJETEIS];
 	int numero_de_projeteis;
 
 	int loop_count_projetil;

@@ -79,13 +79,13 @@ void desenha_jogo (Jogo* jogo) {
         desenha_shield(&jogo->shields[i]);
 
     for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-        desenha_projetil(&jogo->projetil_stack[i]);
-        move_projetil(&jogo->projetil_stack[i]);
+        desenha_projetil(&jogo->conjunto_projeteis[i]);
+        move_projetil(&jogo->conjunto_projeteis[i]);
         
-        if (jogo->projetil_stack[i].posicao_y < 0 - jogo->projetil_stack[i].altura_sprite) {
-            copy_projetil(&jogo->projetil_stack[i], &jogo->projetil_stack[jogo->numero_de_projeteis-1]);
-            desenha_projetil(&jogo->projetil_stack[i]);
-            finaliza_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis-1]);
+        if (jogo->conjunto_projeteis[i].posicao_y < 0 - jogo->conjunto_projeteis[i].altura) {
+            copy_projetil(&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
+            desenha_projetil(&jogo->conjunto_projeteis[i]);
+            finaliza_projetil(&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
             jogo->numero_de_projeteis--;
         }
     }
@@ -125,7 +125,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 && jogo->loop_count_projetil > jogo->player.projetil_cooldown
                 && jogo->loop_count_menu_pause > 1) {
                 jogo->loop_count_projetil = 0;
-                cria_projetil(&jogo->projetil_stack[jogo->numero_de_projeteis],
+                cria_projetil(&jogo->conjunto_projeteis[jogo->numero_de_projeteis],
                               get_posicao_x_centro_player(&jogo->player),
                               jogo->player.posicao_y + 10,
                               CIMA);
@@ -183,9 +183,7 @@ bool loop_de_jogo (Jogo* jogo) {
             colisao_player_vs_projetil(jogo);
             colisao_alien_vs_projetil(jogo);
             colisao_mothership_vs_projetil(jogo);
-
-            for (int i = 0; i < jogo->numero_shields; i++)
-                colisao_shield_vs_projetil (jogo, &jogo->shields[i]);
+            colisao_shield_vs_projetil (jogo);
             
             redraw = false;
             jogo->key[KEY_ESCAPE] = false;
@@ -194,7 +192,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 rota_tropa (jogo->alien, jogo);
 
             if (!(jogo->loop_alien_shots % (GAME_FPS/2+jogo->fase))) {
-                atira_tropa (jogo->alien, &jogo->projetil_stack[jogo->numero_de_projeteis]);
+                atira_tropa (jogo->alien, &jogo->conjunto_projeteis[jogo->numero_de_projeteis]);
                 jogo->numero_de_projeteis++;
             }
 
