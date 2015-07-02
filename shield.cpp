@@ -12,15 +12,15 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y) {
 	shield->posicao_y = posicao_y;
 
 	if (SCALE_BITMAPS) {
-		shield->altura = ALTURA_SHIELD*(ALTURA_DISPLAY/480.0);
 		shield->largura = LARGURA_SHIELD*(LARGURA_DISPLAY/640.0);
+		shield->altura = ALTURA_SHIELD*(ALTURA_DISPLAY/480.0);
 	}
 	else {
-		shield->altura = ALTURA_SHIELD;
 		shield->largura = LARGURA_SHIELD;
+		shield->altura = ALTURA_SHIELD;
 	}
 
-	inicializa_sprite_shield (shield);
+	inicializa_bitmap_shield (shield);
 
 	for (int i = 0; i < PARTES_X; i++)
 		for (int j = 0; j < PARTES_Y; j++)
@@ -55,7 +55,7 @@ void desenha_shield (Shield* shield) {
 	}
 }
 
-void inicializa_sprite_shield (Shield* shield) {
+void inicializa_bitmap_shield (Shield* shield) {
 	ALLEGRO_BITMAP* resized_bmp, *loaded_bmp, *prev_target;
 	prev_target = al_get_target_bitmap();
 

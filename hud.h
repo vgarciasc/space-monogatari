@@ -4,12 +4,12 @@
 #include "config.h"
 
 struct Hud {
-	ALLEGRO_FONT *fonte=NULL;
-	ALLEGRO_BITMAP *life=NULL;
 	int score, score_posicao_x;
 	int lives, lives_posicao_x;
+	double altura_bitmap_vida, largura_bitmap_vida;
 
-	int altura_sprite_vida, largura_sprite_vida;
+	ALLEGRO_FONT *font;
+	ALLEGRO_BITMAP *life;
 
 	int posicao_y;
 };

@@ -5,7 +5,7 @@
 
 struct Shield {
 	double posicao_x, posicao_y;
-	double altura, largura;
+	double largura, altura;
 	
 	ALLEGRO_BITMAP* part_bitmap[PARTES_X][PARTES_Y];
 	ESTADO part_state[PARTES_X][PARTES_Y];
@@ -18,7 +18,7 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y);
 
 void desenha_shield (Shield* shield); 
 
-void inicializa_sprite_shield (Shield* shield);
+void inicializa_bitmap_shield (Shield* shield);
 
 void colisao_shield_vs_projetil (Jogo *jogo);
 

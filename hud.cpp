@@ -7,8 +7,8 @@
 #include "hud.h"
 
 void inicializa_hud (Hud *hud){
-	hud->fonte = al_load_font("resources/acknowledge.ttf", (LARGURA_DISPLAY/32), 0);
-	if (hud->fonte == NULL){
+	hud->font = al_load_font("resources/acknowledge.ttf", (LARGURA_DISPLAY/32), 0);
+	if (hud->font == NULL){
 		puts("Erro ao carregar \"resources/acknowledge.ttf\"");
 		exit(0);
 	}
@@ -31,8 +31,8 @@ void inicializa_lives (Hud *hud){
 		exit(0);
 	}
 
-	hud->altura_sprite_vida = 24*(ALTURA_DISPLAY/480);
-	hud->largura_sprite_vida = 24*(LARGURA_DISPLAY/640);
+	hud->altura_bitmap_vida = 24*(ALTURA_DISPLAY/480.0);
+	hud->largura_bitmap_vida = 24*(LARGURA_DISPLAY/640.0);
 
 	hud->lives = NUMERO_VIDAS;
 	hud->lives_posicao_x = (LARGURA_DISPLAY/12)*6;
@@ -44,14 +44,14 @@ void desenha_hud (Hud *hud){
 }
 
 void desenha_score (Hud *hud){
-	al_draw_text(hud->fonte,
+	al_draw_text(hud->font,
 				 CINZA,
 				 hud->score_posicao_x, 
 				 hud->posicao_y, 
 				 0, 
 				 "SCORE: ");
 
-	al_draw_textf(hud->fonte, 
+	al_draw_textf(hud->font, 
 				  VERDE, 
 				  hud->score_posicao_x + (LARGURA_DISPLAY/12)*1.5, 
 				  hud->posicao_y, 
@@ -64,7 +64,7 @@ void desenha_lives (Hud *hud){
 	int linha_vidas = 0;
 	int coluna_vidas = 0;
 
-	al_draw_text(hud->fonte, 
+	al_draw_text(hud->font, 
 				 CINZA,
 				 hud->lives_posicao_x,
 				 hud->posicao_y,
@@ -72,7 +72,7 @@ void desenha_lives (Hud *hud){
 				 "LIVES:");
 
 	for (int i = 0; i < hud->lives; i++) {
-		if (hud->lives_posicao_x + (LARGURA_DISPLAY/12)*1.5 + hud->largura_sprite_vida*1.25*(coluna_vidas) > LARGURA_DISPLAY - hud->largura_sprite_vida) {
+		if (hud->lives_posicao_x + (LARGURA_DISPLAY/12)*1.5 + hud->largura_bitmap_vida*1.25*(coluna_vidas) > LARGURA_DISPLAY - hud->largura_bitmap_vida) {
 			linha_vidas++;
 			coluna_vidas = 0;
 		}
@@ -81,9 +81,12 @@ void desenha_lives (Hud *hud){
 							  0, 0,
 							  al_get_bitmap_width(hud->life),
 							  al_get_bitmap_height(hud->life),
-							  hud->lives_posicao_x + (LARGURA_DISPLAY/12)*1.5 + hud->largura_sprite_vida*1.25*(coluna_vidas),
-							  hud->posicao_y + linha_vidas*(hud->altura_sprite_vida*1.25),
-							  hud->largura_sprite_vida, hud->altura_sprite_vida,
+
+							  hud->lives_posicao_x + (LARGURA_DISPLAY/12)*1.5 + hud->largura_bitmap_vida*1.25*(coluna_vidas),
+							  hud->posicao_y + linha_vidas*(hud->altura_bitmap_vida*1.25),
+							  hud->largura_bitmap_vida,
+							  hud->altura_bitmap_vida,
+
 							  0);
 		
 		coluna_vidas++;

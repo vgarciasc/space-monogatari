@@ -13,18 +13,26 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->projetil_cooldown = PROJETIL_COOLDOWN;
 
 	player->bitmap = al_load_bitmap("resources/player4.png");
-
 	if (player->bitmap == NULL) {
 		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
 		exit(0);
 	}
 
-	player->delta_x = LARGURA_SPRITES_PLAYER/2;
-	player->delta_y = ALTURA_SPRITES_PLAYER/2;
+	if (SCALE_BITMAPS) {
+		player->largura = LARGURA_PLAYER*(LARGURA_DISPLAY/640.0);
+		player->altura = ALTURA_PLAYER*(ALTURA_DISPLAY/480.0);
+	}
+	else {
+		player->largura = LARGURA_PLAYER;
+		player->altura = ALTURA_PLAYER;
+	}
+
+	player->delta_x = player->largura/2;
+	player->delta_y = player->altura/2;
 }
 
 void finaliza_player (Player* player) {
-	finaliza_sprites_player(player);
+	al_destroy_bitmap(player->bitmap);
 }
 
 void desenha_player (Player* player) {
@@ -41,32 +49,10 @@ void desenha_player (Player* player) {
 
 						  player->posicao_x - player->delta_x,
 						  player->posicao_y + player->delta_y,
-						  LARGURA_SPRITES_PLAYER,
-						  ALTURA_SPRITES_PLAYER,
+						  player->largura,
+						  player->altura,
 
 						  flags);
-
-
-}
-
-ALLEGRO_BITMAP* inicializa_sprites_player (Player* player, const char *filename, int largura, int altura) {
-	ALLEGRO_BITMAP *resized_bmp, *loaded_bmp, *prev_target;
-
-	resized_bmp = al_create_bitmap(largura, altura);
-
-	loaded_bmp = al_load_bitmap(filename);
-
-	prev_target = al_get_target_bitmap();
-	al_set_target_bitmap(resized_bmp);
-
-    al_set_target_bitmap(prev_target);
-  	al_destroy_bitmap(loaded_bmp);
-
-	return resized_bmp;	  
-}
-
-void finaliza_sprites_player (Player* player) {
-	al_destroy_bitmap(player->bitmap);
 }
 
 void move_player (Player* player, DIRECAO direcao) {
@@ -83,80 +69,69 @@ void move_player (Player* player, DIRECAO direcao) {
 
 void colisao_player_vs_projetil (Jogo *jogo) {
 	for (int i = 0; i < jogo->numero_de_projeteis; i++) {
-		for (int j = 0; j < COLUNAS_TROPA; j++) {
-			for (int v = 0; v < LINHAS_TROPA; v++) {
-				if((verificar_se_ponto_esta_dentro( get_posicao_x_min_projetil(&jogo->conjunto_projeteis[i]),
-												   get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]),
-												   &jogo->player) 	) ||
-				(verificar_se_ponto_esta_dentro( get_posicao_x_max_projetil(&jogo->conjunto_projeteis[i]),
-												       get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]),
-												       &jogo->player)) 	)
-				{
-						copy_projetil (&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
-						desenha_projetil (&jogo->conjunto_projeteis[i]);
-						finaliza_projetil (&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
-						jogo->numero_de_projeteis--;
-						jogo->hud.lives--;
+		if(((verifica_se_ponto_dentro(get_posicao_x_min_projetil(&jogo->conjunto_projeteis[i]),
+									  get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]),
+									  &jogo->player))
+		    || (verifica_se_ponto_dentro (get_posicao_x_max_projetil(&jogo->conjunto_projeteis[i]),
+									      get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]),
+										  &jogo->player)))
+			&& jogo->conjunto_projeteis[i].direcao == BAIXO) {
 
-						return;
-				}
-			}
+				copy_projetil (&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
+				desenha_projetil (&jogo->conjunto_projeteis[i]);
+				finaliza_projetil (&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
+				jogo->numero_de_projeteis--;
+				jogo->hud.lives--;
+
+				return;
 		}
 	}
 }
-/*
- *
- *
- * AQUI VAI FICAR A APROXIMAÇÃO PARA TRIANGULO
- *
- *
- */
-bool verificar_se_ponto_esta_dentro(float x, float y, Player* player){
 
-	float coordenada_1[2]={get_posicao_x_min_player(player), get_posicao_y_max_player(player)};
-	float coordenada_2[2]={get_posicao_x_max_player(player), get_posicao_y_max_player(player)};
-	float coordenada_3[2]={get_posicao_x_min_player(player)+LARGURA_SPRITES_PLAYER/2, get_posicao_y_min_player(player)};
-	float coordenada_4[2]={x,y};
-
-	if( calcular_area(coordenada_1,coordenada_2,coordenada_3) == calcular_area(coordenada_1,coordenada_2,coordenada_4)
-																+ calcular_area(coordenada_1,coordenada_3, coordenada_4)
-																+ calcular_area(coordenada_2, coordenada_3, coordenada_4)) {
-		return true;
-	}
-	else
-	return false;
-}
-
-float calcular_area(float coordenada1[], float coordenada2[], float coordenada3[]){
-	float x = coordenada1[0]*coordenada2[1] + coordenada1[1]*coordenada3[0] + coordenada2[0]*coordenada3[1] - coordenada2[1]*coordenada3[0] - coordenada1[0]*coordenada3[1] - coordenada1[1]*coordenada2[0];
-	if(x>=0)
-		return x;
-	else
-		return -x;
-}
-
-
-
-
-/*
- * FIM DA APROXIMAÇÃO
- */
-int get_posicao_x_min_player (Player* player){
+int get_posicao_x_min_player (Player* player) {
 	return player->posicao_x - player->delta_x;
 }
 
-int get_posicao_x_max_player (Player* player){
+int get_posicao_x_max_player (Player* player) {
 	return player->posicao_x + player->delta_x;
 }
 
-int get_posicao_y_min_player (Player* player){
-	return player->posicao_y + player->delta_y + 4;
+int get_posicao_y_min_player (Player* player) {
+	return player->posicao_y + player->delta_y;
 }
 
-int get_posicao_y_max_player (Player* player){
+int get_posicao_y_max_player (Player* player) {
 	return player->posicao_y + 3*player->delta_y;
 }
 
-int get_posicao_x_centro_player (Player* player){
-	return player->posicao_x - 3;
+int get_posicao_x_centro_player (Player* player) {
+	return player->posicao_x - player->largura/12;
+}
+
+bool verifica_se_ponto_dentro (float x, float y, Player* player) {
+	float coordenada_1[2]= {get_posicao_x_min_player(player), get_posicao_y_max_player(player)};
+	float coordenada_2[2]= {get_posicao_x_max_player(player), get_posicao_y_max_player(player)};
+	float coordenada_3[2]= {get_posicao_x_min_player(player) + player->delta_x, get_posicao_y_min_player(player)};
+	float coordenada_4[2]= {x, y};
+
+	if (calcular_area(coordenada_1, coordenada_2, coordenada_3) == calcular_area(coordenada_1, coordenada_2, coordenada_4)
+															     + calcular_area(coordenada_1, coordenada_3, coordenada_4)
+														   	     + calcular_area(coordenada_2, coordenada_3, coordenada_4))
+		return true;
+	else
+		return false;
+}
+
+float calcular_area (float coordenada1[], float coordenada2[], float coordenada3[]) {
+	float x = coordenada1[0]*coordenada2[1]
+	        + coordenada1[1]*coordenada3[0]
+	        + coordenada2[0]*coordenada3[1] 
+	        - coordenada2[1]*coordenada3[0] 
+	        - coordenada1[0]*coordenada3[1] 
+	        - coordenada1[1]*coordenada2[0];
+
+	if (x >= 0)
+		return x;
+	else
+		return -x;
 }

@@ -7,21 +7,15 @@
 
 int main(int argc, char **argv) {
 
+    Jogo jogo;
     int fase = 0;
 
-    Jogo jogo;
-
-	Alien alien[LINHAS_TROPA][COLUNAS_TROPA];
-
 	inic_allegro();
-
-   	inicializa_display (&jogo, LARGURA_DISPLAY, ALTURA_DISPLAY);
+   	inicializa_display (&jogo);
 
     // TITLE SCREEN
 	tela_boot_jogo(&jogo);
-
 	inicializa_menus(&jogo.menu);
-
 	loop_menu(&jogo.menu, &jogo.hud, TITLE_SCREEN);
 
     while (jogo.menu.new_game == 1) {

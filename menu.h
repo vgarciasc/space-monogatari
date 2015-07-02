@@ -10,23 +10,21 @@
 #include "config.h"
 
 struct Menu {
-	ALLEGRO_EVENT_QUEUE* event_queue;
-	ALLEGRO_TIMER* timer;
-
 	ALLEGRO_FONT* font_title;
 	ALLEGRO_FONT* font_subtitle;
 	ALLEGRO_FONT* font_items;
 	int font_size;
 
+	ALLEGRO_EVENT_QUEUE* event_queue;
+	ALLEGRO_TIMER* timer;
+
 	//Telas e Botões funcionam com lógica de array: o primeiro é 0, o segundo é 1, etc
 	int numero_de_botoes[N_TELAS];
 	int botao_selecionado;
 	TELA tela_selecionada;
+	MODO modo_selecionado;
 
 	int score;
-
-	MODO modo;
-
 	int new_game;
 
 	bool key[N_KEYS];

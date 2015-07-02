@@ -11,13 +11,14 @@ struct Jogo;
 
 struct Projetil {
 	double posicao_x, posicao_y;
-	double altura, largura;
+	double largura, altura;
+	double velocidade;
 
-	DIRECAO direcao;
 	ALLEGRO_BITMAP* bitmap;
+	DIRECAO direcao;
 };
 
-void cria_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRECAO direcao);
+void inicializa_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRECAO direcao);
 
 void inicializa_bitmap_projetil (Projetil* projetil);
 

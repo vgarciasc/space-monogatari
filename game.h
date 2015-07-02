@@ -40,7 +40,7 @@ struct Jogo {
 	bool key[N_KEYS];
 };
 
-void inicializa_display (Jogo* jogo, int largura, int altura);
+void inicializa_display (Jogo* jogo);
 
 void finaliza_display (Jogo* jogo);
 

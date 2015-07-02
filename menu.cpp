@@ -65,9 +65,10 @@ void desenha_menu_pause (Menu* menu) {
     //TITLE_SCREEN
     strcpy(titulo_tela[3], "space monogatari");
     strcpy(tela_botao[3][0], "NEW GAME");
-    strcpy(tela_botao[3][1], "HIGH SCORES");
-    strcpy(tela_botao[3][2], "QUIT GAME");   
-    menu->numero_de_botoes[3] = 2;
+    strcpy(tela_botao[3][1], "INSTRUCTIONS");
+    strcpy(tela_botao[3][2], "HIGH SCORES");
+    strcpy(tela_botao[3][3], "QUIT GAME");   
+    menu->numero_de_botoes[3] = 3;
     
     //RESOLUTIONS
     strcpy(titulo_tela[4], "RESOLUTIONS");
@@ -99,8 +100,13 @@ void desenha_menu_pause (Menu* menu) {
     strcpy(tela_botao[7][2], "<===");
     menu->numero_de_botoes[7] = 2;
 
+    //INSTRUCTIONS
+    strcpy(titulo_tela[8], "INSTRUCTIONS");
+    strcpy(tela_botao[8][0], "<===");
+    menu->numero_de_botoes[8] = 0;
+
     for (int i = 0; i < N_TELAS - 1; i++) {
-        if (menu->tela_selecionada == i && i != 2) {
+        if (menu->tela_selecionada == i && i != 2 && i != 8) {
             for (int j = 0; j < menu->numero_de_botoes[i] + 1; j++) {
                 al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[i]);
                 
@@ -123,6 +129,22 @@ void desenha_menu_pause (Menu* menu) {
                 al_draw_text(menu->font_items, MARROM_CLARO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[2][j]);
             else
                 al_draw_text(menu->font_items, BRANCO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[2][j]);
+        }
+    }
+
+    //CASO ESPECIAL: INSTRUCTIONS
+    if (menu->tela_selecionada == 8) {
+        for (int j = 0; j < menu->numero_de_botoes[8] + 1; j++) {
+            al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[8]);
+            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*3, ALLEGRO_ALIGN_CENTRE, "Z or ENTER - Shoot missiles");
+            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*4, ALLEGRO_ALIGN_CENTRE, "Left and Right - Move");
+            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*5, ALLEGRO_ALIGN_CENTRE, "ESC - Pause");
+            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*6, ALLEGRO_ALIGN_CENTRE, "F1 - Quit game");
+                       
+            if (menu->botao_selecionado == j)
+                al_draw_text(menu->font_items, MARROM_CLARO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+5), ALLEGRO_ALIGN_CENTRE, tela_botao[8][j]);
+            else
+                al_draw_text(menu->font_items, BRANCO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+5), ALLEGRO_ALIGN_CENTRE, tela_botao[8][j]);
         }
     }
 }    
@@ -155,11 +177,22 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                     break;
 
                 case ALLEGRO_KEY_F1:
-                    return true;
+                    exit(0);
                     break;
 
                 case ALLEGRO_KEY_ESCAPE:
-                    return false;
+                    if (menu->tela_selecionada == PAUSE)
+                        return false;
+                    if (menu->tela_selecionada == OPTIONS)
+                        seleciona_nova_tela(menu, PAUSE);
+                    if (menu->tela_selecionada == RESOLUTIONS)
+                        seleciona_nova_tela(menu, OPTIONS);
+                    if (menu->tela_selecionada == MECHANICS)
+                        seleciona_nova_tela(menu, OPTIONS);
+                    if (menu->tela_selecionada == LANGUAGES)
+                        seleciona_nova_tela(menu, OPTIONS);
+                    if (menu->tela_selecionada == MODES)
+                        seleciona_nova_tela(menu, TITLE_SCREEN);
                     break;
 
                 case ALLEGRO_KEY_ENTER: case ALLEGRO_KEY_Z:
@@ -217,10 +250,13 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                     seleciona_nova_tela(menu, MODES);
                                     break;
                                 case 1:
+                                    seleciona_nova_tela(menu, INSTRUCTIONS);
+                                    break;
+                                case 2:
                                     // seleciona_nova_tela(menu, 4);
                                     return true;
                                     break;
-                                case 2:
+                                case 3:
                                     return true;
                                     break;   
                             }  
@@ -280,18 +316,26 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         case MODES:
                             switch (menu->botao_selecionado) {
                                 case 0:
-                                    menu->modo = CLASSIC;
+                                    menu->modo_selecionado = CLASSIC;
                                     return true;
                                     break;
                                 case 1:
-                                    menu->modo = INFINITE;
+                                    menu->modo_selecionado = INFINITE;
                                     return true;
                                     break;
                                 case 2:
                                     seleciona_nova_tela(menu, TITLE_SCREEN);
                                     break;
                             } 
-                            break;          
+                            break;        
+
+                        case INSTRUCTIONS:
+                            switch (menu->botao_selecionado) {
+                                case 0:
+                                    seleciona_nova_tela(menu, TITLE_SCREEN);
+                                    break;
+                            } 
+                            break;    
                     }
                     break; break;
             }                  

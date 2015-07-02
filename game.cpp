@@ -7,11 +7,11 @@
 
 #include "game.h"
 
-void inicializa_display (Jogo* jogo, int largura, int altura) {
-    jogo->largura = largura;
-    jogo->altura = altura;
+void inicializa_display (Jogo* jogo) {
+    jogo->largura = LARGURA_DISPLAY;
+    jogo->altura = ALTURA_DISPLAY;
 
-    jogo->display = al_create_display(largura, altura);
+    jogo->display = al_create_display(jogo->largura, jogo->altura);
  
     if (!jogo->display) {
         fprintf(stderr, "Falha ao inicializar o display!\n");
@@ -57,12 +57,11 @@ void inicializa_jogo (Jogo* jogo, int fase) {
     inicializa_hud(&jogo->hud);
     inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
     
-    for (int i = 0; i < jogo->numero_shields; i++) {
+    for (int i = 0; i < jogo->numero_shields; i++)
         inicializa_shield(&jogo->shields[i],
                           (LARGURA_DISPLAY / jogo->numero_shields)*i
                           + (LARGURA_DISPLAY - jogo->numero_shields*LARGURA_SHIELD)/(jogo->numero_shields*2),
                           (ALTURA_DISPLAY / 12.0) * 8.75);
-    }
 }
 
 void finaliza_jogo (Jogo* jogo) {
@@ -125,10 +124,10 @@ bool loop_de_jogo (Jogo* jogo) {
                 && jogo->loop_count_projetil > jogo->player.projetil_cooldown
                 && jogo->loop_count_menu_pause > 1) {
                 jogo->loop_count_projetil = 0;
-                cria_projetil(&jogo->conjunto_projeteis[jogo->numero_de_projeteis],
-                              get_posicao_x_centro_player(&jogo->player),
-                              jogo->player.posicao_y + 10,
-                              CIMA);
+                inicializa_projetil(&jogo->conjunto_projeteis[jogo->numero_de_projeteis],
+                                  get_posicao_x_centro_player(&jogo->player),
+                                  jogo->player.posicao_y + 10,
+                                  CIMA);
                 jogo->numero_de_projeteis++;
             }
     	}
@@ -144,7 +143,6 @@ bool loop_de_jogo (Jogo* jogo) {
                		break;
 
                 case ALLEGRO_KEY_F1:
-                    //F1 é o hard exit
                     doexit = true;
                     break;
 
@@ -220,8 +218,8 @@ void incremento_loop_elementos_jogo (Jogo* jogo) {
 }
 
 void desenha_fundo_jogo (Jogo* jogo) {
-	al_clear_to_color(al_map_rgb(20,20,20));
-	// al_draw_bitmap (jogo->fundo, 0, 0, 0);
+	// al_clear_to_color(al_map_rgb(20,20,20));
+	al_draw_bitmap (jogo->fundo, 0, 0, 0);
 }
 
 void tela_boot_jogo (Jogo* jogo) {
@@ -229,15 +227,17 @@ void tela_boot_jogo (Jogo* jogo) {
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_EVENT ev;
 
-	int alfa = 0;
-	int velocidade = 5;
-
 	ALLEGRO_BITMAP* minerva = al_load_bitmap("resources/minerva.png");
 	if (minerva == NULL) {
 		puts("Erro ao carregar o arquivo \"resources/minerva.png\"");
 		puts("Erro ao carregar o arquivo resources/minerva.png");
 		exit(0);
 	}
+
+    int alfa = 0;
+    int velocidade = 5;
+    double largura_minerva = 260*(LARGURA_DISPLAY/640.0);
+    double altura_minerva = 315*(ALTURA_DISPLAY/480.0);
 
 	event_queue = al_create_event_queue();
 	timer = al_create_timer(1.0 / 30);
@@ -261,11 +261,18 @@ void tela_boot_jogo (Jogo* jogo) {
 
 			if (alfa > 0 && alfa < 255) {
 				al_clear_to_color(al_map_rgb(0,0,0));
-				al_draw_tinted_bitmap(minerva,
-									  al_map_rgba(alfa, alfa, alfa, alfa),
-									  (jogo->largura - al_get_bitmap_width(minerva))/2,
-									  (jogo->altura - al_get_bitmap_height(minerva))/2,
-									  0);
+				al_draw_tinted_scaled_bitmap(minerva,
+        									  al_map_rgba(alfa, alfa, alfa, alfa),
+                                              0, 0,
+                                              al_get_bitmap_width(minerva),
+                                              al_get_bitmap_height(minerva),
+
+                                              (jogo->largura - largura_minerva)/2,
+                                              (jogo->altura - altura_minerva)/2,
+                                              largura_minerva,
+                                              altura_minerva,
+
+        									  0);
 				al_flip_display();
 			}
 

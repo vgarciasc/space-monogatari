@@ -6,20 +6,21 @@
 #include "game.h"
 #include "projetil.h"
 
-void cria_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRECAO direcao) {
+void inicializa_projetil (Projetil* projetil, double posicao_x, double posicao_y, DIRECAO direcao) {
 	projetil->posicao_x = posicao_x;
 	projetil->posicao_y = posicao_y;
 	projetil->direcao = direcao;
+	projetil->velocidade = VELOCIDADE_PROJETIL*(LARGURA_DISPLAY)/640.0;
 
 	inicializa_bitmap_projetil (projetil);
 
 	if (SCALE_BITMAPS) {
-		projetil->altura = ALTURA_PROJETIL*(ALTURA_DISPLAY/480.0);
 		projetil->largura = LARGURA_PROJETIL*(LARGURA_DISPLAY/640.0);
+		projetil->altura = ALTURA_PROJETIL*(ALTURA_DISPLAY/480.0);
 	}
 	else {
-		projetil->altura = ALTURA_PROJETIL;
 		projetil->largura = LARGURA_PROJETIL;
+		projetil->altura = ALTURA_PROJETIL;
 	}
 
 	desenha_projetil (projetil);
@@ -43,10 +44,12 @@ void desenha_projetil (Projetil* projetil) {
 							   0, 0,
 							   al_get_bitmap_width(projetil->bitmap),
 							   al_get_bitmap_height(projetil->bitmap),
+
 							   projetil->posicao_x, 
 							   projetil->posicao_y,
 							   projetil->largura,
 							   projetil->altura,
+
 							   flags);
 	}
 
@@ -56,19 +59,21 @@ void desenha_projetil (Projetil* projetil) {
 									 0, 0,
 								     al_get_bitmap_width(projetil->bitmap),
 								     al_get_bitmap_height(projetil->bitmap),
+
 								     projetil->posicao_x, 
 								     projetil->posicao_y,
 								     projetil->largura,
 								     projetil->altura,
+
 								     flags);
 }
 
 void move_projetil (Projetil* projetil) {
 	if (projetil->direcao == CIMA)
-		projetil->posicao_y -= VELOCIDADE_PROJETIL;
+		projetil->posicao_y -= projetil->velocidade;
 
 	if (projetil->direcao == BAIXO)
-		projetil->posicao_y += VELOCIDADE_PROJETIL;
+		projetil->posicao_y += projetil->velocidade;
 }
 
 void finaliza_projetil (Projetil* projetil) {

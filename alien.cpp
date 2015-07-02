@@ -175,7 +175,7 @@ void atira_tropa (Alien alien[COLUNAS_TROPA][LINHAS_TROPA], Projetil* projetil) 
 	while (!alien[quem_atira_x][quem_atira_y].vivo && quem_atira_y > 0)
 		quem_atira_y--;
 
-	cria_projetil (projetil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
+	inicializa_projetil(projetil, alien[quem_atira_x][quem_atira_y].posicao_x + alien[quem_atira_x][quem_atira_y].delta_x,
 								alien[quem_atira_x][quem_atira_y].posicao_y + al_get_bitmap_height(alien[0][0].sprites[0]), BAIXO);	
 		
 }
