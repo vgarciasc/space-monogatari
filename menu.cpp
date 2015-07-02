@@ -39,7 +39,7 @@ void desenha_fundo_menu_pause () {
 void desenha_menu_pause (Menu* menu, Hud *hud) {
     desenha_fundo_menu_pause ();
 
-    char tela_botao[N_TELAS - 1][MAX_BOTOES - 1][20];
+    char tela_botao[N_TELAS - 1][MAX_BOTOES - 1][60];
     char titulo_tela[N_TELAS - 1][20];
     
     //PAUSE
@@ -52,17 +52,17 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
 
     //OPTIONS
     strcpy(titulo_tela[1], "PAUSE");
-    strcpy(tela_botao[1][0], "RESOLUTIONS");
-    strcpy(tela_botao[1][1], "LANGUAGES");
-    strcpy(tela_botao[1][2], "MECHANICS");
-    strcpy(tela_botao[1][3], "<===");
-    menu->numero_de_botoes[1] = 3;
+    // strcpy(tela_botao[1][0], "RESOLUTIONS");
+    strcpy(tela_botao[1][0], "LANGUAGES");
+    strcpy(tela_botao[1][1], "MECHANICS");
+    strcpy(tela_botao[1][2], "<===");
+    menu->numero_de_botoes[1] = 2;
 
     //GAME_OVER
     strcpy(titulo_tela[2], "GAME OVER");
     strcpy(tela_botao[2][0], "NEW GAME");
     strcpy(tela_botao[2][1], "QUIT GAME");
-    strcpy(tela_botao[2][2],"SALVAR SCORE");
+    strcpy(tela_botao[2][2],"SUBMIT SCORE");
     menu->numero_de_botoes[2] = 2;
 
     //TITLE_SCREEN
@@ -73,13 +73,13 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     strcpy(tela_botao[3][3], "QUIT GAME");   
     menu->numero_de_botoes[3] = 3;
     
-    //RESOLUTIONS
-    strcpy(titulo_tela[4], "RESOLUTIONS");
-    strcpy(tela_botao[4][0], "640 x 480");
-    strcpy(tela_botao[4][1], "800 x 600");
-    strcpy(tela_botao[4][2], "1024 x 768");
-    strcpy(tela_botao[4][3], "<===");
-    menu->numero_de_botoes[4] = 3;
+    // //RESOLUTIONS
+    // strcpy(titulo_tela[4], "RESOLUTIONS");
+    // strcpy(tela_botao[4][0], "640 x 480");
+    // strcpy(tela_botao[4][1], "800 x 600");
+    // strcpy(tela_botao[4][2], "1024 x 768");
+    // strcpy(tela_botao[4][3], "<===");
+    // menu->numero_de_botoes[4] = 3;
 
     //LANGUAGES
     strcpy(titulo_tela[5], "LANGUAGES");
@@ -109,17 +109,17 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     menu->numero_de_botoes[8] = 0;
 
     //SALVAR SCORE
-    strcpy(titulo_tela[9],"SALVAR SCORE");
-    strcpy(tela_botao[9][0],"SALVAR");
+    strcpy(titulo_tela[9],"SUBMIT SCORE");
+    strcpy(tela_botao[9][0],"SUBMIT");
     menu->numero_de_botoes[9] = 0;
 
     //HIGH SCORES
     strcpy(titulo_tela[10],"HIGH SCORES");
     strcpy(tela_botao[10][0],"<===");
-    menu->numero_de_botoes[10]=0;
+    menu->numero_de_botoes[10] = 0;
 
     for (int i = 0; i < N_TELAS - 1; i++) {
-        if (menu->tela_selecionada == i && i != 2 && i != 8 && i!=9 && i!=10) {
+        if (menu->tela_selecionada == i && i != 2 && i != 8 && i != 9 && i != 10) {
             for (int j = 0; j < menu->numero_de_botoes[i] + 1; j++) {
                 al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[i]);
                 
@@ -139,10 +139,10 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
         	 * AQUI EH PRA ELE PULAR E NAO MOSTRAR O BOTAO SALVAR GAME PRA CASO A PONTUAÇÃO NÃO FOR
         	 * ENTRE AS DEZ MELHORES;   O 'J' EH O INDICE DO BOTAO LÁ EM CIMA NO "GAME OVER"
         	 */
-        	if(j==2 && hud->score<=hud->scores_high_score[9]){continue;}
-            al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[2]);
-            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*2, ALLEGRO_ALIGN_CENTRE, "your score was:");
-            al_draw_textf(menu->font_title, AMARELO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*2)*2, ALLEGRO_ALIGN_CENTRE, "%d", menu->score);
+        	if (j == 2 && hud->score <= hud->scores_high_score[9]){continue;}
+                al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[2]);
+                al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*2, ALLEGRO_ALIGN_CENTRE, "your score was:");
+                al_draw_textf(menu->font_title, AMARELO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*2)*2, ALLEGRO_ALIGN_CENTRE, "%d", menu->score);
                        
             if (menu->botao_selecionado == j)
                 al_draw_text(menu->font_items, MARROM_CLARO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[2][j]);
@@ -167,13 +167,13 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
         }
     }
 
-    //CASO ESPECIAL: SALVAR_SCORE
+    //CASO ESPECIAL: SUBMIT_SCORE
      if(menu->tela_selecionada == 9 ){
         iniciar_salvar_score(hud);
         for (int j = 0; j < menu->numero_de_botoes[9] + 1; j++) {
        		al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[8]);
        		al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*2, ALLEGRO_ALIGN_CENTRE, "PLEASE ENTER YOUR INITIALS");
-       		al_draw_textf(menu->font_title, VERDE, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.75)*(2), ALLEGRO_ALIGN_CENTRE,"%c %c %c" ,hud->nome_score[0], hud->nome_score[1], hud->nome_score[2]);
+       		al_draw_textf(menu->font_title, AMARELO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.75)*(2), ALLEGRO_ALIGN_CENTRE,"%c %c %c" ,hud->nome_score[0], hud->nome_score[1], hud->nome_score[2]);
        		if (menu->botao_selecionado == j)
        			al_draw_text(menu->font_items, MARROM_CLARO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[9][j]);
        		else
@@ -188,7 +188,7 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
          	for (int j = 0; j < menu->numero_de_botoes[10] + 1; j++) {
          		al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/10), ALLEGRO_ALIGN_CENTRE, titulo_tela[10]);
          		for(int i=0;i<10;i++){
-         			al_draw_textf(menu->font_subtitle, VERDE, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/8) + (menu->font_size*1.25)*(2+i), ALLEGRO_ALIGN_CENTRE, "%d...%c%c%c...%d",i+1,hud->nomes_high_score[i][0],hud->nomes_high_score[i][1],hud->nomes_high_score[i][2],hud->scores_high_score[i]);
+         			al_draw_textf(menu->font_subtitle, AMARELO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/8) + (menu->font_size*1.25)*(2+i), ALLEGRO_ALIGN_CENTRE, "%d____%c%c%c____%d",i+1,hud->nomes_high_score[i][0],hud->nomes_high_score[i][1],hud->nomes_high_score[i][2],hud->scores_high_score[i]);
 
          		}
          		if (menu->botao_selecionado == j)
@@ -196,9 +196,7 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
          		else
          			al_draw_text(menu->font_items, BRANCO, LARGURA_DISPLAY/2, ALTURA_DISPLAY/1.2 + (menu->font_size)*(j+2), ALLEGRO_ALIGN_CENTRE, tela_botao[10][j]);
          		}
-
          }
-
 }    
 
 
@@ -247,6 +245,8 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         seleciona_nova_tela(menu, OPTIONS);
                     if (menu->tela_selecionada == MODES)
                         seleciona_nova_tela(menu, TITLE_SCREEN);
+                    if (menu->tela_selecionada == HIGH_SCORES)
+                        seleciona_nova_tela(menu, TITLE_SCREEN);
                     break;
 
                 case ALLEGRO_KEY_ENTER: case ALLEGRO_KEY_Z:
@@ -271,17 +271,17 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         case OPTIONS:
                             switch (menu->botao_selecionado) {
                                 case 0:
-                                    seleciona_nova_tela(menu, RESOLUTIONS);
-                                    break;
-                                case 1:
                                     seleciona_nova_tela(menu, LANGUAGES);
                                     break;
-                                case 2:
+                                case 1:
                                     seleciona_nova_tela(menu, MECHANICS);
                                     break;
-                                case 3:
+                                case 2:
                                     seleciona_nova_tela(menu, PAUSE);
                                     break;
+                                // case 0:
+                                //     seleciona_nova_tela(menu, RESOLUTIONS);
+                                //     break;
                             }  
                             break;
 
@@ -294,7 +294,7 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                 case 1:
                                     return true;
                                 case 2:
-                                	seleciona_nova_tela(menu, SALVAR_SCORE);
+                                	seleciona_nova_tela(menu, SUBMIT_SCORE);
                                     break;                        
                             }
                             break;
@@ -309,7 +309,7 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                     seleciona_nova_tela(menu, INSTRUCTIONS);
                                     break;
                                 case 2:
-                                    seleciona_nova_tela(menu,HIGH_SCORES);
+                                    seleciona_nova_tela(menu, HIGH_SCORES);
                                     break;
                                 case 3:
                                     return true;
@@ -317,23 +317,23 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                             }  
                             break;
 
-                        case RESOLUTIONS:
-                            switch (menu->botao_selecionado) {
-                                case 0:
-                                    menu->new_game = 1;
-                                    return true;
-                                    break;
-                                case 1:
-                                    return true;
-                                    break;
-                                case 2:
-                                    return true;
-                                    break;
-                                case 3:
-                                    seleciona_nova_tela(menu, OPTIONS);
-                                    break;   
-                            } 
-                            break;
+                        // case RESOLUTIONS:
+                        //     switch (menu->botao_selecionado) {
+                        //         case 0:
+                        //             menu->new_game = 1;
+                        //             return true;
+                        //             break;
+                        //         case 1:
+                        //             return true;
+                        //             break;
+                        //         case 2:
+                        //             return true;
+                        //             break;
+                        //         case 3:
+                        //             seleciona_nova_tela(menu, OPTIONS);
+                        //             break;   
+                        //     } 
+                        //     break;
 
                         case LANGUAGES:
                             switch (menu->botao_selecionado) {
@@ -393,11 +393,11 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                             break;
 
 
-                        case SALVAR_SCORE:
+                        case SUBMIT_SCORE:
                              switch(menu->botao_selecionado){
                                  case 0:
                                      ler_high_score(hud);
-                                     if( hud->nome_score[2]!='_' ){
+                                     if(hud->nome_score[2] != '_') {
                                          enviar_score(hud);
                     					 seleciona_nova_tela(menu, HIGH_SCORES);
                                      }
