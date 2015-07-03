@@ -56,12 +56,21 @@ void inicializa_jogo (Jogo* jogo, int fase) {
     inicializa_mothership(&jogo->mothership, jogo);
     inicializa_hud(&jogo->hud);
     inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
+    jogo->aliens_vivos = COLUNAS_TROPA * LINHAS_TROPA;
     
     for (int i = 0; i < jogo->numero_shields; i++)
         inicializa_shield(&jogo->shields[i],
                           (LARGURA_DISPLAY / jogo->numero_shields)*i
                           + (LARGURA_DISPLAY - jogo->numero_shields*LARGURA_SHIELD)/(jogo->numero_shields*2),
                           (ALTURA_DISPLAY / 12.0) * 8.75);
+
+	jogo->buffer = al_create_bitmap(LARGURA_DISPLAY, ALTURA_DISPLAY);
+/*	inicializa_zbuffer(&jogo->buffer, jogo->fundo, &jogo->player,
+			&jogo->mothership, &jogo->alien[COLUNAS_TROPA * LINHAS_TROPA],
+			&jogo->hud, jogo->numero_shields, jogo->shields,
+			jogo->conjunto_projeteis, jogo->numero_de_projeteis,
+			LARGURA_DISPLAY, ALTURA_DISPLAY);
+*/
 }
 
 void finaliza_jogo (Jogo* jogo) {
@@ -70,6 +79,7 @@ void finaliza_jogo (Jogo* jogo) {
 }
 
 void desenha_jogo (Jogo* jogo) {
+	al_set_target_bitmap(jogo->buffer);
     desenha_fundo_jogo(jogo);
     desenha_mothership(&jogo->mothership);
     desenha_hud(&jogo->hud);
@@ -91,7 +101,10 @@ void desenha_jogo (Jogo* jogo) {
 
     desenha_player(&jogo->player);
     desenha_tropa(jogo->alien);
-    
+
+//	processa_zbuffer(&jogo->buffer, jogo->display);
+	al_set_target_backbuffer(jogo->display);
+	al_draw_bitmap(jogo->buffer, 0, 0, 0);
 	al_flip_display();
 }
 
@@ -114,7 +127,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 move_player_com_inercia(&jogo->player, DIREITA);
  
             if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
-                inicializa_menus(&jogo->menu,&jogo->hud);
+                inicializa_menus(&jogo->menu, &jogo->hud);
                 doexit = loop_menu(&jogo->menu, &jogo->hud, PAUSE);
                 jogo->key[KEY_Z] = false;
                 jogo->loop_count_menu_pause = 0;
@@ -207,7 +220,7 @@ bool loop_de_jogo (Jogo* jogo) {
             al_flip_display();
 
             if (jogo->hud.lives < 0) {
-                inicializa_menus(&jogo->menu,&jogo->hud);
+                inicializa_menus(&jogo->menu, &jogo->hud);
                 doexit = loop_menu(&jogo->menu, &jogo->hud, GAME_OVER);
             }
 		}
