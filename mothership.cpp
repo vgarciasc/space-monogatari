@@ -6,9 +6,9 @@
 #include "mothership.h"
 
 void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
-	mothership->bitmap = al_load_bitmap("resources/mothership.png");
+	mothership->bitmap = al_load_bitmap("resources/mothership2.png");
 	if (mothership->bitmap == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/mothership.png\"");
+		puts("Erro ao carregar o arquivo \"resources/mothership2.png\"");
 		exit(0);
 	}
 

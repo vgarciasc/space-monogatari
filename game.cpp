@@ -83,7 +83,6 @@ void desenha_jogo (Jogo* jogo) {
 	al_set_target_bitmap(jogo->buffer);
     desenha_fundo_jogo(jogo);
     desenha_mothership(&jogo->mothership);
-    desenha_hud(&jogo->hud);
 
     for (int i = 0; i < jogo->numero_shields; i++)
         desenha_shield(&jogo->shields[i]);
@@ -102,11 +101,12 @@ void desenha_jogo (Jogo* jogo) {
 
     desenha_player(&jogo->player);
     desenha_tropa(jogo->alien);
+    desenha_hud(&jogo->hud);
 
-//	processa_zbuffer(&jogo->buffer, jogo->display);
-	al_set_target_backbuffer(jogo->display);
-	al_draw_bitmap(jogo->buffer, 0, 0, 0);
-	al_flip_display();
+//  processa_zbuffer(&jogo->buffer, jogo->display);
+    al_set_target_backbuffer(jogo->display);
+    al_draw_bitmap(jogo->buffer, 0, 0, 0);
+    al_flip_display();
 }
 
 bool loop_de_jogo (Jogo* jogo) {

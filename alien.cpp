@@ -273,6 +273,15 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 	}
 }
 
+bool checa_vitoria (Alien alien[COLUNAS_TROPA * LINHAS_TROPA]) {
+	for (int i = 0; i < COLUNAS_TROPA; i++)
+		for (int j = 0; j < LINHAS_TROPA; j++)
+			if (alien[i * COLUNAS_TROPA + j].vivo)
+				return false;
+
+	return true;
+}
+
 int get_posicao_x_min_alien (Alien* alien){
 	return alien->posicao_x - alien->delta_x;
 }

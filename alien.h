@@ -49,6 +49,8 @@ void atira_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Projetil* projetil)
 
 void colisao_alien_vs_projetil (Jogo *jogo);
 
+bool checa_vitoria (Alien alien[COLUNAS_TROPA * LINHAS_TROPA]);
+
 int get_posicao_x_min_alien (Alien* alien);
 
 int get_posicao_x_max_alien (Alien* alien);

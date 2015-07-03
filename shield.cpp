@@ -60,9 +60,9 @@ void inicializa_bitmap_shield (Shield* shield) {
 	prev_target = al_get_target_bitmap();
 
 	shield->bitmap_inteiro = al_create_bitmap(shield->largura, shield->altura);
-	loaded_bmp = al_load_bitmap("resources/shield_inteiro.png");
+	loaded_bmp = al_load_bitmap("resources/shield_inteiro2.png");
 	if (loaded_bmp == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/shield_inteiro.png\"");
+		puts("Erro ao carregar o arquivo \"resources/shield_inteiro2.png\"");
 		exit(0);
 	}
 
@@ -77,9 +77,9 @@ void inicializa_bitmap_shield (Shield* shield) {
 						  0);
 
 	shield->bitmap_danificado = al_create_bitmap(shield->largura, shield->altura);
-	loaded_bmp = al_load_bitmap("resources/shield_danificado.png");
+	loaded_bmp = al_load_bitmap("resources/shield_danificado2.png");
 	if (loaded_bmp == NULL) {
-		puts("Erro ao carregar o arquivo \"resources/shield_danificado.png\"");
+		puts("Erro ao carregar o arquivo \"resources/shield_danificado2.png\"");
 		exit(0);
 	}
 
