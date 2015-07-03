@@ -108,10 +108,10 @@ bool loop_de_jogo (Jogo* jogo) {
         	redraw = true;
     
             if (jogo->key[KEY_LEFT] && get_posicao_x_min_player(&jogo->player) > 0 + BARREIRA_LATERAL_DISPLAY)
-                move_player(&jogo->player, ESQUERDA);
+                move_player_com_inercia(&jogo->player, ESQUERDA);
 
             if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - BARREIRA_LATERAL_DISPLAY)
-                move_player(&jogo->player, DIREITA);
+                move_player_com_inercia(&jogo->player, DIREITA);
  
             if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
                 inicializa_menus(&jogo->menu,&jogo->hud);
@@ -130,6 +130,11 @@ bool loop_de_jogo (Jogo* jogo) {
                                   CIMA);
                 jogo->numero_de_projeteis++;
             }
+
+            if (!jogo->key[KEY_LEFT] && !jogo->key[KEY_RIGHT]
+                && get_posicao_x_min_player(&jogo->player) > 0 + BARREIRA_LATERAL_DISPLAY
+                && get_posicao_x_max_player(&jogo->player) < jogo->largura - BARREIRA_LATERAL_DISPLAY)
+                move_player_com_inercia(&jogo->player, PARADA);
     	}
  
       	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
@@ -177,6 +182,7 @@ bool loop_de_jogo (Jogo* jogo) {
             /*CONDIÇÕES DE VITÓRIA
             return true;
             */
+                // move_player(&jogo->player, PARADA);
 
             colisao_player_vs_projetil(jogo);
             colisao_alien_vs_projetil(jogo);

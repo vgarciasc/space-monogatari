@@ -13,6 +13,8 @@ struct Player {
 	double delta_x, delta_y;
 	double largura, altura;
 
+	double velocidade;
+
 	ALLEGRO_BITMAP* bitmap;
 	DIRECAO direcao_atual;
 
@@ -25,7 +27,9 @@ void finaliza_player (Player* player);
 
 void desenha_player (Player* player);
 
-void move_player (Player* player, DIRECAO direcao);
+void move_player_com_inercia (Player* player, DIRECAO Direcao);
+
+void move_player_sem_inercia (Player* player, DIRECAO direcao);
 
 void colisao_player_vs_projetil (Jogo *jogo);
 
