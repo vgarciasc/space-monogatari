@@ -283,14 +283,53 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 }
 
 void colisao_alien_vs_shield (Jogo* jogo) {
-	for (int i = 0; i < jogo->numero_shields; i++) {
-		for (int j = 0; j < COLUNAS_TROPA; j++) {
-			for (int v = 0; v < LINHAS_TROPA; v++) {
-				if ((get_posicao_y_max_alien(&jogo->alien[j * LINHAS_TROPA + v]) > get_posicao_y_min_part_n(&jogo->shields[i], 0))
-					&& jogo->alien[j * LINHAS_TROPA + v].vivo);
+	for (int k = 0; k < COLUNAS_TROPA; k++) {
+		for (int l = 0; l < LINHAS_TROPA; l++) {
+			for (int i = 0; i < jogo->numero_shields; i++) {
+				for (int j = 0; j < PARTES_X; j++) {
+					for (int v = 0; v < PARTES_Y; v++) {
+						if ((!(get_posicao_x_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_x_max_part_n(&jogo->shields[i], j)
+							|| get_posicao_y_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_y_max_part_n(&jogo->shields[i], v)
+							|| get_posicao_y_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_y_min_part_n(&jogo->shields[i], v)
+							|| get_posicao_x_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_x_min_part_n(&jogo->shields[i], j)))
+							&& jogo->shields[i].part_state[j][v] != DESTRUIDO
+							&& jogo->alien[k * LINHAS_TROPA + l].vivo) {
+
+							jogo->shields[i].part_state[j][v] = DESTRUIDO;
+
+							return;
+						}
+					}
+				}
 			}
 		}
 	}
+}
+
+bool colisao_alien_vs_player (Jogo* jogo) {
+	for (int k = 0; k < COLUNAS_TROPA; k++) {
+		for (int l = 0; l < LINHAS_TROPA; l++) {
+						if (!(get_posicao_x_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_x_max_player(&jogo->player)
+							|| get_posicao_y_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_y_max_player(&jogo->player)
+							|| get_posicao_y_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_y_min_player(&jogo->player)
+							|| get_posicao_x_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_x_min_player(&jogo->player))) {
+
+							return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool verifica_ultrapassagem (Jogo* jogo) {
+	for (int i = 0; i < COLUNAS_TROPA; i++) {
+		for (int j = 0; j < COLUNAS_TROPA; j++) {
+			if ((get_posicao_y_max_alien(&jogo->alien[i * LINHAS_TROPA + j]) > ALTURA_DISPLAY)
+				&& jogo->alien[i * LINHAS_TROPA + j].vivo)
+				return true;
+		}
+	}
+	return false;
 }
 
 int get_posicao_x_min_alien (Alien* alien){

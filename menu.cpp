@@ -54,10 +54,10 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     //OPTIONS
     strcpy(titulo_tela[1], "PAUSE");
     // strcpy(tela_botao[1][0], "RESOLUTIONS");
-    strcpy(tela_botao[1][0], "LANGUAGES");
-    strcpy(tela_botao[1][1], "MECHANICS");
-    strcpy(tela_botao[1][2], "<===");
-    menu->numero_de_botoes[1] = 2;
+    // strcpy(tela_botao[1][0], "LANGUAGES");
+    strcpy(tela_botao[1][0], "MECHANICS");
+    strcpy(tela_botao[1][1], "<===");
+    menu->numero_de_botoes[1] = 1;
 
     //GAME_OVER
     strcpy(titulo_tela[2], "GAME OVER");
@@ -82,18 +82,18 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     // strcpy(tela_botao[4][3], "<===");
     // menu->numero_de_botoes[4] = 3;
 
-    //LANGUAGES
-    strcpy(titulo_tela[5], "LANGUAGES");
-    strcpy(tela_botao[5][0], "PORTUGUESE");
-    strcpy(tela_botao[5][1], "ENGLISH");
-    strcpy(tela_botao[5][2], "CHINESE (ORIENTAL MANDARIN)");
-    strcpy(tela_botao[5][3], "<===");
-    menu->numero_de_botoes[5] = 3;
+    // //LANGUAGES
+    // strcpy(titulo_tela[5], "LANGUAGES");
+    // strcpy(tela_botao[5][0], "PORTUGUESE");
+    // strcpy(tela_botao[5][1], "ENGLISH");
+    // strcpy(tela_botao[5][2], "CHINESE (ORIENTAL MANDARIN)");
+    // strcpy(tela_botao[5][3], "<===");
+    // menu->numero_de_botoes[5] = 3;
 
     //MECHANICS
     strcpy(titulo_tela[6], "MECHANICS");
     strcpy(tela_botao[6][0], "PLAYER MOVEMENT");
-    strcpy(tela_botao[6][1], "ALIEN MOVEMENT");
+    strcpy(tela_botao[6][1], "ALIEN MOVEMENT (DLC)");
     strcpy(tela_botao[6][2], "<===");
     menu->numero_de_botoes[6] = 2;
 
@@ -119,12 +119,12 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     strcpy(tela_botao[10][0],"<===");
     menu->numero_de_botoes[10] = 0;
 
-    //PLAYER_MOVEMENT
-    strcpy(titulo_tela[11], "PLAYER MOVEMENT");
-    strcpy(tela_botao[11][0], "WITH INÉRCIA");
-    strcpy(tela_botao[11][1], "WITHOUT INÉRCIA");
-    strcpy(tela_botao[11][2], "<===");
-    menu->numero_de_botoes[11] = 2;
+    // //PLAYER_MOVEMENT
+    // strcpy(titulo_tela[11], "PLAYER MOVEMENT");
+    // strcpy(tela_botao[11][0], "WITH INÉRCIA");
+    // strcpy(tela_botao[11][1], "WITHOUT INÉRCIA");
+    // strcpy(tela_botao[11][2], "<===");
+    // menu->numero_de_botoes[11] = 2;
 
     for (int i = 0; i < N_TELAS - 1; i++) {
         if (menu->tela_selecionada == i && i != 2 && i != 8 && i != 9 && i != 10) {
@@ -258,7 +258,7 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         seleciona_nova_tela(menu, TITLE_SCREEN);
                     break;
 
-                case ALLEGRO_KEY_ENTER: case ALLEGRO_KEY_Z: case ALLEGRO_KEY_SPACE:
+                case ALLEGRO_KEY_ENTER: case ALLEGRO_KEY_SPACE:
                     loop_cooldown_menu = 0;
                     switch (menu->tela_selecionada) {
                         case PAUSE:
@@ -281,14 +281,14 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         case OPTIONS:
                             switch (menu->botao_selecionado) {
                                 case 0:
-                                    seleciona_nova_tela(menu, LANGUAGES);
-                                    break;
-                                case 1:
                                     seleciona_nova_tela(menu, MECHANICS);
                                     break;
-                                case 2:
+                                case 1:
                                     seleciona_nova_tela(menu, PAUSE);
                                     break;
+                                // case :
+                                //     seleciona_nova_tela(menu, LANGUAGES);
+                                //     break;
                                 // case 0:
                                 //     seleciona_nova_tela(menu, RESOLUTIONS);
                                 //     break;
@@ -345,37 +345,37 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         //     } 
                         //     break;
 
-                        case LANGUAGES:
-                            switch (menu->botao_selecionado) {
-                                case 0:
-                                    menu->new_game = 1;
-                                    return true;
-                                    break;
-                                case 1:
-                                    return true;
-                                    break;
-                                case 2:
-                                    return true;
-                                    break;
-                                case 3:
-                                    seleciona_nova_tela(menu, OPTIONS);
-                                    break;   
-                            } 
-                            break;
+                        // case LANGUAGES:
+                        //     switch (menu->botao_selecionado) {
+                        //         case 0:
+                        //             menu->new_game = 1;
+                        //             return true;
+                        //             break;
+                        //         case 1:
+                        //             return true;
+                        //             break;
+                        //         case 2:
+                        //             return true;
+                        //             break;
+                        //         case 3:
+                        //             seleciona_nova_tela(menu, OPTIONS);
+                        //             break;   
+                        //     } 
+                        //     break;
 
-                        case MECHANICS:
-                            switch (menu->botao_selecionado) {
-                                case 0:
-                                    seleciona_nova_tela(menu, PLAYER_MOVEMENT);
-                                    break;
-                                case 1:
-                                    return true;
-                                    break;
-                                case 2:
-                                    seleciona_nova_tela(menu, OPTIONS);
-                                    break;
-                            } 
-                            break;     
+                        // case MECHANICS:
+                        //     switch (menu->botao_selecionado) {
+                        //         case 0:
+                        //             seleciona_nova_tela(menu, PLAYER_MOVEMENT);
+                        //             break;
+                        //         case 1:
+                        //             return true;
+                        //             break;
+                        //         case 2:
+                        //             seleciona_nova_tela(menu, OPTIONS);
+                        //             break;
+                        //     } 
+                        //     break;     
 
                         case MODES:
                             switch (menu->botao_selecionado) {
@@ -426,26 +426,26 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                }
                                break;
 
-                        case PLAYER_MOVEMENT:
-                                switch(menu->botao_selecionado) {
-                                    case 0:
-                                        menu->movimento_selecionado = COM_INERCIA;
-                                        seleciona_nova_tela(menu, MECHANICS);
-                                        break;
-                                    case 1:
-                                        menu->movimento_selecionado = SEM_INERCIA;
-                                        seleciona_nova_tela(menu, MECHANICS);
-                                        break;
-                                    case 2:
-                                        puts("A");
-                                        seleciona_nova_tela(menu, MECHANICS);
-                                        break;
-                                }
-                                break;
+                        // case PLAYER_MOVEMENT:
+                        //         switch(menu->botao_selecionado) {
+                        //             case 0:
+                        //                 menu->movimento_selecionado = COM_INERCIA;
+                        //                 seleciona_nova_tela(menu, MECHANICS);
+                        //                 break;
+                        //             case 1:
+                        //                 menu->movimento_selecionado = SEM_INERCIA;
+                        //                 seleciona_nova_tela(menu, MECHANICS);
+                        //                 break;
+                        //             case 2:
+                        //                 puts("A");
+                        //                 seleciona_nova_tela(menu, MECHANICS);
+                        //                 break;
+                        //         }
+                        //         break;
                         }
                         break;
 
-                    break; break; break;
+                    break; break;
             }
         }
 

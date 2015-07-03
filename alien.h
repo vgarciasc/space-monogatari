@@ -52,6 +52,10 @@ void colisao_alien_vs_projetil (Jogo *jogo);
 
 void colisao_alien_vs_shield (Jogo* jogo);
 
+bool colisao_alien_vs_player (Jogo* jogo);
+
+bool verifica_ultrapassagem (Jogo* jogo);
+
 int get_posicao_x_min_alien (Alien* alien);
 
 int get_posicao_x_max_alien (Alien* alien);

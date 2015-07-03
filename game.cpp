@@ -68,6 +68,7 @@ void inicializa_jogo (Jogo* jogo, int fase) {
 }
 
 void finaliza_jogo (Jogo* jogo) {
+    free(jogo->shields);
 	finaliza_player(&jogo->player);
 	finaliza_mothership(&jogo->mothership);
 }
@@ -130,7 +131,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 jogo->loop_count_menu_pause = 0;
             }
 
-            if ((jogo->key[KEY_Z] || jogo->key[KEY_SPACE])
+            if ((jogo->key[KEY_SPACE])
                 && jogo->loop_count_projetil > jogo->player.projetil_cooldown
                 && jogo->loop_count_menu_pause > 1) {
                 jogo->loop_count_projetil = 0;
@@ -198,7 +199,6 @@ bool loop_de_jogo (Jogo* jogo) {
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
             jogo->movimento_selecionado = jogo->menu.movimento_selecionado;
 
-            // CONDIÇÕES DE VITÓRIA
             if (jogo->aliens_vivos == 0) {
                 if (jogo->menu.modo_selecionado == INFINITE) {
                     puts("Esta pausa é meramente metafórica e representa o computador pensando. O jogo não travou.");
@@ -227,7 +227,7 @@ bool loop_de_jogo (Jogo* jogo) {
 
             al_flip_display();
 
-            if (jogo->hud.lives < 0) {
+            if (jogo->hud.lives < 0 || verifica_ultrapassagem(jogo) || colisao_alien_vs_player(jogo)) {
                 jogo->menu.new_game = 0;
                 inicializa_menus(&jogo->menu, &jogo->hud);
                 doexit = loop_menu(&jogo->menu, &jogo->hud, GAME_OVER);
