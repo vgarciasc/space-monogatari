@@ -20,7 +20,9 @@ struct Jogo {
 
 	Player player;
 	Mothership mothership;
-	Alien alien[COLUNAS_TROPA][LINHAS_TROPA];
+	Alien alien[COLUNAS_TROPA * LINHAS_TROPA];
+	int aliens_vivos;
+
 	Menu menu;
 	Hud hud;
 
@@ -31,6 +33,8 @@ struct Jogo {
 
 	Projetil conjunto_projeteis[MAX_PROJETEIS];
 	int numero_de_projeteis;
+
+	ALLEGRO_BITMAP* buffer;
 
 	int loop_count_projetil;
 	int loop_count_menu_pause;
