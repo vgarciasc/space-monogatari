@@ -148,7 +148,7 @@ bool loop_de_jogo (Jogo* jogo) {
             if (!jogo->key[KEY_LEFT] && !jogo->key[KEY_RIGHT]
                 && get_posicao_x_min_player(&jogo->player) > 0 + BARREIRA_LATERAL_DISPLAY
                 && get_posicao_x_max_player(&jogo->player) < jogo->largura - BARREIRA_LATERAL_DISPLAY)
-                move_player(&jogo->player, PARADA);
+                move_player(&jogo->player, PARADA, jogo->movimento_selecionado);
     	}
  
       	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {

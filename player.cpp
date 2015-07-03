@@ -59,18 +59,18 @@ void desenha_player (Player* player) {
 
 void move_player (Player* player, DIRECAO direcao, MOVIMENTO movimento) {
 	if (movimento == SEM_INERCIA)
-		move_player_sem_inercia(&player, direcao);
+		move_player_sem_inercia(player, direcao);
 	else if (movimento == COM_INERCIA)
-		move_player_com_inercia(&player, direcao);
+		move_player_com_inercia(player, direcao);
 }
 
 void move_player_sem_inercia (Player* player, DIRECAO direcao) {
 	if (direcao == ESQUERDA) {
-		player->posicao_x -= DISTANCIA_PASSO_PLAYER;
+		player->posicao_x -= DISTANCIA_PASSO_PLAYER*3;
 		player->direcao_atual = ESQUERDA;
 	}
 	if (direcao == DIREITA) {
-		player->posicao_x += DISTANCIA_PASSO_PLAYER;
+		player->posicao_x += DISTANCIA_PASSO_PLAYER*3;
 		player->direcao_atual = DIREITA;
 	}
 }

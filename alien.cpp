@@ -212,32 +212,39 @@ void rota_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Jogo* jogo) {
 }
 
 void atira_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Projetil* projetil) {
-	int pode_atirar[COLUNAS_TROPA];
-	int quem_atira_x;
-	int quem_atira_y;
+	int pode_atirar[COLUNAS_TROPA-1];
+	int indice_potencial_atirador;
+	int atirador;
+	int numero_atirador;
+	bool selecionado = false;
+
 	for (int i = 0; i < COLUNAS_TROPA; i++)
 		for (int j = LINHAS_TROPA - 1; j > -2; j--) {
 			if (j == -1) {
 				pode_atirar[i] = -1;
 				break;
 			}
-			if (alien[i + COLUNAS_TROPA + j].vivo == true) {
+			if (alien[i * LINHAS_TROPA + j].vivo) {
 				pode_atirar[i] = j;
 				break;
 			}
 		}
 
 	srand(time(NULL));
-	quem_atira_x = rand() % COLUNAS_TROPA;
-	while (pode_atirar[quem_atira_x] < 0) {
-		quem_atira_x = (quem_atira_x+1) % COLUNAS_TROPA;
+
+	while (!selecionado) {
+		//resto pode ir de 0 a 9
+		indice_potencial_atirador = rand() % (COLUNAS_TROPA);
+
+		if (pode_atirar[indice_potencial_atirador] != -1) {
+			selecionado = true;
+			numero_atirador = indice_potencial_atirador * LINHAS_TROPA + pode_atirar[indice_potencial_atirador];
+		}
 	}
-	quem_atira_y = pode_atirar[quem_atira_x];
 
-
-	inicializa_projetil (projetil, alien[quem_atira_x * LINHAS_TROPA + quem_atira_y].posicao_x +
-		alien[quem_atira_x * LINHAS_TROPA + quem_atira_y].delta_x,
-		alien[quem_atira_x * LINHAS_TROPA + quem_atira_y].posicao_y + al_get_bitmap_height(alien[0].sprites[0]), BAIXO);
+	inicializa_projetil (projetil, alien[numero_atirador].posicao_x +
+		alien[numero_atirador].delta_x,
+		alien[numero_atirador].posicao_y + al_get_bitmap_height(alien[0].sprites[0]), BAIXO);
 }
 
 void colisao_alien_vs_projetil (Jogo *jogo) {

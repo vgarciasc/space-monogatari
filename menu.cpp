@@ -16,6 +16,7 @@ void inicializa_menus (Menu* menu, Hud *hud) {
     inicializa_event_queue_menu_pause(menu);
     inicializar_high_score(hud);
 
+    menu->movimento_selecionado = SEM_INERCIA;
     menu->botao_selecionado = 0;
 
     menu->font_size = ALTURA_DISPLAY/20;
@@ -91,8 +92,8 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
 
     //MECHANICS
     strcpy(titulo_tela[6], "MECHANICS");
-    strcpy(tela_botao[6][0], "ALIEN MOVEMENT");
-    strcpy(tela_botao[6][1], "PLAYER MOVEMENT");
+    strcpy(tela_botao[6][0], "PLAYER MOVEMENT");
+    strcpy(tela_botao[6][1], "ALIEN MOVEMENT");
     strcpy(tela_botao[6][2], "<===");
     menu->numero_de_botoes[6] = 2;
 
@@ -363,8 +364,7 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         case MECHANICS:
                             switch (menu->botao_selecionado) {
                                 case 0:
-                                    menu->new_game = 1;
-                                    return true;
+                                    seleciona_nova_tela(menu, PLAYER_MOVEMENT);
                                     break;
                                 case 1:
                                     return true;
@@ -399,7 +399,6 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                             } 
                             break;
 
-
                         case SUBMIT_SCORE:
                              switch(menu->botao_selecionado) {
                                  case 0:
@@ -425,9 +424,6 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                }
                                break;
 
-                    	 }
-                    	 break;
-
                         case PLAYER_MOVEMENT:
                                 switch(menu->botao_selecionado) {
                                     case 0:
@@ -439,11 +435,13 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                         seleciona_nova_tela(menu, MECHANICS);
                                         break;
                                     case 2:
+                                        puts("A");
                                         seleciona_nova_tela(menu, MECHANICS);
                                         break;
                                 }
+                                break;
+                        }
                         break;
-
 
                     break; break;
             }
