@@ -11,6 +11,10 @@ void inicializa_alien (Alien* alien, double posicao_x, double posicao_y, int lin
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
 
+	for (int i = 0; i < 5; i++) {
+		alien->sprites[i] = NULL;
+	}
+
 	alien->vivo = true;
 
 	alien->velocidade = DISTANCIA_PASSO_ALIEN*(LARGURA_DISPLAY/640.0);
@@ -283,8 +287,7 @@ void colisao_alien_vs_shield (Jogo* jogo) {
 		for (int j = 0; j < COLUNAS_TROPA; j++) {
 			for (int v = 0; v < LINHAS_TROPA; v++) {
 				if ((get_posicao_y_max_alien(&jogo->alien[j * LINHAS_TROPA + v]) > get_posicao_y_min_part_n(&jogo->shields[i], 0))
-					&& jogo->alien[j * LINHAS_TROPA + v].vivo)
-					puts("A");
+					&& jogo->alien[j * LINHAS_TROPA + v].vivo);
 			}
 		}
 	}

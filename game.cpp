@@ -84,7 +84,8 @@ void desenha_jogo (Jogo* jogo) {
         desenha_projetil(&jogo->conjunto_projeteis[i]);
         move_projetil(&jogo->conjunto_projeteis[i]);
         
-        if (jogo->conjunto_projeteis[i].posicao_y < 0 - jogo->conjunto_projeteis[i].altura) {
+        if ((jogo->conjunto_projeteis[i].posicao_y < 0 - jogo->conjunto_projeteis[i].altura)
+            || (jogo->conjunto_projeteis[i].posicao_y > jogo->altura)) {
             copy_projetil(&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
             desenha_projetil(&jogo->conjunto_projeteis[i]);
             finaliza_projetil(&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
@@ -96,7 +97,6 @@ void desenha_jogo (Jogo* jogo) {
     desenha_tropa(jogo->alien);
     desenha_hud(&jogo->hud);
 
-//  processa_zbuffer(&jogo->buffer, jogo->display);
     al_set_target_backbuffer(jogo->display);
     al_draw_bitmap(jogo->buffer, 0, 0, 0);
     al_flip_display();
@@ -196,7 +196,6 @@ bool loop_de_jogo (Jogo* jogo) {
     }
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
-                // move_player(&jogo->player, PARADA);
             jogo->movimento_selecionado = jogo->menu.movimento_selecionado;
 
             // CONDIÇÕES DE VITÓRIA

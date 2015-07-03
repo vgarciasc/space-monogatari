@@ -21,7 +21,7 @@ struct Alien {
 	bool vivo;
 
 	int sprite_atual;
-	ALLEGRO_BITMAP* sprites[10];
+	ALLEGRO_BITMAP* sprites[5];
 };
 
 void inicializa_alien (Alien* alien, double posicao_x, double posicao_y, int linha);

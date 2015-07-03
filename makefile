@@ -11,16 +11,16 @@ all: game.o player.o projetil.o menu.o alien.o mothership.o hud.o shield.o
 game.o:
 	g++ -c -g game.cpp
 player.o:
-	g++ -c player.cpp
+	g++ -c -g player.cpp
 projetil.o:
-	g++ -c projetil.cpp
+	g++ -c -g projetil.cpp
 menu.o:
-	g++ -c menu.cpp
+	g++ -c -g menu.cpp
 alien.o:
-	g++ -c alien.cpp
+	g++ -c -g alien.cpp
 mothership.o:
-	g++ -c mothership.cpp
+	g++ -c -g mothership.cpp
 hud.o:
-	g++ -c hud.cpp
+	g++ -c -g hud.cpp
 shield.o:
-	g++ -c shield.cpp
+	g++ -c -g shield.cpp
