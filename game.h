@@ -61,6 +61,8 @@ void desenha_fundo_jogo (Jogo* jogo);
 
 void desenha_tela_fase (Jogo* jogo);
 
+void detecta_colisoes (Jogo* jogo);
+
 void incremento_loop_elementos_jogo (Jogo* jogo);
 
 void inicializa_teclado_jogo (Jogo* jogo);

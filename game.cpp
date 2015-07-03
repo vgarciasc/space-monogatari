@@ -199,11 +199,6 @@ bool loop_de_jogo (Jogo* jogo) {
                 // move_player(&jogo->player, PARADA);
             jogo->movimento_selecionado = jogo->menu.movimento_selecionado;
 
-            colisao_player_vs_projetil(jogo);
-            colisao_alien_vs_projetil(jogo);
-            colisao_mothership_vs_projetil(jogo);
-            colisao_shield_vs_projetil(jogo);
-
             // CONDIÇÕES DE VITÓRIA
             if (jogo->aliens_vivos == 0) {
                 if (jogo->menu.modo_selecionado == INFINITE) {
@@ -214,6 +209,8 @@ bool loop_de_jogo (Jogo* jogo) {
                 return true;
             }
             
+            detecta_colisoes(jogo);
+
             redraw = false;
             jogo->key[KEY_ESCAPE] = false;
 
@@ -252,6 +249,14 @@ void incremento_loop_elementos_jogo (Jogo* jogo) {
 void desenha_fundo_jogo (Jogo* jogo) {
 	// al_clear_to_color(al_map_rgb(20,20,20));
 	al_draw_bitmap (jogo->fundo, 0, 0, 0);
+}
+
+void detecta_colisoes (Jogo* jogo) {
+    colisao_player_vs_projetil(jogo);
+    colisao_alien_vs_projetil(jogo);
+    colisao_mothership_vs_projetil(jogo);
+    colisao_shield_vs_projetil(jogo);
+    colisao_alien_vs_shield(jogo);
 }
 
 void desenha_tela_fase (Jogo* jogo) {

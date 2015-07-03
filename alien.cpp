@@ -278,6 +278,18 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 	}
 }
 
+void colisao_alien_vs_shield (Jogo* jogo) {
+	for (int i = 0; i < jogo->numero_shields; i++) {
+		for (int j = 0; j < COLUNAS_TROPA; j++) {
+			for (int v = 0; v < LINHAS_TROPA; v++) {
+				if ((get_posicao_y_max_alien(&jogo->alien[j * LINHAS_TROPA + v]) > get_posicao_y_min_part_n(&jogo->shields[i], 0))
+					&& jogo->alien[j * LINHAS_TROPA + v].vivo)
+					puts("A");
+			}
+		}
+	}
+}
+
 int get_posicao_x_min_alien (Alien* alien){
 	return alien->posicao_x - alien->delta_x;
 }

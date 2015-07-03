@@ -163,7 +163,7 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     if (menu->tela_selecionada == 8) {
         for (int j = 0; j < menu->numero_de_botoes[8] + 1; j++) {
             al_draw_text(menu->font_title, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4), ALLEGRO_ALIGN_CENTRE, titulo_tela[8]);
-            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*3, ALLEGRO_ALIGN_CENTRE, "Z or ENTER - Shoot missiles");
+            al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*3, ALLEGRO_ALIGN_CENTRE, "Spacebar or Enter - Shoot missiles");
             al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*4, ALLEGRO_ALIGN_CENTRE, "Left and Right - Move");
             al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*5, ALLEGRO_ALIGN_CENTRE, "ESC - Pause");
             al_draw_text(menu->font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/4) + (menu->font_size*1.25)*6, ALLEGRO_ALIGN_CENTRE, "F1 - Quit game");
@@ -212,6 +212,7 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
 bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
     al_start_timer(menu->timer);
     ALLEGRO_EVENT ev;
+    int loop_cooldown_menu = 0;
 
     menu->score = hud->score;
     menu->tela_selecionada = tela;
@@ -257,7 +258,8 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         seleciona_nova_tela(menu, TITLE_SCREEN);
                     break;
 
-                case ALLEGRO_KEY_ENTER: case ALLEGRO_KEY_Z:
+                case ALLEGRO_KEY_ENTER: case ALLEGRO_KEY_Z: case ALLEGRO_KEY_SPACE:
+                    loop_cooldown_menu = 0;
                     switch (menu->tela_selecionada) {
                         case PAUSE:
                             switch (menu->botao_selecionado) {
@@ -302,7 +304,7 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                 case 1:
                                     return true;
                                 case 2:
-                                	seleciona_nova_tela(menu, SUBMIT_SCORE);
+                              	    seleciona_nova_tela(menu, SUBMIT_SCORE);
                                     break;                        
                             }
                             break;
@@ -443,16 +445,17 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         }
                         break;
 
-                    break; break;
+                    break; break; break;
             }
         }
 
         if (redraw && al_is_event_queue_empty(menu->event_queue)) {
-           redraw = false;
+            loop_cooldown_menu++;
+            redraw = false;
 
-           desenha_menu_pause(menu,hud);
+            desenha_menu_pause(menu,hud);
 
-           al_flip_display();
+            al_flip_display();
         }
     }
 }
