@@ -7,27 +7,30 @@
 #include "alien.h"
 #include "game.h"
 
-void inicializa_alien (Alien* alien, int posicao_x, int posicao_y, int linha) {
+void inicializa_alien (Alien* alien, double posicao_x, double posicao_y, int linha) {
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
 
 	alien->vivo = true;
 
-	alien->velocidade = DISTANCIA_PASSO_ALIEN;
+	alien->velocidade = DISTANCIA_PASSO_ALIEN*(LARGURA_DISPLAY/640.0);
 
 	alien->direcao_atual = DIREITA;
 
 	inicializa_sprites_alien (alien, linha);
 
-	alien->delta_x = LARGURA_SPRITES_ALIEN/2;
-	alien->delta_y = ALTURA_SPRITES_ALIEN/2;
+	alien->largura = LARGURA_SPRITES_ALIEN*(LARGURA_DISPLAY/640.0);
+	alien->altura = ALTURA_SPRITES_ALIEN*(ALTURA_DISPLAY/480.0);
+
+	alien->delta_x = alien->largura/2;
+	alien->delta_y = alien->altura/2;
 }
 
-void inicializa_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], int posicao_x, int posicao_y) {
+void inicializa_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], double posicao_x, double posicao_y) {
 	for (int i = 0; i < COLUNAS_TROPA; i++)
 		for (int j = 0; j < LINHAS_TROPA; j++) {
-			inicializa_alien (&alien[i * LINHAS_TROPA + j], posicao_x + i * (LARGURA_SPRITES_ALIEN + LARGURA_SPRITES_ALIEN/2),
-									posicao_y + j * (ALTURA_SPRITES_ALIEN + ALTURA_SPRITES_ALIEN/2), j ); 
+			inicializa_alien (&alien[i * LINHAS_TROPA + j], posicao_x + i * (alien->largura*1.5),
+									posicao_y + j * (alien->altura*1.5), j ); 
 /*if (i!=0 && j%2==0) alien[i * LINHAS_TROPA + j].vivo = false;*/} 
 
 }
@@ -50,8 +53,8 @@ void desenha_alien (Alien* alien) {
 
 						  alien->posicao_x - alien->delta_x,
 						  alien->posicao_y,
-						  LARGURA_SPRITES_ALIEN,
-						  ALTURA_SPRITES_ALIEN,
+						  alien->largura,
+						  alien->altura,
 
 						  flags);
 }
@@ -264,7 +267,7 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 						jogo->numero_de_projeteis--;
 						jogo->hud.score += PONTOS_ALIEN;
 
-						jogo->aliens_vivos -= 1;
+						jogo->aliens_vivos--;
 
 						jogo->alien[j * LINHAS_TROPA + v].vivo = false;
 

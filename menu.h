@@ -22,7 +22,7 @@ struct Menu {
 	int numero_de_botoes[N_TELAS];
 	int botao_selecionado;
 	TELA tela_selecionada;
-	MODO modo_selecionado;
+	MODO_DE_JOGO modo_selecionado;
 	MOVIMENTO movimento_selecionado;
 
 	int score;
@@ -33,7 +33,7 @@ struct Menu {
 
 void inicializa_menus (Menu* menu, Hud* hud);
 
-void desenha_fundo_menu_pause ();
+void desenha_fundo_menu ();
 
 void desenha_menu_pause (Menu* menu, Hud* hud);
 

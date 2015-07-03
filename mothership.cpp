@@ -12,21 +12,15 @@ void inicializa_mothership (Mothership *mothership, Jogo *jogo) {
 		exit(0);
 	}
 
-	if (SCALE_BITMAPS) {
-		mothership->largura = LARGURA_MOTHERSHIP*(LARGURA_DISPLAY/640.0);
-		mothership->altura = ALTURA_MOTHERSHIP*(ALTURA_DISPLAY/480.0);
-	}
-	else {
-		mothership->largura = LARGURA_MOTHERSHIP;
-		mothership->altura = ALTURA_MOTHERSHIP;
-	}
+	mothership->largura = LARGURA_MOTHERSHIP*(LARGURA_DISPLAY/640.0);
+	mothership->altura = ALTURA_MOTHERSHIP*(ALTURA_DISPLAY/480.0);
 
 	mothership->delta_x = mothership->largura/6;
 	mothership->delta_y = mothership->altura/6;
 
 	mothership->direcao = DIREITA;
-	mothership->distancia_passo = VELOCIDADE_MOTHERSHIP;
-	mothership->frequencia = FREQUENCIA_MOTHERSHIP;
+	mothership->distancia_passo = VELOCIDADE_MOTHERSHIP*(LARGURA_DISPLAY/640.0);
+	mothership->frequencia = FREQUENCIA_MOTHERSHIP*(LARGURA_DISPLAY/640.0);
 
 	reinicia_mothership(mothership);
 	inicializar_timer_mothership(mothership);

@@ -13,6 +13,7 @@ struct Player {
 	double delta_x, delta_y;
 	double largura, altura;
 
+	double distancia_passo_player;
 	double velocidade;
 
 	ALLEGRO_BITMAP* bitmap;

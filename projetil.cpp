@@ -14,14 +14,8 @@ void inicializa_projetil (Projetil* projetil, double posicao_x, double posicao_y
 
 	inicializa_bitmap_projetil (projetil);
 
-	if (SCALE_BITMAPS) {
-		projetil->largura = LARGURA_PROJETIL*(LARGURA_DISPLAY/640.0);
-		projetil->altura = ALTURA_PROJETIL*(ALTURA_DISPLAY/480.0);
-	}
-	else {
-		projetil->largura = LARGURA_PROJETIL;
-		projetil->altura = ALTURA_PROJETIL;
-	}
+	projetil->largura = LARGURA_PROJETIL*(LARGURA_DISPLAY/640.0);
+	projetil->altura = ALTURA_PROJETIL*(ALTURA_DISPLAY/480.0);
 
 	desenha_projetil (projetil);
 }

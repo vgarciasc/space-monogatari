@@ -33,12 +33,12 @@ void inicializa_menus (Menu* menu, Hud *hud) {
         menu->key[i] = false;
 }
 
-void desenha_fundo_menu_pause () {
+void desenha_fundo_menu () {
 	al_clear_to_color(MARROM_ESCURO);
 }
 
 void desenha_menu_pause (Menu* menu, Hud *hud) {
-    desenha_fundo_menu_pause ();
+    desenha_fundo_menu ();
 
     char tela_botao[N_TELAS - 1][MAX_BOTOES - 1][60];
     char titulo_tela[N_TELAS - 1][20];

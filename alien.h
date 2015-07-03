@@ -11,11 +11,12 @@
 struct Jogo;
 
 struct Alien {
-	int posicao_x, posicao_y;
-	int delta_x, delta_y;
+	double posicao_x, posicao_y;
+	double largura, altura;
+	double delta_x, delta_y;
 	DIRECAO direcao_atual;
 
-	int velocidade;
+	double velocidade;
 	
 	bool vivo;
 
@@ -23,9 +24,9 @@ struct Alien {
 	ALLEGRO_BITMAP* sprites[10];
 };
 
-void inicializa_alien (Alien* alien, int posicao_x, int posicao_y, int linha);
+void inicializa_alien (Alien* alien, double posicao_x, double posicao_y, int linha);
 
-void inicializa_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], int posicao_x, int posicao_y);
+void inicializa_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], double posicao_x, double posicao_y);
 
 void finaliza_alien (Alien* alien);
 
@@ -48,8 +49,6 @@ void rota_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Jogo* jogo);
 void atira_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Projetil* projetil);
 
 void colisao_alien_vs_projetil (Jogo *jogo);
-
-bool checa_vitoria (Alien alien[COLUNAS_TROPA * LINHAS_TROPA]);
 
 int get_posicao_x_min_alien (Alien* alien);
 

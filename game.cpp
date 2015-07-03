@@ -24,8 +24,6 @@ void finaliza_display (Jogo* jogo) {
 }
 
 void inicializa_jogo (Jogo* jogo, int fase) {
-    jogo->movimento_selecionado = SEM_INERCIA;
-
     jogo->event_queue = NULL;
     jogo->menu.new_game = 0;
     jogo->fase = fase;
@@ -56,7 +54,8 @@ void inicializa_jogo (Jogo* jogo, int fase) {
     inicializa_player(&jogo->player, jogo->largura/2.0, jogo->altura/12.0*10);
     inicializa_mothership(&jogo->mothership, jogo);
     inicializa_hud(&jogo->hud);
-    inicializa_tropa(jogo->alien, ((jogo->largura - 20) - (1.5*LARGURA_SPRITES_ALIEN*COLUNAS_TROPA - LARGURA_SPRITES_ALIEN/2)) / 2 , 1.5*ALTURA_SPRITES_ALIEN);
+    inicializa_tropa(jogo->alien,
+        ((jogo->largura - 20) - (1.5*((LARGURA_SPRITES_ALIEN*LARGURA_DISPLAY/640.0))*COLUNAS_TROPA - (LARGURA_SPRITES_ALIEN*LARGURA_DISPLAY/640.0)/2)) / 2 , 1.5*(ALTURA_SPRITES_ALIEN*(ALTURA_DISPLAY/640.0)));
     jogo->aliens_vivos = COLUNAS_TROPA * LINHAS_TROPA;
     
     for (int i = 0; i < jogo->numero_shields; i++)
@@ -66,12 +65,6 @@ void inicializa_jogo (Jogo* jogo, int fase) {
                           (ALTURA_DISPLAY / 12.0) * 8.75);
 
 	jogo->buffer = al_create_bitmap(LARGURA_DISPLAY, ALTURA_DISPLAY);
-/*	inicializa_zbuffer(&jogo->buffer, jogo->fundo, &jogo->player,
-			&jogo->mothership, &jogo->alien[COLUNAS_TROPA * LINHAS_TROPA],
-			&jogo->hud, jogo->numero_shields, jogo->shields,
-			jogo->conjunto_projeteis, jogo->numero_de_projeteis,
-			LARGURA_DISPLAY, ALTURA_DISPLAY);
-*/
 }
 
 void finaliza_jogo (Jogo* jogo) {
@@ -114,6 +107,9 @@ bool loop_de_jogo (Jogo* jogo) {
     bool doexit = false;
     bool redraw = true;
 
+    if (jogo->menu.modo_selecionado == INFINITE)
+        desenha_tela_fase(jogo);
+
     while (!doexit) {
         ALLEGRO_EVENT ev;
         al_wait_for_event(jogo->event_queue, &ev);
@@ -134,7 +130,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 jogo->loop_count_menu_pause = 0;
             }
 
-            if (jogo->key[KEY_Z]
+            if ((jogo->key[KEY_Z] || jogo->key[KEY_SPACE])
                 && jogo->loop_count_projetil > jogo->player.projetil_cooldown
                 && jogo->loop_count_menu_pause > 1) {
                 jogo->loop_count_projetil = 0;
@@ -172,6 +168,10 @@ bool loop_de_jogo (Jogo* jogo) {
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = true;
                		break;
+
+                case ALLEGRO_KEY_SPACE:
+                    jogo->key[KEY_SPACE] = true;
+                    break;
         }
     }
 
@@ -188,21 +188,31 @@ bool loop_de_jogo (Jogo* jogo) {
             	case ALLEGRO_KEY_Z:
                		jogo->key[KEY_Z] = false;
                		break;
+
+                case ALLEGRO_KEY_SPACE:
+                    jogo->key[KEY_SPACE] = false;
+                    break;
         }
     }
  
     	if (redraw && al_is_event_queue_empty(jogo->event_queue)) {
-
-            /*CONDIÇÕES DE VITÓRIA
-            return true;
-            */
                 // move_player(&jogo->player, PARADA);
             jogo->movimento_selecionado = jogo->menu.movimento_selecionado;
 
             colisao_player_vs_projetil(jogo);
             colisao_alien_vs_projetil(jogo);
             colisao_mothership_vs_projetil(jogo);
-            colisao_shield_vs_projetil (jogo);
+            colisao_shield_vs_projetil(jogo);
+
+            // CONDIÇÕES DE VITÓRIA
+            if (jogo->aliens_vivos == 0) {
+                if (jogo->menu.modo_selecionado == INFINITE) {
+                    puts("Esta pausa é meramente metafórica e representa o computador pensando. O jogo não travou.");
+                    al_rest(1);
+                    jogo->menu.new_game = 1;
+                }
+                return true;
+            }
             
             redraw = false;
             jogo->key[KEY_ESCAPE] = false;
@@ -222,6 +232,7 @@ bool loop_de_jogo (Jogo* jogo) {
             al_flip_display();
 
             if (jogo->hud.lives < 0) {
+                jogo->menu.new_game = 0;
                 inicializa_menus(&jogo->menu, &jogo->hud);
                 doexit = loop_menu(&jogo->menu, &jogo->hud, GAME_OVER);
             }
@@ -241,6 +252,14 @@ void incremento_loop_elementos_jogo (Jogo* jogo) {
 void desenha_fundo_jogo (Jogo* jogo) {
 	// al_clear_to_color(al_map_rgb(20,20,20));
 	al_draw_bitmap (jogo->fundo, 0, 0, 0);
+}
+
+void desenha_tela_fase (Jogo* jogo) {
+    desenha_fundo_menu();
+    al_draw_text(jogo->menu.font_subtitle, BRANCO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/2.15), ALLEGRO_ALIGN_CENTRE, "FASE");
+    al_draw_textf(jogo->menu.font_title, AMARELO, LARGURA_DISPLAY/2, (ALTURA_DISPLAY/2), ALLEGRO_ALIGN_CENTRE, "%d", jogo->fase + 1);
+    al_flip_display();
+    al_rest(2);
 }
 
 void tela_boot_jogo (Jogo* jogo) {

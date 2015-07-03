@@ -14,20 +14,16 @@ void inicializa_player (Player* player, double posicao_x, double posicao_y) {
 	player->velocidade = 0;
 	player->direcao_atual = DIREITA;
 
+	player->distancia_passo_player = DISTANCIA_PASSO_PLAYER*(LARGURA_DISPLAY/640.0);
+
 	player->bitmap = al_load_bitmap("resources/player4.png");
 	if (player->bitmap == NULL) {
 		puts("Erro ao carregar o arquivo \"resources/player4.png\"");
 		exit(0);
 	}
 
-	if (SCALE_BITMAPS) {
-		player->largura = LARGURA_PLAYER*(LARGURA_DISPLAY/640.0);
-		player->altura = ALTURA_PLAYER*(ALTURA_DISPLAY/480.0);
-	}
-	else {
-		player->largura = LARGURA_PLAYER;
-		player->altura = ALTURA_PLAYER;
-	}
+	player->largura = LARGURA_PLAYER*(LARGURA_DISPLAY/640.0);
+	player->altura = ALTURA_PLAYER*(ALTURA_DISPLAY/480.0);
 
 	player->delta_x = player->largura/2;
 	player->delta_y = player->altura/2;

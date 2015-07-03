@@ -11,14 +11,8 @@ void inicializa_shield (Shield* shield, double posicao_x, double posicao_y) {
 	shield->posicao_x = posicao_x;
 	shield->posicao_y = posicao_y;
 
-	if (SCALE_BITMAPS) {
-		shield->largura = LARGURA_SHIELD*(LARGURA_DISPLAY/640.0);
-		shield->altura = ALTURA_SHIELD*(ALTURA_DISPLAY/480.0);
-	}
-	else {
-		shield->largura = LARGURA_SHIELD;
-		shield->altura = ALTURA_SHIELD;
-	}
+	shield->largura = LARGURA_SHIELD*(LARGURA_DISPLAY/640.0);
+	shield->altura = ALTURA_SHIELD*(ALTURA_DISPLAY/480.0);
 
 	inicializa_bitmap_shield (shield);
 
