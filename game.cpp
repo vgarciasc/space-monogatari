@@ -24,9 +24,10 @@ void finaliza_display (Jogo* jogo) {
 }
 
 void inicializa_jogo (Jogo* jogo, int fase) {
+    jogo->movimento_selecionado = SEM_INERCIA;
+
     jogo->event_queue = NULL;
     jogo->menu.new_game = 0;
-
     jogo->fase = fase;
 
     jogo->numero_de_projeteis = 0;
@@ -121,10 +122,10 @@ bool loop_de_jogo (Jogo* jogo) {
         	redraw = true;
     
             if (jogo->key[KEY_LEFT] && get_posicao_x_min_player(&jogo->player) > 0 + BARREIRA_LATERAL_DISPLAY)
-                move_player_com_inercia(&jogo->player, ESQUERDA);
+                move_player(&jogo->player, ESQUERDA, jogo->movimento_selecionado);
 
             if (jogo->key[KEY_RIGHT] && get_posicao_x_max_player(&jogo->player) < jogo->largura - BARREIRA_LATERAL_DISPLAY)
-                move_player_com_inercia(&jogo->player, DIREITA);
+                move_player(&jogo->player, DIREITA, jogo->movimento_selecionado);
  
             if (jogo->key[KEY_ESCAPE] && jogo->loop_count_menu_pause > 1) {
                 inicializa_menus(&jogo->menu, &jogo->hud);
@@ -147,7 +148,7 @@ bool loop_de_jogo (Jogo* jogo) {
             if (!jogo->key[KEY_LEFT] && !jogo->key[KEY_RIGHT]
                 && get_posicao_x_min_player(&jogo->player) > 0 + BARREIRA_LATERAL_DISPLAY
                 && get_posicao_x_max_player(&jogo->player) < jogo->largura - BARREIRA_LATERAL_DISPLAY)
-                move_player_com_inercia(&jogo->player, PARADA);
+                move_player(&jogo->player, PARADA);
     	}
  
       	else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
@@ -196,6 +197,7 @@ bool loop_de_jogo (Jogo* jogo) {
             return true;
             */
                 // move_player(&jogo->player, PARADA);
+            jogo->movimento_selecionado = jogo->menu.movimento_selecionado;
 
             colisao_player_vs_projetil(jogo);
             colisao_alien_vs_projetil(jogo);

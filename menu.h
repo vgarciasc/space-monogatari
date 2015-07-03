@@ -23,6 +23,7 @@ struct Menu {
 	int botao_selecionado;
 	TELA tela_selecionada;
 	MODO modo_selecionado;
+	MOVIMENTO movimento_selecionado;
 
 	int score;
 	int new_game;

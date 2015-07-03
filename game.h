@@ -15,16 +15,15 @@ struct Jogo {
 	ALLEGRO_EVENT_QUEUE* event_queue;
 	ALLEGRO_TIMER* timer;
 	
-	int largura, altura;
+	double largura, altura;
 	ALLEGRO_BITMAP* fundo;
 
+	Menu menu;
+	Hud hud;
 	Player player;
 	Mothership mothership;
 	Alien alien[COLUNAS_TROPA * LINHAS_TROPA];
 	int aliens_vivos;
-
-	Menu menu;
-	Hud hud;
 
 	int numero_shields;
 	Shield* shields;
@@ -42,6 +41,8 @@ struct Jogo {
 	int loop_alien_shots;
 	
 	bool key[N_KEYS];
+
+	MOVIMENTO movimento_selecionado;
 };
 
 void inicializa_display (Jogo* jogo);

@@ -57,32 +57,50 @@ void desenha_player (Player* player) {
 						  flags);
 }
 
+void move_player (Player* player, DIRECAO direcao, MOVIMENTO movimento) {
+	if (movimento == SEM_INERCIA)
+		move_player_sem_inercia(&player, direcao);
+	else if (movimento == COM_INERCIA)
+		move_player_com_inercia(&player, direcao);
+}
+
+void move_player_sem_inercia (Player* player, DIRECAO direcao) {
+	if (direcao == ESQUERDA) {
+		player->posicao_x -= DISTANCIA_PASSO_PLAYER;
+		player->direcao_atual = ESQUERDA;
+	}
+	if (direcao == DIREITA) {
+		player->posicao_x += DISTANCIA_PASSO_PLAYER;
+		player->direcao_atual = DIREITA;
+	}
+}
+
 void move_player_com_inercia (Player* player, DIRECAO direcao) {
-  if (direcao == PARADA) {
-    if (player->velocidade > 0)
-      player->velocidade -= 3;
-    else if(player->velocidade < 0)
-      player->velocidade += 3;      
-  }
+	if (direcao == PARADA) {
+		if (player->velocidade > 0)
+			player->velocidade -= 3;
+		else if(player->velocidade < 0)
+			player->velocidade += 3;      
+	}
 
-  else if (player->direcao_atual == direcao)
-    player->velocidade += direcao;
-  else 
-    player->velocidade -= 10*direcao;
-  
-  if (player->velocidade > 25) 
-    player->velocidade = 25;
-  else if (player->velocidade < -25)
-    player->velocidade = -25;
-  
-  player->direcao_atual = direcao;
-  player->posicao_x += player->velocidade/5;
+	else if (player->direcao_atual == direcao)
+		player->velocidade += direcao;
+	else 
+		player->velocidade -= 10*direcao;
 
-  if (get_posicao_x_max_player(player) > LARGURA_DISPLAY - BARREIRA_LATERAL_DISPLAY)
-    player->posicao_x = LARGURA_DISPLAY - BARREIRA_LATERAL_DISPLAY - player->delta_x;
+	if (player->velocidade > 25) 
+		player->velocidade = 25;
+	else if (player->velocidade < -25)
+		player->velocidade = -25;
 
-  if (get_posicao_x_min_player(player) < 0 + BARREIRA_LATERAL_DISPLAY)
-    player->posicao_x = BARREIRA_LATERAL_DISPLAY + player->delta_x;
+	player->direcao_atual = direcao;
+	player->posicao_x += player->velocidade/5;
+
+	if (get_posicao_x_max_player(player) > LARGURA_DISPLAY - BARREIRA_LATERAL_DISPLAY)
+		player->posicao_x = LARGURA_DISPLAY - BARREIRA_LATERAL_DISPLAY - player->delta_x;
+
+	if (get_posicao_x_min_player(player) < 0 + BARREIRA_LATERAL_DISPLAY)
+		player->posicao_x = BARREIRA_LATERAL_DISPLAY + player->delta_x;
 }
 
 

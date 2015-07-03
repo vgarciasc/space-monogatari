@@ -27,6 +27,8 @@ void finaliza_player (Player* player);
 
 void desenha_player (Player* player);
 
+void move_player (Player* player, DIRECAO direcao, MOVIMENTO movimento);
+
 void move_player_com_inercia (Player* player, DIRECAO Direcao);
 
 void move_player_sem_inercia (Player* player, DIRECAO direcao);
