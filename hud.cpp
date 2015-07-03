@@ -184,20 +184,19 @@ void permutar_strings(char *nome1, char*nome2){
 	}
 }
 void ordenar_vetor(int *vetor, char nomes[][3], int n_elementos){
-	int i, j, chave;
+	int i, j=9,chave;
 	char chave2[3];
-	for(j=1;j<n_elementos;j++){
-		chave = vetor[j];
-		permutar_strings(chave2,nomes[j]);
-		i = j-1;
-		while(chave > vetor[i] && i>=0){
-			vetor[i+1]=vetor[i];
-			permutar_strings(nomes[i+1],nomes[i]);
-			i--;
-		}
-		vetor[i+1]=chave;
-		permutar_strings(nomes[i+1],chave2);
+
+	chave = vetor[j];
+	permutar_strings(chave2,nomes[j]);
+	i = j-1;
+	while(chave > vetor[i] && i>=0){
+		vetor[i+1]=vetor[i];
+		permutar_strings(nomes[i+1],nomes[i]);
+		i--;
 	}
+	vetor[i+1]=chave;
+	permutar_strings(nomes[i+1],chave2);
 
 }
 
