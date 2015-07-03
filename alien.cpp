@@ -255,7 +255,7 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 					|| get_posicao_y_min_projetil(&jogo->conjunto_projeteis[i]) > get_posicao_y_max_alien(&jogo->alien[j * LINHAS_TROPA + v])
 					|| get_posicao_y_max_projetil(&jogo->conjunto_projeteis[i]) < get_posicao_y_min_alien(&jogo->alien[j * LINHAS_TROPA + v])
 					|| get_posicao_x_max_projetil(&jogo->conjunto_projeteis[i]) < get_posicao_x_min_alien(&jogo->alien[j * LINHAS_TROPA + v])))
-					&& jogo->alien[j * LINHAS_TROPA + v].vivo) {
+					&& jogo->alien[j * LINHAS_TROPA + v].vivo && (jogo->conjunto_projeteis[i].direcao == CIMA)) {
 
 						copy_projetil (&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
 						desenha_projetil (&jogo->conjunto_projeteis[i]);
@@ -264,6 +264,8 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 						jogo->numero_de_projeteis--;
 						jogo->hud.score += PONTOS_ALIEN;
 
+						jogo->aliens_vivos -= 1;
+
 						jogo->alien[j * LINHAS_TROPA + v].vivo = false;
 
 						return;
@@ -271,15 +273,6 @@ void colisao_alien_vs_projetil (Jogo *jogo) {
 			}
 		}
 	}
-}
-
-bool checa_vitoria (Alien alien[COLUNAS_TROPA * LINHAS_TROPA]) {
-	for (int i = 0; i < COLUNAS_TROPA; i++)
-		for (int j = 0; j < LINHAS_TROPA; j++)
-			if (alien[i * COLUNAS_TROPA + j].vivo)
-				return false;
-
-	return true;
 }
 
 int get_posicao_x_min_alien (Alien* alien){
