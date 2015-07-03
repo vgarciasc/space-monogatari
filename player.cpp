@@ -113,6 +113,7 @@ void colisao_player_vs_projetil (Jogo *jogo) {
 				copy_projetil (&jogo->conjunto_projeteis[i], &jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
 				desenha_projetil (&jogo->conjunto_projeteis[i]);
 				finaliza_projetil (&jogo->conjunto_projeteis[jogo->numero_de_projeteis-1]);
+				al_rest(1);
 				jogo->numero_de_projeteis--;
 				jogo->hud.lives--;
 

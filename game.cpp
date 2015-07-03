@@ -131,7 +131,7 @@ bool loop_de_jogo (Jogo* jogo) {
                 jogo->loop_count_menu_pause = 0;
             }
 
-            if ((jogo->key[KEY_SPACE])
+            if ((jogo->key[KEY_SPACE] || jogo->key[KEY_ENTER]) 
                 && jogo->loop_count_projetil > jogo->player.projetil_cooldown
                 && jogo->loop_count_menu_pause > 1) {
                 jogo->loop_count_projetil = 0;
@@ -166,9 +166,9 @@ bool loop_de_jogo (Jogo* jogo) {
                     jogo->key[KEY_ESCAPE] = true;
                     break;
 
-            	case ALLEGRO_KEY_Z:
-               		jogo->key[KEY_Z] = true;
-               		break;
+                case ALLEGRO_KEY_ENTER:
+                    jogo->key[KEY_ENTER] = true;
+                    break;
 
                 case ALLEGRO_KEY_SPACE:
                     jogo->key[KEY_SPACE] = true;
@@ -186,8 +186,8 @@ bool loop_de_jogo (Jogo* jogo) {
                		jogo->key[KEY_RIGHT] = false;
                		break;
 
-            	case ALLEGRO_KEY_Z:
-               		jogo->key[KEY_Z] = false;
+            	case ALLEGRO_KEY_ENTER:
+               		jogo->key[KEY_ENTER] = false;
                		break;
 
                 case ALLEGRO_KEY_SPACE:
@@ -361,7 +361,7 @@ void inicializa_event_queue_jogo (Jogo* jogo) {
 void inicializa_timer_jogo (Jogo* jogo) {
 	jogo->timer = al_create_timer(1.0/GAME_FPS);
 
-	if(!jogo->timer){
+	if(!jogo->timer) {
 		fprintf(stderr, "Falha em executar timer!\n");
 		exit(-1);
 	}

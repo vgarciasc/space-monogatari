@@ -119,12 +119,12 @@ void desenha_menu_pause (Menu* menu, Hud *hud) {
     strcpy(tela_botao[10][0],"<===");
     menu->numero_de_botoes[10] = 0;
 
-    // //PLAYER_MOVEMENT
-    // strcpy(titulo_tela[11], "PLAYER MOVEMENT");
-    // strcpy(tela_botao[11][0], "WITH INÉRCIA");
-    // strcpy(tela_botao[11][1], "WITHOUT INÉRCIA");
-    // strcpy(tela_botao[11][2], "<===");
-    // menu->numero_de_botoes[11] = 2;
+    //PLAYER_MOVEMENT
+    strcpy(titulo_tela[11], "PLAYER MOVEMENT");
+    strcpy(tela_botao[11][0], "WITH INÉRCIA");
+    strcpy(tela_botao[11][1], "WITHOUT INÉRCIA");
+    strcpy(tela_botao[11][2], "<===");
+    menu->numero_de_botoes[11] = 2;
 
     for (int i = 0; i < N_TELAS - 1; i++) {
         if (menu->tela_selecionada == i && i != 2 && i != 8 && i != 9 && i != 10) {
@@ -363,19 +363,18 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                         //     } 
                         //     break;
 
-                        // case MECHANICS:
-                        //     switch (menu->botao_selecionado) {
-                        //         case 0:
-                        //             seleciona_nova_tela(menu, PLAYER_MOVEMENT);
-                        //             break;
-                        //         case 1:
-                        //             return true;
-                        //             break;
-                        //         case 2:
-                        //             seleciona_nova_tela(menu, OPTIONS);
-                        //             break;
-                        //     } 
-                        //     break;     
+                        case MECHANICS:
+                            switch (menu->botao_selecionado) {
+                                case 0:
+                                    seleciona_nova_tela(menu, PLAYER_MOVEMENT);
+                                    break;
+                                case 1:
+                                    break;
+                                case 2:
+                                    seleciona_nova_tela(menu, OPTIONS);
+                                    break;
+                            } 
+                            break;     
 
                         case MODES:
                             switch (menu->botao_selecionado) {
@@ -426,22 +425,22 @@ bool loop_menu (Menu* menu, Hud* hud, TELA tela) {
                                }
                                break;
 
-                        // case PLAYER_MOVEMENT:
-                        //         switch(menu->botao_selecionado) {
-                        //             case 0:
-                        //                 menu->movimento_selecionado = COM_INERCIA;
-                        //                 seleciona_nova_tela(menu, MECHANICS);
-                        //                 break;
-                        //             case 1:
-                        //                 menu->movimento_selecionado = SEM_INERCIA;
-                        //                 seleciona_nova_tela(menu, MECHANICS);
-                        //                 break;
-                        //             case 2:
-                        //                 puts("A");
-                        //                 seleciona_nova_tela(menu, MECHANICS);
-                        //                 break;
-                        //         }
-                        //         break;
+                        case PLAYER_MOVEMENT:
+                                switch(menu->botao_selecionado) {
+                                    case 0:
+                                        menu->movimento_selecionado = COM_INERCIA;
+                                        seleciona_nova_tela(menu, MECHANICS);
+                                        break;
+                                    case 1:
+                                        menu->movimento_selecionado = SEM_INERCIA;
+                                        seleciona_nova_tela(menu, MECHANICS);
+                                        break;
+                                    case 2:
+                                        puts("A");
+                                        seleciona_nova_tela(menu, MECHANICS);
+                                        break;
+                                }
+                                break;
                         }
                         break;
 

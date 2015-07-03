@@ -1,10 +1,10 @@
  vin 9600
  ghj 5400
+ aaa 3200
  abc 1200
  xcz 1000
  abc 800
  zzz 600
  aaa 400
  abc 200
- 000 0
  000 0

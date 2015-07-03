@@ -11,10 +11,6 @@ void inicializa_alien (Alien* alien, double posicao_x, double posicao_y, int lin
 	alien->posicao_x = posicao_x;
 	alien->posicao_y = posicao_y;
 
-	for (int i = 0; i < 5; i++) {
-		alien->sprites[i] = NULL;
-	}
-
 	alien->vivo = true;
 
 	alien->velocidade = DISTANCIA_PASSO_ALIEN*(LARGURA_DISPLAY/640.0);
@@ -32,10 +28,9 @@ void inicializa_alien (Alien* alien, double posicao_x, double posicao_y, int lin
 
 void inicializa_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], double posicao_x, double posicao_y) {
 	for (int i = 0; i < COLUNAS_TROPA; i++)
-		for (int j = 0; j < LINHAS_TROPA; j++) {
+		for (int j = 0; j < LINHAS_TROPA; j++)
 			inicializa_alien (&alien[i * LINHAS_TROPA + j], posicao_x + i * (alien->largura*1.5),
 									posicao_y + j * (alien->altura*1.5), j ); 
-/*if (i!=0 && j%2==0) alien[i * LINHAS_TROPA + j].vivo = false;*/} 
 
 }
 
@@ -65,10 +60,9 @@ void desenha_alien (Alien* alien) {
 
 void desenha_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA]) {
 	for (int i = 0; i < COLUNAS_TROPA; i++)
-		for (int j = 0; j < LINHAS_TROPA; j++) {
+		for (int j = 0; j < LINHAS_TROPA; j++)
 			if (alien[i * LINHAS_TROPA + j].vivo)
 				desenha_alien (&alien[i * LINHAS_TROPA + j]);
-		}
 }
 
 void inicializa_sprites_alien (Alien* alien, int linha) {
@@ -192,11 +186,9 @@ void move_alien (Alien* alien, DIRECAO direcao) {
 }
 
 void move_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], DIRECAO direcao) {
-	for (int i = 0; i < COLUNAS_TROPA; i++) {
-		for (int j = 0; j < LINHAS_TROPA; j++) {
+	for (int i = 0; i < COLUNAS_TROPA; i++)
+		for (int j = 0; j < LINHAS_TROPA; j++)
 			move_alien (&alien[i * LINHAS_TROPA + j], direcao);
-		}
-	}
 }
 
 void rota_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Jogo* jogo) {
@@ -204,13 +196,13 @@ void rota_tropa (Alien alien[COLUNAS_TROPA * LINHAS_TROPA], Jogo* jogo) {
 		move_tropa (alien, ESQUERDA);
 
 	if (get_posicao_x_min_alien(&alien[0]) <= 0 + 10 + alien[0].velocidade) {
-			move_tropa (alien, BAIXO);
-			muda_direcao_tropa(alien, DIREITA);
+		move_tropa (alien, BAIXO);
+		muda_direcao_tropa(alien, DIREITA);
 	}
 
 	if (get_posicao_x_max_alien(&alien[(COLUNAS_TROPA-1) * LINHAS_TROPA + 0]) >= jogo->largura - 10 - alien[0].velocidade) {
-			move_tropa (alien, BAIXO);
-			muda_direcao_tropa(alien, ESQUERDA);
+		move_tropa (alien, BAIXO);
+		muda_direcao_tropa(alien, ESQUERDA);
 	}
 
 	if (alien[(COLUNAS_TROPA-1) * LINHAS_TROPA + 0].direcao_atual == DIREITA && get_posicao_x_max_alien(&alien[(COLUNAS_TROPA-1) * LINHAS_TROPA + 0]) < jogo->largura - 10 - alien[0].velocidade)
@@ -309,12 +301,12 @@ void colisao_alien_vs_shield (Jogo* jogo) {
 bool colisao_alien_vs_player (Jogo* jogo) {
 	for (int k = 0; k < COLUNAS_TROPA; k++) {
 		for (int l = 0; l < LINHAS_TROPA; l++) {
-						if (!(get_posicao_x_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_x_max_player(&jogo->player)
-							|| get_posicao_y_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_y_max_player(&jogo->player)
-							|| get_posicao_y_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_y_min_player(&jogo->player)
-							|| get_posicao_x_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_x_min_player(&jogo->player))) {
+			if (!(get_posicao_x_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_x_max_player(&jogo->player)
+				|| get_posicao_y_min_alien(&jogo->alien[k * LINHAS_TROPA + l]) > get_posicao_y_max_player(&jogo->player)
+				|| get_posicao_y_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_y_min_player(&jogo->player)
+				|| get_posicao_x_max_alien(&jogo->alien[k * LINHAS_TROPA + l]) < get_posicao_x_min_player(&jogo->player))) {
 
-							return true;
+				return true;
 			}
 		}
 	}
