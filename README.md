@@ -1,29 +1,18 @@
 # space-monogatari
-### Projeto de Computação I - Ciência da Computação 2015.1 UFRJ
-    Professor:   Geraldo Zimbrão
-    Estudantes:  Vinícius Garcia
-                 Diego Souza
-                 Júlio Rama
+> Projeto da disciplina de Computação I 2015/1 do curso de Ciência da Computação UFRJ.
 
-    Objetivo:  Realizar uma recomposição do jogo Space Invaders utilizando C++ e Allegro 5.0
-  
-  Objetos a serem implementados:
-  
-      - Player (nave/tanque)
-          anda, atira, morre
-          
-      - Aliens
-          anda, atira, morre
-          
-      - Projéteis
-          anda
-          
-      - Nave-mãe
-          anda, atira, morre
-          
-      - Shields (escudos/bunkers)
-          toma tiro, fica danificado
-          
-      - HUD
-          apresenta pontuação, vidas
+## objetivo
+Criar uma recriação do jogo 'Space Invaders', utilizando a linguagem *C* com orientação a objetos e a biblioteca gráfica *Allegro 5.0*. Os seguintes objetos devem ser obrigatoriamente implementados no jogo:
+- Player (nave/tanque): anda, atira, morre
+- Aliens: anda, atira, morre
+- Projéteis: anda
+- Nave-mãe: anda, atira, morre
+- Shields (escudos/bunkers): toma tiro, fica danificado
+- HUD: apresenta pontuação, vidas
 
+## informações
+- Professor: Geraldo Zimbrão
+- Estudantes: Vinícius Garcia, Júlio Rama, Diego Souza
+
+## imagens
+![](./preview.png)
